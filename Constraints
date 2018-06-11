@@ -1,0 +1,6 @@
+symmetry :
+dis = Sum Li^3*xi / Sum Li^3
+Li : length voile
+xi : distance from origin
+do it for both directions
+
