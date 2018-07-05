@@ -4,6 +4,8 @@ from PyQt4 import QtGui, QtCore
 from Geometry import ShapeToPoly
 
 
+defaultColor = QtGui.QColor(220,220,220)
+
 class cell(object):
     poly = None
     def __init__(self, c,p):
@@ -25,7 +27,8 @@ class cell(object):
 
 class Window(QtGui.QWidget):
     polys = []
-    def __init__(self,polys,rect=None):
+    colors = []
+    def __init__(self,polys,colors=None,rect=None):
         super(Window, self).__init__()
         if not rect:
             self.setGeometry(50, 50, 800, 600)
@@ -34,6 +37,8 @@ class Window(QtGui.QWidget):
         # self.setWindowTitle("PyQT tuts!")
         self.cells = []
         self.polys = polys
+        if colors:
+            self.colors = colors
         self.resizePolys()
         now = QtCore.QTime.currentTime()
         QtCore.qsrand(now.msec())
@@ -75,11 +80,10 @@ class Window(QtGui.QWidget):
 
 
     def createCells(self):
-        for polygon in self.polys:
-            self.cells.append(cell(QtGui.QColor(QtCore.qrand() % 256,
-                                                QtCore.qrand() % 256,
-                                                QtCore.qrand() % 256),
-                                                polygon))
+        for i in range(len(self.polys)-len(self.colors)):
+            self.colors.append(defaultColor)
+        for polygon,color in zip(self.polys,self.colors):
+            self.cells.append(cell(color,polygon))
         self.update()
 
     def paintEvent(self, e):

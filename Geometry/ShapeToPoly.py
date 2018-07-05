@@ -38,6 +38,13 @@ def getShapeBasePolygon(shape):
                 points.append(Pnt(pnt.x, pnt.y))
             return Poly(points)
 
+def getBaseOfShapeZ(shape):
+    polygons = getPolygonesFromShape(shape)
+    return min([pnt.z for polygon in polygons for pnt in polygon.points])
+
+def getTopOfShapeZ(shape):
+    polygons = getPolygonesFromShape(shape)
+    return max([pnt.z for polygon in polygons for pnt in polygon.points])
 
 def getShapesBasePolygons(shapes):
     polys = []

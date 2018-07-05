@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'Show2DWindow.ui'
+# Form implementation generated from reading ui file 'Show2DWindowMod.ui'
 #
 # Created by: PyQt4 UI code generator 4.11.4
 #
@@ -25,7 +25,7 @@ except AttributeError:
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
-        MainWindow.resize(798, 600)
+        MainWindow.resize(845, 679)
         self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
         self.loadFile = QtGui.QPushButton(self.centralwidget)
@@ -52,9 +52,21 @@ class Ui_MainWindow(object):
         self.tab_2 = QtGui.QWidget()
         self.tab_2.setObjectName(_fromUtf8("tab_2"))
         self.tabWidget.addTab(self.tab_2, _fromUtf8(""))
+        self.sol2 = QtGui.QPushButton(self.centralwidget)
+        self.sol2.setGeometry(QtCore.QRect(150, 550, 111, 32))
+        self.sol2.setObjectName(_fromUtf8("sol2"))
+        self.sol1 = QtGui.QPushButton(self.centralwidget)
+        self.sol1.setGeometry(QtCore.QRect(10, 550, 111, 32))
+        self.sol1.setObjectName(_fromUtf8("sol1"))
+        self.merge = QtGui.QPushButton(self.centralwidget)
+        self.merge.setGeometry(QtCore.QRect(300, 550, 111, 32))
+        self.merge.setObjectName(_fromUtf8("merge"))
+        self.cross = QtGui.QPushButton(self.centralwidget)
+        self.cross.setGeometry(QtCore.QRect(450, 550, 111, 32))
+        self.cross.setObjectName(_fromUtf8("cross"))
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 798, 28))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 845, 28))
         self.menubar.setObjectName(_fromUtf8("menubar"))
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtGui.QStatusBar(MainWindow)
@@ -72,4 +84,8 @@ class Ui_MainWindow(object):
         self.openWin.setText(_translate("MainWindow", "Open Window", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", "Tab 1", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("MainWindow", "Tab 2", None))
+        self.sol2.setText(_translate("MainWindow", "Solution2", None))
+        self.sol1.setText(_translate("MainWindow", "Solution1", None))
+        self.merge.setText(_translate("MainWindow", "Merge", None))
+        self.cross.setText(_translate("MainWindow", "Cross", None))
 

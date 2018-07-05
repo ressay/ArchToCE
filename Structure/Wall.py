@@ -11,7 +11,7 @@ class Wall(Structure):
         lowestW = self.getLowestPoint()
         lowestS = slab.getLowestPoint()
         if lowestW.z < lowestS.z:
-            if self.getHighestPoint().z >= lowestS.z-tolerance:
+            if self.getHighestPoint().z >= lowestS.z-tolerance and self._isUnderSlab(slab):
                 return True
 
         return False
@@ -19,3 +19,4 @@ class Wall(Structure):
     def _isUnderSlab(self,slab):
         polW = self.getBasePolygon()
         polS = slab.getBasePolygon()
+        return polS.intersects(polW)
