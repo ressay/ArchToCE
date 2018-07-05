@@ -49,6 +49,7 @@ def search(levelSkeleton,popSize=300,crossRate=0.1,mutRate=0.2,maxIterations=100
     population = generatePopulation(levelSkeleton,popSize)
 
     for i in range(maxIterations):
+
         print ("iteration: " + str(i))
         fitnesses = calculateFitnessPopulation(population)
         # for fit in fitnesses:
