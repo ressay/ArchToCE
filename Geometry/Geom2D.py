@@ -61,6 +61,10 @@ class Pnt(object):
     def __str__(self):
         return "("+str(self.x())+","+str(self.y())+")"
 
+    @staticmethod
+    def createPointFromShapely(point):
+        return Pnt(point.x,point.y)
+
 
 
 class Poly(object):
@@ -105,3 +109,22 @@ class Poly(object):
 
     def __copy__(self):
         return self.copy()
+
+
+class Ellip(object):
+
+    def __init__(self,pnt,d1,d2=None):
+        super(Ellip, self).__init__()
+        self.pnt = pnt
+        self.d1 = d1
+        self.d2 = d2
+        if not d2:
+            self.d2 = d1
+
+    def move(self, x, y):
+        self.pnt.move(x,y)
+
+    def scale(self,r):
+        self.pnt.scale(r)
+        self.d1 *= r
+        self.d2 *= r

@@ -1,3 +1,4 @@
+from Geometry.Geom2D import Pnt
 from Skeleton.SlabSkeleton import SlabSkeleton
 from Skeleton.WallSkeleton import WallSkeleton
 from Skeleton.Skelet import Skelet
@@ -37,3 +38,35 @@ class LevelSkeleton(Skelet):
         levelSkeleton = LevelSkeleton(walls,self.slabSkeleton.copy(),self.level)
         levelSkeleton.evalData = self.evalData
         return levelSkeleton
+
+    def getCenterFromSlab(self):
+        return Pnt.createPointFromShapely(self.slabSkeleton.poly.centroid())
+    def getCenterFromShear(self):
+        sumLiX = 0
+        sumLiY = 0
+        sumLixi = 0
+        sumLiyi = 0
+        for wallSkeleton in self.wallSkeletons:
+            sLiX, sLiY, sLixi, sLiyi = wallSkeleton.getSums()
+            sumLiX += sLiX
+            sumLiY += sLiY
+            sumLixi += sLixi
+            sumLiyi += sLiyi
+
+        x = 0
+        y = 0
+        if sumLiY != 0:
+            x = sumLixi / sumLiY
+        else:
+            print("sumLiY is 0")
+            if sumLiyi != 0:
+                print("hummm error")
+        if sumLiX != 0:
+            y = sumLiyi / sumLiX
+        else:
+            print("sumLiX is 0")
+            if sumLixi != 0:
+                print("hummm error")
+        cntr = Pnt(y, x)
+
+        return cntr

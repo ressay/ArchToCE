@@ -1,9 +1,22 @@
+import math
+
 from Geometry.Geom2D import Pnt
 
 def distance(p1,p2):
     p = p1 - p2
     return p.magn()
 
+
+class EvaluationData(object):
+    def __init__(self,dis, size, length):
+        super(EvaluationData, self).__init__()
+        self.dis = dis
+        self.size = size
+        self.length = length
+        self.sumLiX = 0
+        self.sumLiY = 0
+        self.sumLixi = 0
+        self.sumLiyi = 0
 
 class WallEvaluator(object):
     def __init__(self,levelSkeleton):
@@ -17,6 +30,7 @@ class WallEvaluator(object):
         size = 0
         dis = 0
         length = 0
+
         for voileSkeleton in wallSkeleton.attachedVoiles:
             # for voileSkeleton in voiles:
             # print ("looping")
@@ -25,11 +39,15 @@ class WallEvaluator(object):
             dis += distance(centerV, self.center)
             length += (voileSkeleton.end - voileSkeleton.start)
             size += 1
-        wallSkeleton.evalData = dis, size, length
-        return dis, size, length
+        wallSkeleton.evalData = EvaluationData(dis, size, length)
+        sumLi1,sumLi2,sumLixi,sumLiyi = wallSkeleton.getSums()
+        wallSkeleton.evalData.sumLiX = sumLi1
+        wallSkeleton.evalData.sumLiY = sumLi2
+        wallSkeleton.evalData.sumLixi = sumLixi
+        wallSkeleton.evalData.sumLiyi = sumLiyi
+        return wallSkeleton.evalData
 
 def calculateFitnessSolution(solution):
-    fitness = 0
     levelSkeleton = solution.levelSkeleton
     wallEvaluator = WallEvaluator(levelSkeleton)
     # print ("before looping")
@@ -38,15 +56,22 @@ def calculateFitnessSolution(solution):
     size = 0
     dis = 0
     length = 0
+    sumLiX = 0
+    sumLiY = 0
+    sumLixi = 0
+    sumLiyi = 0
     for wallSkeleton in levelSkeleton.wallSkeletons:
         # print "attached voiles : " + str(len(wallSkeleton.attachedVoiles))
-        d,s,l = wallEvaluator.calculateFitnessWall(wallSkeleton)
+        evalData = wallEvaluator.calculateFitnessWall(wallSkeleton)
+        d,s,l = evalData.dis,evalData.size,evalData.length
         dis += d
         size += s
         length += l
 
-
-    fitness = length
+    cntr = levelSkeleton.getCenterFromShear()
+    centerV = levelSkeleton.slabSkeleton.poly.centroid()
+    centerV = Pnt(centerV.x, centerV.y)
+    fitness = -distance(cntr,centerV)
     return fitness
 
 

@@ -5,6 +5,7 @@ from PyQt4 import QtGui
 
 import Show2DWindow
 # from Optimization.Genetic import GeneticOperations2
+from Geometry.Geom2D import Pnt, Ellip
 from Optimization.Genetic import GeneticOperations2
 from Optimization.Genetic.GeneticAlgorithm import search
 from Optimization.Genetic.GeneticOperations import merge
@@ -76,18 +77,28 @@ class TryApp(QtGui.QMainWindow, Show2DWindow.Ui_MainWindow):
 
     def sol1CB(self):
         print "s1: " + str(self.solutions1[self.selectedRow].getFitness())
-        self.drawPolygonsFromLevelSkeletons(self.solutions1[self.selectedRow].levelSkeleton)
+        polys = self.getPolygonsFromLevelSkeletons(self.solutions1[self.selectedRow].levelSkeleton)
+        self.draw(polys)
 
     def sol2CB(self):
         print "s2: " + str(self.solutions2[self.selectedRow].getFitness())
-        self.drawPolygonsFromLevelSkeletons(self.solutions2[self.selectedRow].levelSkeleton)
+        polys = self.getPolygonsFromLevelSkeletons(self.solutions2[self.selectedRow].levelSkeleton)
+        self.draw(polys)
 
     def mergeCB(self):
         solution = search(self.skeletonLevels[self.selectedRow])
         # s1 = self.solutions1[self.selectedRow]
         # s2 = self.solutions2[self.selectedRow]
         # solution = merge(s1,s2)
-        self.drawPolygonsFromLevelSkeletons(solution.levelSkeleton)
+        # from Optimization.Genetic.GeneticOperations2 import mutate
+        # mutate(s1)
+        polys = self.getPolygonsFromLevelSkeletons(solution.levelSkeleton)
+        c1 = solution.levelSkeleton.getCenterFromSlab()
+        c2 = solution.levelSkeleton.getCenterFromShear()
+        e1 = Ellip(c1,0.4)
+        e2 = Ellip(c2,0.4)
+        ellipses = [e1,e2],[QtGui.QColor(0,255,0),QtGui.QColor(0,0,255)]
+        self.draw(polys,ellipses)
 
     def crossCB(self):
 
@@ -95,7 +106,8 @@ class TryApp(QtGui.QMainWindow, Show2DWindow.Ui_MainWindow):
         s2 = self.solutions2[self.selectedRow]
         s,b = GeneticOperations2.cross(s1,s2)
         # print "s fitness: " + str(s.getFitness())
-        self.drawPolygonsFromLevelSkeletons(s.levelSkeleton)
+        polys = self.getPolygonsFromLevelSkeletons(s.levelSkeleton)
+        self.draw(polys)
 
     def addViewerTab(self,name):
         from OCC.Display import qtDisplay
@@ -120,7 +132,7 @@ class TryApp(QtGui.QMainWindow, Show2DWindow.Ui_MainWindow):
             i += 1
             self.model.appendRow(item)
 
-    def drawPolygonsFromLevelSkeletons(self, levelSkeleton):
+    def getPolygonsFromLevelSkeletons(self, levelSkeleton):
         polygons = [wallSkeleton.poly.copy() for wallSkeleton in levelSkeleton.wallSkeletons]
         colors = [QtGui.QColor(220, 220, 220) for wallSkeleton in levelSkeleton.wallSkeletons]
         polygons += [voileSkeleton.poly.copy()
@@ -133,9 +145,16 @@ class TryApp(QtGui.QMainWindow, Show2DWindow.Ui_MainWindow):
 
         if not len(polygons):
             return
+        polys = (polygons,colors)
+        center = Pnt.createPointFromShapely(levelSkeleton.slabSkeleton.poly.centroid())
+        return polys
+        # ellipses = ([Ellip(center, 0.5)], [QtGui.QColor(0, 255, 0)])
+        # self.draw(polys,ellipses)
 
+
+    def draw(self,polys=None,ellipses=None):
         from UI.DrawUtils import Window
-        self.scrollTab.setWidget(Window(polygons,colors=colors,rect=self.scrollTab.geometry()))
+        self.scrollTab.setWidget(Window(polys,ellipses=ellipses, rect=self.scrollTab.geometry()))
 
     def drawPolygons(self,shapes):
         from Geometry import ShapeToPoly
@@ -152,7 +171,8 @@ class TryApp(QtGui.QMainWindow, Show2DWindow.Ui_MainWindow):
         # print ('selected item index found at %s with data: %s' % (index.row(), index.data().toString()))
         shapes = [wall.shape for wall in self.levels[row].walls]
         # self.drawPolygons(shapes)
-        self.drawPolygonsFromLevelSkeletons(self.skeletonLevels[row])
+        polys = self.getPolygonsFromLevelSkeletons(self.skeletonLevels[row])
+        self.draw(polys)
         shapes.append(self.levels[row].slab.shape)
         self.setViewerDisplay("Selected",shapes)
 

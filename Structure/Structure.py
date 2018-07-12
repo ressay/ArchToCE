@@ -7,6 +7,7 @@ class Structure(object):
         super(Structure, self).__init__()
         self.shape = shape
 
+
     def getBasePolygon(self):
         return ShapeToPoly.getShapeBasePolygon(self.shape)
 

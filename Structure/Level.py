@@ -25,6 +25,8 @@ class Level(object):
         for shape in slabShapes:
             slabs.append(Slab(shape))
 
+
+
         for slab in slabs:
             levels.append(Level(slab, slab.getSupportingWalls(walls)))
         for level in levels:

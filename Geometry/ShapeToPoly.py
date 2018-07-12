@@ -12,6 +12,7 @@ import OCC.Core.gp
 
 def getPolygonesFromShape(shape):
     from Geometry.Geom3D import Pnt3D,Poly3D
+
     exp = OCC.Core.TopExp.TopExp_Explorer(shape, OCC.Core.TopAbs.TopAbs_WIRE)  # .TopAbs_FACE)
     polygons = []
     while exp.More():

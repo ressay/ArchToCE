@@ -31,6 +31,9 @@ class VoileSkeleton(BoxSkeleton):
         poly = Poly([topLeftPnt, pnt1, pnt2, pnt3])
         return poly
 
+    def getLength(self):
+        return self.end - self.start
+
     def copy(self):
         voile = VoileSkeleton(self.parentWall,self.start,self.end)
         voile.evalData = self.evalData

@@ -16,6 +16,8 @@ class Solution(object):
             self.fitness = calculateFitnessSolution(self)
         return self.fitness
 
+    def reInitFitness(self):
+        self.fitness = None
 
     @staticmethod
     def createRandomSolutionFromSkeleton(levelSkeleton):
