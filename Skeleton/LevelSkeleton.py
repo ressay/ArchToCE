@@ -41,6 +41,7 @@ class LevelSkeleton(Skelet):
 
     def getCenterFromSlab(self):
         return Pnt.createPointFromShapely(self.slabSkeleton.poly.centroid())
+
     def getCenterFromShear(self):
         sumLiX = 0
         sumLiY = 0
@@ -70,3 +71,4 @@ class LevelSkeleton(Skelet):
         cntr = Pnt(y, x)
 
         return cntr
+

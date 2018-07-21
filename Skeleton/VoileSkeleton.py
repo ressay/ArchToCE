@@ -12,6 +12,10 @@ class VoileSkeleton(BoxSkeleton):
         self.end = end
         poly = self.getPolyFromStartEnd(start,end)
         super(VoileSkeleton, self).__init__(poly)
+        # self.isStartValid = False
+        # self.isEndValid = False
+        self.pointsList = None
+        self.isPointValid = None
 
     def setParentWall(self,wallSkeleton):
         self.parentWall = wallSkeleton
@@ -38,3 +42,24 @@ class VoileSkeleton(BoxSkeleton):
         voile = VoileSkeleton(self.parentWall,self.start,self.end)
         voile.evalData = self.evalData
         return voile
+
+    def getStartPoint(self):
+        return self.topLeftPnt
+
+    def getEndPoint(self):
+        return self.topLeftPnt + self.vecLength
+
+    # def startIsValid(self):
+    #     self.isStartValid = True
+    #
+    # def endIsValid(self):
+    #     self.isEndValid = True
+
+    def getPointsList(self):
+        if not self.pointsList:
+            self.pointsList = [self.getStartPoint(),self.getEndPoint()]
+            self.isPointValid = [False for p in self.pointsList]
+        return self.pointsList
+
+    def setPointValid(self,index):
+        self.isPointValid[index] = True

@@ -97,7 +97,31 @@ class TryApp(QtGui.QMainWindow, Show2DWindow.Ui_MainWindow):
         c2 = solution.levelSkeleton.getCenterFromShear()
         e1 = Ellip(c1,0.4)
         e2 = Ellip(c2,0.4)
-        ellipses = [e1,e2],[QtGui.QColor(0,255,0),QtGui.QColor(0,0,255)]
+        ells = [e1,e2]
+        colors = [QtGui.QColor(0,255,0),QtGui.QColor(0,0,255)]
+        # for wallSkeleton in solution.levelSkeleton.wallSkeletons:
+        #     for voileSkeleton in wallSkeleton.attachedVoiles:
+        #         ells.append(Ellip(voileSkeleton.getStartPoint()-Pnt(4,4), 8))
+        #         ells.append(Ellip(voileSkeleton.getEndPoint()-Pnt(4,4), 8))
+        #         q1 = QtGui.QColor(0, 255, 0)
+        #         q1.setAlpha(60)
+        #         q2 = QtGui.QColor(0, 0, 255)
+        #         q2.setAlpha(60)
+        #         colors.append(q1)
+        #         colors.append(q2)
+        d = 8.
+        for pnt in solution.getValidVoilesPoints():
+            ells.append(Ellip(pnt - Pnt(d/2, d/2), d))
+            q1 = QtGui.QColor(0, 255, 0)
+            q1.setAlpha(60)
+            colors.append(q1)
+
+        for pnt in solution.getNonValidVoilesPoints():
+            ells.append(Ellip(pnt - Pnt(d/2, d/2), d))
+            q1 = QtGui.QColor(255, 0, 0)
+            q1.setAlpha(60)
+            colors.append(q1)
+        ellipses = ells,colors
         self.draw(polys,ellipses)
 
     def crossCB(self):

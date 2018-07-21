@@ -1,5 +1,7 @@
 import math
 
+from shapely.ops import cascaded_union
+
 from Geometry.Geom2D import Pnt
 
 def distance(p1,p2):
@@ -17,6 +19,7 @@ class EvaluationData(object):
         self.sumLiY = 0
         self.sumLixi = 0
         self.sumLiyi = 0
+        self.vecUni = 0
 
 class WallEvaluator(object):
     def __init__(self,levelSkeleton):
@@ -30,12 +33,14 @@ class WallEvaluator(object):
         size = 0
         dis = 0
         length = 0
-
+        vec = Pnt(0,0)
         for voileSkeleton in wallSkeleton.attachedVoiles:
             # for voileSkeleton in voiles:
             # print ("looping")
             centerV = voileSkeleton.poly.centroid()
             centerV = Pnt(centerV.x, centerV.y)
+            v = centerV - self.center
+            vec += v*voileSkeleton.getLength()
             dis += distance(centerV, self.center)
             length += (voileSkeleton.end - voileSkeleton.start)
             size += 1
@@ -45,6 +50,7 @@ class WallEvaluator(object):
         wallSkeleton.evalData.sumLiY = sumLi2
         wallSkeleton.evalData.sumLixi = sumLixi
         wallSkeleton.evalData.sumLiyi = sumLiyi
+        wallSkeleton.evalData.vecUni = vec
         return wallSkeleton.evalData
 
 def calculateFitnessSolution(solution):
@@ -60,6 +66,10 @@ def calculateFitnessSolution(solution):
     sumLiY = 0
     sumLixi = 0
     sumLiyi = 0
+    needed = levelSkeleton.getVoileLengthNeeded()
+    centerV = levelSkeleton.slabSkeleton.poly.centroid()
+    centerV = Pnt(centerV.x, centerV.y)
+    vecUni = Pnt(0,0)
     for wallSkeleton in levelSkeleton.wallSkeletons:
         # print "attached voiles : " + str(len(wallSkeleton.attachedVoiles))
         evalData = wallEvaluator.calculateFitnessWall(wallSkeleton)
@@ -67,11 +77,18 @@ def calculateFitnessSolution(solution):
         dis += d
         size += s
         length += l
+        vecUni += evalData.vecUni
 
     cntr = levelSkeleton.getCenterFromShear()
-    centerV = levelSkeleton.slabSkeleton.poly.centroid()
-    centerV = Pnt(centerV.x, centerV.y)
-    fitness = -distance(cntr,centerV)
+    area = solution.getAreaCovered()
+
+    fitV = {
+        'sym': distance(cntr,centerV),
+        'lengthShear': abs(needed-length),
+        'unif': vecUni.magn(),
+        'area': area
+        }
+    fitness = fitV['area']
     return fitness
 
 

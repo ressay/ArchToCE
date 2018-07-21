@@ -58,6 +58,9 @@ class Pnt(object):
     def __sub__(self, other):
         return self.minus(other)
 
+    def __mul__(self, other):
+        return self.scale(other)
+
     def __str__(self):
         return "("+str(self.x())+","+str(self.y())+")"
 

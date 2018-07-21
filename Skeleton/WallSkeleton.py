@@ -73,7 +73,7 @@ class WallSkeleton(BoxSkeleton):
         lengthDiscreted = self.vecLength.magn()/WallSkeleton.discreteFactor
         minVoileLen = WallSkeleton.miniVoileLength/WallSkeleton.discreteFactor
         voiles = []
-        proba = needed / totalLength
+        proba = min([needed / totalLength,1])
         lengthCreated = 0
         n = numpy.random.binomial(lengthDiscreted,proba)
         length = n*WallSkeleton.discreteFactor
