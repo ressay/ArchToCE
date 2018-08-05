@@ -32,12 +32,29 @@ def getPolygonesFromShape(shape):
 def getShapeBasePolygon(shape):
     from Geometry.Geom2D import Pnt,Poly
     polygons = getPolygonesFromShape(shape)
+    minZ = min([pnt.z for polygon in polygons for pnt in polygon.points])
+    # print "min z: " + str(minZ)
     for polygon in polygons:
         points = []
-        if polygon.isInPlaneXY():
+        if polygon.isInPlaneXY(minZ):
             for pnt in polygon.points:
                 points.append(Pnt(pnt.x, pnt.y))
             return Poly(points)
+    return None
+
+def getShapeBasePolygons(shape):
+    from Geometry.Geom2D import Pnt,Poly
+    polygons = getPolygonesFromShape(shape)
+    minZ = min([pnt.z for polygon in polygons for pnt in polygon.points])
+    polys = []
+    # print "min z: " + str(minZ)
+    for polygon in polygons:
+        points = []
+        if polygon.isInPlaneXY(minZ):
+            for pnt in polygon.points:
+                points.append(Pnt(pnt.x, pnt.y))
+            polys.append(Poly(points))
+    return polys
 
 def getBaseOfShapeZ(shape):
     polygons = getPolygonesFromShape(shape)

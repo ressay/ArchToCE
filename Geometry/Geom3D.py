@@ -1,8 +1,8 @@
+from Debugging.Logger import Logger
+
 
 class Pnt3D(object):
-    x = 0
-    y = 0
-    z = 0
+    accuracy = 0.000001
     def __init__(self,x,y,z):
         super(Pnt3D, self).__init__()
         self.x = x
@@ -18,22 +18,30 @@ class Poly3D(object):
         self.points = pts
 
 
-    def isInPlaneXY(self):
-        z = self.points[0].z
+    def isInPlaneXY(self,z=None):
+        logger = Logger.getInstance()
+        if not z:
+            z = self.points[0].z
+        logger.log("NotSlabShapeException","z is: " + str(z) + "\n")
         for point in self.points:
-            if point.z != z:
+            logger.log("NotSlabShapeException", "pnt: " + str(point.z) + " vs " + str(z) + "\n")
+            if abs(point.z - z) > Pnt3D.accuracy:
+                logger.log("NotSlabShapeException", "result: " + str(point.z - z) + "\n")
+                logger.log("NotSlabShapeException","out\n")
                 return False
         return True
 
-    def isInPlaneXZ(self):
-        y = self.points[0].y
+    def isInPlaneXZ(self,y=None):
+        if not y:
+            y = self.points[0].y
         for point in self.points:
             if point.y != y:
                 return False
         return True
 
-    def isInPlaneYZ(self):
-        x = self.points[0].x
+    def isInPlaneYZ(self,x=None):
+        if not x:
+            x = self.points[0].x
         for point in self.points:
             if point.x != x:
                 return False

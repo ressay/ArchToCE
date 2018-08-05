@@ -5,7 +5,7 @@ import math
 import numpy
 
 from Geometry.Geom2D import Pnt
-from Skeleton.BoxSkeleton import BoxSkeleton
+from Skeleton.BoxSkeleton import BoxSkeleton, NotBoxError
 from Skeleton.VoileSkeleton import VoileSkeleton
 
 
@@ -24,6 +24,21 @@ class WallSkeleton(BoxSkeleton):
     @staticmethod
     def createSkeletonFromWall(wall):
         return WallSkeleton(wall.getBasePolygon())
+
+    @staticmethod
+    def createSkeletonsFromWall(wall):
+        polygons = wall.getBasePolygons()
+        wallSkeletons = []
+        for polygon in polygons:
+            print("polygon: haha")
+            try:
+                wallSkeleton = WallSkeleton(polygon)
+            except NotBoxError:
+                print("not box error damn")
+                continue
+            wallSkeletons.append(wallSkeleton)
+
+        return wallSkeletons
 
     def createRandomVoileFromRatio(self,ratio):
         if ratio >= 1:

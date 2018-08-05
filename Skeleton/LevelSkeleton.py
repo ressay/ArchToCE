@@ -1,4 +1,5 @@
 from Geometry.Geom2D import Pnt
+from Skeleton.BoxSkeleton import NotBoxError
 from Skeleton.SlabSkeleton import SlabSkeleton
 from Skeleton.WallSkeleton import WallSkeleton
 from Skeleton.Skelet import Skelet
@@ -16,7 +17,10 @@ class LevelSkeleton(Skelet):
     @staticmethod
     def createSkeletonFromLevel(level):
         slabSkeleton = SlabSkeleton.createSkeletonFromSlab(level.slab)
-        wallSkeletons = [WallSkeleton.createSkeletonFromWall(wall) for wall in level.walls]
+        wallSkeletons = []
+        for wall in level.walls:
+            wallSkeletons += WallSkeleton.createSkeletonsFromWall(wall)
+        # wallSkeletons = [WallSkeleton.createSkeletonFromWall(wall) for wall in level.walls]
         return LevelSkeleton(wallSkeletons,slabSkeleton,level)
 
     def getVoileLengthNeeded(self):

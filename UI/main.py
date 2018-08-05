@@ -11,7 +11,7 @@ from Optimization.Genetic.GeneticAlgorithm import search
 from Optimization.Genetic.GeneticOperations import merge
 from Optimization.Solution import Solution
 from Skeleton.LevelSkeleton import LevelSkeleton
-from Structure.Level import Level
+from Structures.Level import Level
 from Ifc import IfcUtils
 
 load_backend("qt-pyqt4")   #here you need to tell OCC.Display to load qt4 backend
@@ -87,11 +87,6 @@ class TryApp(QtGui.QMainWindow, Show2DWindow.Ui_MainWindow):
 
     def mergeCB(self):
         solution = search(self.skeletonLevels[self.selectedRow])
-        # s1 = self.solutions1[self.selectedRow]
-        # s2 = self.solutions2[self.selectedRow]
-        # solution = merge(s1,s2)
-        # from Optimization.Genetic.GeneticOperations2 import mutate
-        # mutate(s1)
         polys = self.getPolygonsFromLevelSkeletons(solution.levelSkeleton)
         c1 = solution.levelSkeleton.getCenterFromSlab()
         c2 = solution.levelSkeleton.getCenterFromShear()
@@ -157,6 +152,7 @@ class TryApp(QtGui.QMainWindow, Show2DWindow.Ui_MainWindow):
             self.model.appendRow(item)
 
     def getPolygonsFromLevelSkeletons(self, levelSkeleton):
+        print ("size: " + str(len(levelSkeleton.wallSkeletons)))
         polygons = [wallSkeleton.poly.copy() for wallSkeleton in levelSkeleton.wallSkeletons]
         colors = [QtGui.QColor(220, 220, 220) for wallSkeleton in levelSkeleton.wallSkeletons]
         polygons += [voileSkeleton.poly.copy()
@@ -221,7 +217,7 @@ def createShapes(file):
     return wShapes,sShapes
 
 def main():
-    file = "../IFCFiles/projet.ifc"
+    file = "../IFCFiles/villa2.ifc"
     wShapes,sShapes = createShapes(file)
     app = QtGui.QApplication(sys.argv)
     form = TryApp(wallShapes=wShapes,slabShapes=sShapes)

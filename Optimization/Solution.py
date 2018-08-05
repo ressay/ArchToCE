@@ -73,7 +73,7 @@ class Solution(object):
         return Solution(levelSkeleton)
 
     def getValidVoilesPoints(self):
-        if not self.validPoints:
+        if not self.validPoints or True:
 
             allVoiles = [voile for wallSkeleton in self.levelSkeleton.wallSkeletons
                          for voile in wallSkeleton.attachedVoiles]
@@ -96,12 +96,12 @@ class Solution(object):
         return self.validPoints
 
     def getValidVoilesShapelyPoints(self):
-        if not self.validPoints:
+        if not self.validPoints or True:
             self.getValidVoilesPoints()
         return self.validShapelyCircles
 
     def getAreaCovered(self):
-        if not self.areaCovered:
+        if not self.areaCovered or True:
             pntsArray = self.getValidVoilesShapelyPoints()
             a = cascaded_union(pntsArray)
             self.areaCovered = a.area

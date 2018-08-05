@@ -5,6 +5,7 @@ from Optimization.Genetic import GeneticOperations2
 from Optimization.Genetic.Evaluator import calculateFitnessPopulation
 from Optimization.Genetic.GeneticOperations2 import mutate
 from Optimization.Solution import Solution
+from pympler.tracker import SummaryTracker
 
 
 def generatePopulation(levelSkeleton,popSize):
@@ -19,6 +20,7 @@ def selection(population,probability,fitnesses):
     popSize = len(population)
     indexes = range(popSize)
     size = int(probability*popSize)
+
     for i in range(size):
         i1 = int(random.uniform(0, len(indexes) - 0.1))
         ind = indexes[i1]
@@ -34,15 +36,18 @@ def mutationSelection(mutationRate,population):
         if random.uniform(0,1) < mutationRate:
             yield p
 
-def search(levelSkeleton,popSize=50,crossRate=0.2,mutRate=0.1,maxIterations=100
+def search(levelSkeleton,popSize=20,crossRate=0.3,mutRate=0.2,maxIterations=100
            ,geneticOps=GeneticOperations2):
     start = timeit.default_timer()
     population = generatePopulation(levelSkeleton,popSize)
+    # tracker = SummaryTracker()
 
     for i in range(maxIterations):
-
+        # tracker.print_diff()
         print ("iteration: " + str(i))
+        start = timeit.default_timer()
         fitnesses = calculateFitnessPopulation(population)
+
         # for fit in fitnesses:
         #     print "fitness is " + str(fit)
         best = max(fitnesses)
@@ -67,6 +72,10 @@ def search(levelSkeleton,popSize=50,crossRate=0.2,mutRate=0.1,maxIterations=100
             index = min(range(len(fits)), key=lambda a: fits[a])
             del population[index]
             del fits[index]
+
+        stop = timeit.default_timer()
+
+        print ("time it took: " + str(stop - start))
 
 
     fitnesses = calculateFitnessPopulation(population)

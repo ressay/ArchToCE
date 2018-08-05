@@ -11,6 +11,9 @@ class Structure(object):
     def getBasePolygon(self):
         return ShapeToPoly.getShapeBasePolygon(self.shape)
 
+    def getBasePolygons(self):
+        return ShapeToPoly.getShapeBasePolygons(self.shape)
+
     def getPolygons(self):
         return ShapeToPoly.getPolygonesFromShape(self.shape)
 
@@ -18,10 +21,10 @@ class Structure(object):
         minZ = None
         polygons = ShapeToPoly.getPolygonesFromShape(self.shape)
         for poly in polygons:
-            if poly.isInPlaneXY():
-                for pnt in poly.points:
-                    if not minZ or pnt.z < minZ.z:
-                        minZ = pnt
+            # if poly.isInPlaneXY():
+            for pnt in poly.points:
+                if not minZ or pnt.z < minZ.z:
+                    minZ = pnt
 
         return minZ
 
@@ -29,9 +32,8 @@ class Structure(object):
         maxZ = None
         polygons = ShapeToPoly.getPolygonesFromShape(self.shape)
         for poly in polygons:
-            if poly.isInPlaneXY():
-                for pnt in poly.points:
-                    if not maxZ or pnt.z > maxZ.z:
-                        maxZ = pnt
+            for pnt in poly.points:
+                if not maxZ or pnt.z > maxZ.z:
+                    maxZ = pnt
 
         return maxZ

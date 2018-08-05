@@ -1,7 +1,10 @@
 # from Structure.Slab import Slab
-# from Structure.Wall import Wall
+# from Structures.Wall import Wall
+from Debugging.Logger import Logger
 from Geometry.ShapeToPoly import getBaseOfShapeZ
 from Slab import Slab
+from Structures.StructureExceptions.NotSlabShapeException import NotSlabShapeException
+from Structures.StructureExceptions.NotWallShapeException import NotWallShapeException
 from Wall import Wall
 
 class Level(object):
@@ -19,11 +22,26 @@ class Level(object):
         levels = []
         walls = []
         slabs = []
+        logger = Logger.getInstance()
         for shape in wallShapes:
-            walls.append(Wall(shape))
-
+            try:
+                print "wall:"
+                logger.clearTrack("NotWallShapeException")
+                wall = Wall(shape)
+            except NotWallShapeException:
+                print "not added"
+                logger.printTrack("NotWallShapeException")
+                continue
+            walls.append(wall)
         for shape in slabShapes:
-            slabs.append(Slab(shape))
+            try:
+                logger.clearTrack("NotSlabShapeException")
+                slab = Slab(shape)
+            except NotSlabShapeException:
+                print("slab not added")
+                logger.printTrack("NotSlabShapeException")
+                continue
+            slabs.append(slab)
 
 
 

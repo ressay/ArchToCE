@@ -14,8 +14,8 @@ class BoxSkeleton(PolySkeleton):
         self.topLeftPnt = Pnt
         self.vecLength = Pnt
         self.vecWidth = Pnt
-        if len(poly.points) != 4:
-            raise NotBoxError("not four points")
+        # if len(poly.points) != 4:
+        #     raise NotBoxError("not four points")
         # else:
         #     pnts = poly.points
         #     for p in pnts:
@@ -28,8 +28,37 @@ class BoxSkeleton(PolySkeleton):
         #         raise NotBoxError("not parallel")
         self._getTopLeftPoint()
 
-            
+
     def _getTopLeftPoint(self):
+        pnts = self.poly.points
+        size = len(pnts)
+        maxVec = None
+
+        topPnt = None
+        endPnt = None
+        for index,pnt in enumerate(pnts):
+            vec = pnts[(index+1)%size] - pnt
+            if not maxVec or maxVec.magn() < vec.magn():
+                maxVec = vec
+                topPnt = pnt
+
+        maxVec2 = None
+        for index,pnt in enumerate(pnts):
+            if pnt != topPnt:
+                ePnt = pnts[(index + 1) % size]
+                vec = ePnt - pnt
+                if not maxVec2 or maxVec2.magn() < vec.magn():
+                    maxVec2 = vec
+                    endPnt = ePnt
+
+        if maxVec.magn() - maxVec2.magn() > 0.1:
+            print "mVec: " + str(maxVec.magn()) + " mVec2: " + str(maxVec2.magn())
+        self.vecLength = maxVec
+        self.vecWidth = endPnt - topPnt
+        self.topLeftPnt = topPnt
+
+            
+    def _getTopLeftPoint4(self):
         pnts = self.poly.points
         minXpnt = min(pnts,key=lambda p: p.x())
         self.topLeftPnt = minXpnt
