@@ -1,5 +1,7 @@
 #TODO change name
-from Geometry.Geom2D import Poly
+from shapely.geometry import Polygon
+
+from Geometry.Geom2D import Poly, Pnt
 from Skeleton.BoxSkeleton import BoxSkeleton
 # from Skeleton.WallSkeleton import WallSkeleton
 
@@ -12,8 +14,6 @@ class VoileSkeleton(BoxSkeleton):
         self.end = end
         poly = self.getPolyFromStartEnd(start,end)
         super(VoileSkeleton, self).__init__(poly)
-        # self.isStartValid = False
-        # self.isEndValid = False
         self.pointsList = None
         self.isPointValid = None
 
@@ -37,6 +37,12 @@ class VoileSkeleton(BoxSkeleton):
 
     def getLength(self):
         return self.end - self.start
+
+    def getLengthX(self):
+        return abs(self.vecLength.x())
+
+    def getLengthY(self):
+        return abs(self.vecLength.y())
 
     def copy(self):
         voile = VoileSkeleton(self.parentWall,self.start,self.end)
@@ -63,3 +69,17 @@ class VoileSkeleton(BoxSkeleton):
 
     def setPointValid(self,index):
         self.isPointValid[index] = True
+
+    def getSurrondingBox(self):
+        distance = 4
+        wid = Pnt(self.vecLength.y(),-self.vecLength.x())
+        wid = wid.copy().resize(distance)*2 + wid.copy().resize(self.vecWidth.magn())
+        leng = self.vecLength.copy().resize(distance)*2 + self.vecLength
+        center = self.topLeftPnt + self.vecLength/2 + self.vecWidth/2
+        pnts = []
+        pnts.append(center - leng/2 - wid/2)
+        pnts.append(pnts[0] + leng)
+        pnts.append(pnts[1] + wid)
+        pnts.append(pnts[0] + wid)
+        polyPnts = [[pnt.x(),pnt.y()] for pnt in pnts]
+        return Polygon(polyPnts)

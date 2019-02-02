@@ -14,6 +14,9 @@ class Structure(object):
     def getBasePolygons(self):
         return ShapeToPoly.getShapeBasePolygons(self.shape)
 
+    def getXYPlanePolygons(self,minZ=None,maxZ=None):
+        return ShapeToPoly.getShapeXYPlanePolygons(self.shape,minZ,maxZ)
+
     def getPolygons(self):
         return ShapeToPoly.getPolygonesFromShape(self.shape)
 
@@ -37,3 +40,9 @@ class Structure(object):
                     maxZ = pnt
 
         return maxZ
+
+    def getLowestZ(self):
+        return self.getLowestPoint().z
+
+    def getHighestZ(self):
+        return self.getHighestPoint().z

@@ -16,6 +16,7 @@ class Level(object):
         self.relatedLevels = []
         self.lowerLevel = None
         self.upperLevel = None
+        self.lowerLevels = None
 
     @staticmethod
     def generateLevelsFromShapes(wallShapes,slabShapes):
@@ -25,11 +26,11 @@ class Level(object):
         logger = Logger.getInstance()
         for shape in wallShapes:
             try:
-                print "wall:"
+                # print "wall:"
                 logger.clearTrack("NotWallShapeException")
                 wall = Wall(shape)
             except NotWallShapeException:
-                print "not added"
+                # print "not added"
                 logger.printTrack("NotWallShapeException")
                 continue
             walls.append(wall)
@@ -38,7 +39,7 @@ class Level(object):
                 logger.clearTrack("NotSlabShapeException")
                 slab = Slab(shape)
             except NotSlabShapeException:
-                print("slab not added")
+                # print("slab not added")
                 logger.printTrack("NotSlabShapeException")
                 continue
             slabs.append(slab)
@@ -51,12 +52,21 @@ class Level(object):
             level.relatedLevels = levels
         return levels
 
+    def getLowerLevels(self):
+        if self.lowerLevels:
+            return self.lowerLevels
+        lowerLevels = [lvl for lvl in self.relatedLevels if lvl.isUnder(self)]
+        if self.lowerLevels is None and len(lowerLevels) != 0:
+            maxVal = max([level.getHeight() for level in lowerLevels])
+            self.lowerLevels = [level for level in lowerLevels if level.getHeight() == maxVal]
+        return self.lowerLevels
+
     def getLowerLevel(self):
         if self.lowerLevel:
             return self.lowerLevel
-        lowerLevels = [lvl for lvl in self.relatedLevels if lvl.isUnder(self)]
-        if self.lowerLevel is None and len(lowerLevels) != 0:
-            self.lowerLevel = max(lowerLevels, key=lambda p: p.getHeight())
+        lowerLevels = self.getLowerLevels()
+        if lowerLevels and len(lowerLevels) != 0:
+            self.lowerLevel = lowerLevels[0]
         return self.lowerLevel
 
     def getUpperLevel(self):
@@ -81,3 +91,10 @@ class Level(object):
             return -1
         return self.getHeight() - self.getLowerLevel().getHeight()
 
+# slab z: -0.2
+# slab z: 3.8
+# slab z: 7.8
+# slab z: 5.8
+# slab z: 11.8
+# slab z: 15.8
+# slab z: 19.8

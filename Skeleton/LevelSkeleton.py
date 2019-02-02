@@ -10,6 +10,7 @@ class LevelSkeleton(Skelet):
     def __init__(self,walls,slab,level):
         super(LevelSkeleton, self).__init__()
         self.wallSkeletons = walls
+        self.notModifiedWalls = walls
         self.slabSkeleton = slab
         self.level = level
         self.height = level.getHeightOverLowerLevel()
@@ -19,7 +20,9 @@ class LevelSkeleton(Skelet):
         slabSkeleton = SlabSkeleton.createSkeletonFromSlab(level.slab)
         wallSkeletons = []
         for wall in level.walls:
-            wallSkeletons += WallSkeleton.createSkeletonsFromWall(wall)
+            wallSkeletons += WallSkeleton.createSkeletonsFromWall(wall,
+                                                        level.getLowerLevel().slab.getHighestZ(),
+                                                                  level.slab.getLowestZ())
         # wallSkeletons = [WallSkeleton.createSkeletonFromWall(wall) for wall in level.walls]
         return LevelSkeleton(wallSkeletons,slabSkeleton,level)
 
@@ -45,6 +48,9 @@ class LevelSkeleton(Skelet):
 
     def getCenterFromSlab(self):
         return Pnt.createPointFromShapely(self.slabSkeleton.poly.centroid())
+
+    def getSlabArea(self):
+        return self.slabSkeleton.poly.area()
 
     def getCenterFromShear(self):
         sumLiX = 0
@@ -76,3 +82,16 @@ class LevelSkeleton(Skelet):
 
         return cntr
 
+    def restrictLevelUsableWalls(self,levelSkeleton):
+        restrictWalls = levelSkeleton.wallSkeletons
+        resultWalls = []
+        for wallSkeleton in restrictWalls:
+            for wallSkeleton2 in self.wallSkeletons:
+                intersection = wallSkeleton.poly.intersection(wallSkeleton2.poly)
+                if intersection:
+                    resultWalls.append(WallSkeleton(intersection))
+
+        self.wallSkeletons = resultWalls
+
+    def getPolys(self):
+        return [wallSkeleton.poly for wallSkeleton in self.wallSkeletons]

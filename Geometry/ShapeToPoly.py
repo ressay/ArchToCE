@@ -56,6 +56,23 @@ def getShapeBasePolygons(shape):
             polys.append(Poly(points))
     return polys
 
+def getShapeXYPlanePolygons(shape,minZ=None,maxZ=None):
+    from Geometry.Geom2D import Pnt,Poly
+    polygons = getPolygonesFromShape(shape)
+    polys = []
+    # print "min z: " + str(minZ)
+    for polygon in polygons:
+        points = []
+        if polygon.isInPlaneXY():
+            if minZ is not None and polygon.points[0].z < minZ:
+                continue
+            if maxZ is not None and polygon.points[0].z > maxZ:
+                continue
+            for pnt in polygon.points:
+                points.append(Pnt(pnt.x, pnt.y))
+            polys.append(Poly(points))
+    return polys
+
 def getBaseOfShapeZ(shape):
     polygons = getPolygonesFromShape(shape)
     return min([pnt.z for polygon in polygons for pnt in polygon.points])

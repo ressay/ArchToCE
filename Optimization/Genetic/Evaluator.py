@@ -10,11 +10,14 @@ def distance(p1,p2):
 
 
 class EvaluationData(object):
-    def __init__(self,dis, size, length):
+    def __init__(self,dis, size, totalLengthX, totalLengthY, lengthX, lengthY):
         super(EvaluationData, self).__init__()
         self.dis = dis
         self.size = size
-        self.length = length
+        self.totalLengthX = totalLengthX
+        self.totalLengthY = totalLengthY
+        self.lengthX = lengthX
+        self.lengthY = lengthY
         self.sumLiX = 0
         self.sumLiY = 0
         self.sumLixi = 0
@@ -32,7 +35,10 @@ class WallEvaluator(object):
             return wallSkeleton.evalData
         size = 0
         dis = 0
-        length = 0
+        totalLengthX = abs(wallSkeleton.vecLength.x())
+        totalLengthY = abs(wallSkeleton.vecLength.y())
+        lengthX = 0
+        lengthY = 0
         vec = Pnt(0,0)
         for voileSkeleton in wallSkeleton.attachedVoiles:
             # for voileSkeleton in voiles:
@@ -42,9 +48,11 @@ class WallEvaluator(object):
             v = centerV - self.center
             vec += v*voileSkeleton.getLength()
             dis += distance(centerV, self.center)
-            length += (voileSkeleton.end - voileSkeleton.start)
+            lengthX += voileSkeleton.getLengthX()
+            lengthY += voileSkeleton.getLengthY()
+            # length += (voileSkeleton.end - voileSkeleton.start)
             size += 1
-        wallSkeleton.evalData = EvaluationData(dis, size, length)
+        wallSkeleton.evalData = EvaluationData(dis, size, totalLengthX,totalLengthY,lengthX,lengthY)
         sumLi1,sumLi2,sumLixi,sumLiyi = wallSkeleton.getSums()
         wallSkeleton.evalData.sumLiX = sumLi1
         wallSkeleton.evalData.sumLiY = sumLi2
@@ -52,6 +60,8 @@ class WallEvaluator(object):
         wallSkeleton.evalData.sumLiyi = sumLiyi
         wallSkeleton.evalData.vecUni = vec
         return wallSkeleton.evalData
+
+
 
 def calculateFitnessSolution(solution):
     levelSkeleton = solution.levelSkeleton
@@ -61,7 +71,10 @@ def calculateFitnessSolution(solution):
     #                       for voile in wallSkeleton.attachedVoiles]
     size = 0
     dis = 0
-    length = 0
+    totalX = 0
+    totalY = 0
+    lengthX = 0
+    lengthY = 0
     sumLiX = 0
     sumLiY = 0
     sumLixi = 0
@@ -73,29 +86,56 @@ def calculateFitnessSolution(solution):
     for wallSkeleton in levelSkeleton.wallSkeletons:
         # print "attached voiles : " + str(len(wallSkeleton.attachedVoiles))
         evalData = wallEvaluator.calculateFitnessWall(wallSkeleton)
-        d,s,l = evalData.dis,evalData.size,evalData.length
+        d,s,lx,ly = evalData.dis,evalData.size,evalData.totalLengthX,evalData.totalLengthY
         dis += d
         size += s
-        length += l
+        totalX += lx
+        totalY += ly
+        lengthX += evalData.lengthX
+        lengthY += evalData.lengthY
         vecUni += evalData.vecUni
 
     cntr = levelSkeleton.getCenterFromShear()
-    area = solution.getAreaCovered()
+    area = solution.getAreaCoveredBoxes()
+
+    coeffs = {
+        # 'sym': 0,
+        'lengthShearX': 0.5,
+        'lengthShearY': 0.5,
+        # 'unif': 0,
+        'area': 2
+    }
+    def getScoreLength(lengthA,total):
+        if lengthA < needed:
+            scoreLengthA = math.pow(lengthA/needed,3)
+        else:
+            scoreLengthA = 1 - (lengthA - needed)/needed
+        return scoreLengthA
+
+    scoreLengthX = getScoreLength(lengthX,totalX)
+    scoreLengthY = getScoreLength(lengthY,totalY)
 
     fitV = {
         'sym': distance(cntr,centerV),
-        'lengthShear': abs(needed-length),
+        'lengthShearX': scoreLengthX,
+        'lengthShearY': scoreLengthY,
         'unif': vecUni.magn(),
-        'area': area
+        'area': area/levelSkeleton.getSlabArea(),
+        'lengthX': lengthX,
+        'lengthY': lengthY
         }
-    fitness = fitV['area']
-    return fitness
+    fitness = 0
+    for key in coeffs:
+        fitness += fitV[key]*coeffs[key]
+    fitV['totalScore'] = fitness
+    # fitness = fitV['area']
+    return fitV
 
 
 def calculateFitnessPopulation(population):
     fitnesses = []
     for solution in population:
         # print("calculating:")
-        fitnesses.append(solution.getFitness())
+        fitnesses.append(solution.getFitness()['totalScore'])
 
     return fitnesses

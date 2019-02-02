@@ -36,7 +36,7 @@ def mutationSelection(mutationRate,population):
         if random.uniform(0,1) < mutationRate:
             yield p
 
-def search(levelSkeleton,popSize=20,crossRate=0.3,mutRate=0.2,maxIterations=100
+def search(levelSkeleton,popSize=40,crossRate=0.3,mutRate=0.4,maxIterations=60
            ,geneticOps=GeneticOperations2):
     start = timeit.default_timer()
     population = generatePopulation(levelSkeleton,popSize)
@@ -44,15 +44,22 @@ def search(levelSkeleton,popSize=20,crossRate=0.3,mutRate=0.2,maxIterations=100
 
     for i in range(maxIterations):
         # tracker.print_diff()
+        print("len population: " + str(len(population)))
         print ("iteration: " + str(i))
         start = timeit.default_timer()
         fitnesses = calculateFitnessPopulation(population)
+        stop = timeit.default_timer()
+        print ("time it took fitness: " + str(stop - start))
 
         # for fit in fitnesses:
         #     print "fitness is " + str(fit)
+        start = timeit.default_timer()
         best = max(fitnesses)
         print ("best is : " + str(best))
         selected = selection(population,crossRate/2,fitnesses)
+        stop = timeit.default_timer()
+        print ("time it took selection: " + str(stop - start))
+        start = timeit.default_timer()
         newComers = []
         for s1,s2 in selected:
             s3,s4 = geneticOps.cross(s1,s2)
@@ -60,29 +67,39 @@ def search(levelSkeleton,popSize=20,crossRate=0.3,mutRate=0.2,maxIterations=100
             newComers.append(s3)
             newComers.append(s4)
 
+        stop = timeit.default_timer()
+        print ("time it took cross: " + str(stop - start))
+        start = timeit.default_timer()
         for s in mutationSelection(mutRate,newComers):
             # print "mutating!!"
             mutate(s)
         population.extend(newComers)
+        stop = timeit.default_timer()
+        print ("time it took mutation: " + str(stop - start))
 
-
+        start = timeit.default_timer()
         fits = calculateFitnessPopulation(population)
-
+        stop = timeit.default_timer()
+        print ("time it took fitness2: " + str(stop - start))
+        start = timeit.default_timer()
         for k in range(len(selected)*2):
             index = min(range(len(fits)), key=lambda a: fits[a])
             del population[index]
             del fits[index]
 
         stop = timeit.default_timer()
-
-        print ("time it took: " + str(stop - start))
+        print ("time it took delete: " + str(stop - start))
 
 
     fitnesses = calculateFitnessPopulation(population)
     bestIndex = max(range(len(fitnesses)), key=lambda a: fitnesses[a])
     stop = timeit.default_timer()
-
     print ("time it took: " + str(stop - start))
-    return population[bestIndex]
+    solution = population[bestIndex]
+    fitness = solution.getFitness()
+    print ("in x: " + str(fitness['lengthX']) + " in y: " + str(fitness['lengthY']))
+    print ("score in x: " + str(fitness['lengthShearX']) + " in y: " + str(fitness['lengthShearY']))
+    print ("needed: " + str(solution.levelSkeleton.getVoileLengthNeeded()))
+    return solution
 
 

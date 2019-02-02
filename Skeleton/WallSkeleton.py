@@ -4,9 +4,11 @@ import math
 
 import numpy
 
+from Geometry import ShapeToPoly
 from Geometry.Geom2D import Pnt
 from Skeleton.BoxSkeleton import BoxSkeleton, NotBoxError
 from Skeleton.VoileSkeleton import VoileSkeleton
+from UI import Plotter
 
 
 class WallSkeleton(BoxSkeleton):
@@ -16,7 +18,7 @@ class WallSkeleton(BoxSkeleton):
     optimumVoileLength = 2.5
     startFromZeroProba = 0.5
     # attachedVoiles = []
-    def __init__(self, poly,pnts = None):
+    def __init__(self, poly,pnts=None):
         super(WallSkeleton, self).__init__(poly,pnts)
         self.attachedVoiles = []
         self.sums = None
@@ -25,12 +27,54 @@ class WallSkeleton(BoxSkeleton):
     def createSkeletonFromWall(wall):
         return WallSkeleton(wall.getBasePolygon())
 
+    # @staticmethod
+    # def createSkeletonsFromWall(wall, minZ=None,maxZ=None):
+    #     polygons = wall.getBasePolygons()
+    #     print("size is: ", len(polygons))
+    #     wallSkeletons = []
+    #     for polygon in polygons:
+    #         try:
+    #             wallSkeleton = WallSkeleton(polygon)
+    #         except NotBoxError:
+    #             print("not box error damn")
+    #             continue
+    #         wallSkeletons.append(wallSkeleton)
+    #
+    #     return wallSkeletons
+
     @staticmethod
-    def createSkeletonsFromWall(wall):
+    def createSkeletonsFromWall(wall, minZ=None,maxZ=None):
+        e = 0.2
+        pols = ShapeToPoly.getPolygonesFromShape(wall.shape)
+        if maxZ is not None:
+            maxZ = min([maxZ,max([pnt.z for poly in pols for pnt in poly.points])])-e
+        if minZ is not None: minZ = minZ + e
+        allPolygons = wall.getXYPlanePolygons(minZ,maxZ)
+
+        # print('maxZ: ',maxZ,' maxZ2: ',maxZ2)
         polygons = wall.getBasePolygons()
+        result = []
+        i = 1
+        # from matplotlib import pyplot as plt
+        for poly2 in allPolygons:
+            for poly in polygons:
+                if not poly.intersects(poly2):
+                    result.append(poly)
+                    continue
+                inters = poly.intersection(poly2)
+                if inters:
+                    result += poly.subtractPoly(inters)
+                else:
+                    result.append(poly)
+            polygons = result
+            # Plotter.plotPolys(polygons,i)
+            # plt.show()
+            i += 1
+            result = []
+
+
         wallSkeletons = []
         for polygon in polygons:
-            print("polygon: haha")
             try:
                 wallSkeleton = WallSkeleton(polygon)
             except NotBoxError:

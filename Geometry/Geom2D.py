@@ -1,6 +1,8 @@
 from shapely.geometry import Point,Polygon
 import math
 
+
+
 class Pnt(object):
 
     def __init__(self,x,y):
@@ -18,8 +20,10 @@ class Pnt(object):
 
 
     def isParallel(self,point,threshold=0):
-        if self.y() <= threshold:
+        if abs(self.y()) <= threshold:
             return abs(point.y()) <= threshold
+        if abs(point.y()) <=threshold:
+            return False
         return abs(self.x()/self.y() - point.x()/point.y()) <= threshold
 
 
@@ -59,7 +63,10 @@ class Pnt(object):
         return self.minus(other)
 
     def __mul__(self, other):
-        return self.scale(other)
+        return self.copy().scale(other)
+
+    def __div__(self, other):
+        return self*(1.0/other)
 
     def __str__(self):
         return "("+str(self.x())+","+str(self.y())+")"
@@ -101,6 +108,109 @@ class Poly(object):
     def intersects(self,poly):
         return self.poly.intersects(poly.poly)
 
+    def intersection(self,poly):
+        if not self.intersects(poly):
+            return None
+        try:
+            poly = self.poly.intersection(poly.poly)
+            if type(poly) is Polygon:
+                return Poly(Poly.getPointsFromShapelyPoly(poly))
+        except Exception:
+            return None
+        return None
+
+    def subtractPoly(self,poly):
+        spoints = list(self.points)
+        if len(self.points) > 4:
+            pnts = self.points
+            size = len(pnts)
+            for i in range(size):
+                p1,p2 = pnts[(i-1)%size], pnts[(i+1)%size]
+                vec1 = pnts[i] - p1
+                vec2 = p2 - pnts[i]
+                if vec1.isParallel(vec2,0.05):
+                    spoints.remove(pnts[i])
+            if len(spoints) > 4:
+                return [self]
+        def getTopLeft(points):
+            minY = min([pnt.y() for pnt in points])
+            minX = None
+            minPnt = None
+            for pnt in points:
+                if pnt.y() == minY:
+                    if not minPnt:
+                        minPnt = pnt
+                        minX = pnt.x()
+                    if pnt.x() < minX:
+                        minPnt = pnt
+                        minX = pnt.x()
+            return minPnt
+
+        pntM = getTopLeft(spoints)
+        indM = [i for i, pnt in enumerate(spoints)
+                if pnt.x() == pntM.x() and pnt.y() == pntM.y()][0]
+        vecL = spoints[(indM + 1) % len(spoints)] - spoints[indM]
+        vecW = spoints[(indM - 1) % len(spoints)] - spoints[indM]
+        if vecW.magn() > vecL.magn():
+            vecL, vecW = vecW, vecL
+        pPntM = None
+        minS = None
+        for pnt in poly.points:
+            vec = pnt - pntM
+            if vec.isParallel(vecL):
+                if not pPntM:
+                    pPntM = pnt
+                    minS = vec.magn()
+                elif minS > vec.magn():
+                    pPntM = pnt
+                    minS = vec.magn()
+        if not pPntM:
+            # from UI import Plotter
+            # from matplotlib import pyplot as plt
+            print("ERROR GEOM2D: NO PARALLELISM")
+            print(self)
+            print(poly)
+            # Plotter.plotPolys([self],1)
+            # Plotter.plotPolys([poly], 2)
+            # Plotter.plotPolys([self,poly], 2)
+            # plt.show()
+            return [self]
+        # pPntM = getTopLeft(poly.points)
+
+        pIndM = [i for i, pnt in enumerate(poly.points)
+                 if pnt.x() == pPntM.x() and pnt.y() == pPntM.y()][0]
+
+        pvecL = poly.points[(pIndM+1)%len(poly.points)] - poly.points[pIndM]
+        pvecW = poly.points[(pIndM-1)%len(poly.points)] - poly.points[pIndM]
+        # print(vecL)
+        # print(vecW)
+        # print(pvecL)
+        # print(pvecW)
+        if pvecW.isParallel(vecL,0.05):
+            pvecW,pvecL = pvecL,pvecW
+        if not pvecL.isParallel(vecL,0.05):
+            print("ERROR GEOM2D SUBTRACTPOLY: NOT PARALLEL, THEY SHOULD BE PARALLEL!")
+            return [self]
+        vecp = pPntM - pntM
+        if pntM.x() == pPntM.x() and pntM.y() == pPntM.y():
+            if pvecL.magn() == vecL.magn():
+                print("REMOVING IT ALL!!!")
+                print(self)
+                print(poly)
+                return []
+            return [Poly([pPntM+pvecL,pPntM+pvecL+pvecW,pntM+vecL+pvecW,pntM+vecL])]
+        if vecp.magn()+pvecL.magn() == vecL.magn():
+            return [Poly([pntM,pPntM,pPntM+pvecW,pntM+pvecW])]
+            # return [self]
+        polys = [Poly([pntM,pPntM,pPntM+pvecW,pntM+pvecW]),
+                Poly([pPntM+pvecL,pPntM+pvecL+pvecW,pntM+vecL+pvecW,pntM+vecL])]
+        # print(polys[0])
+        # print(polys[1])
+        return polys
+        # return [self]
+
+
+
     def copy(self):
         return Poly([pnt.copy() for pnt in self.points])
 
@@ -112,6 +222,20 @@ class Poly(object):
 
     def __copy__(self):
         return self.copy()
+
+    def __str__(self):
+        s = "polygon:\n"
+        for pnt in self.points:
+            s += str(pnt) + '\n'
+        return s
+
+    @staticmethod
+    def getPointsFromShapelyPoly(polygon):
+        pnts = []
+        for pnt in polygon.exterior.coords:
+            pnts.append(Pnt(pnt[0],pnt[1]))
+        del pnts[-1]
+        return pnts
 
 
 class Ellip(object):

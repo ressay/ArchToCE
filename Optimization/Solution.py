@@ -13,12 +13,15 @@ class Solution(object):
 
     def __init__(self,levelSkeleton):
         super(Solution, self).__init__()
+        self.areaCoveredBoxes = None
         self.levelSkeleton = levelSkeleton
         self.fitness = None
         self.validPoints = None
         self.nonValidPoints = None
         self.validShapelyCircles = None
         self.areaCovered = None
+        self.validBoxes = None
+        self.nonValidBoxes = None
 
     def getFitness(self):
         if self.fitness is None:
@@ -30,6 +33,9 @@ class Solution(object):
         self.validPoints = None
         self.nonValidPoints = None
         self.areaCovered = None
+        self.validBoxes = None
+        self.nonValidBoxes = None
+        self.areaCoveredBoxes = None
 
     @staticmethod
     def createRandomSolutionFromSkeleton(levelSkeleton):
@@ -49,7 +55,7 @@ class Solution(object):
 
 
         totalLength = levelSkeleton.getWallsTotalLength()
-        needed = levelSkeleton.getVoileLengthNeeded()
+        needed = levelSkeleton.getVoileLengthNeeded()*2
         # print("needed : " + str(needed) + " total length: " + str(totalLength))
         size = len(levelSkeleton.wallSkeletons)
         indexes = range(size)
@@ -73,7 +79,7 @@ class Solution(object):
         return Solution(levelSkeleton)
 
     def getValidVoilesPoints(self):
-        if not self.validPoints or True:
+        if not self.validPoints:
 
             allVoiles = [voile for wallSkeleton in self.levelSkeleton.wallSkeletons
                          for voile in wallSkeleton.attachedVoiles]
@@ -96,12 +102,12 @@ class Solution(object):
         return self.validPoints
 
     def getValidVoilesShapelyPoints(self):
-        if not self.validPoints or True:
+        if not self.validPoints:
             self.getValidVoilesPoints()
         return self.validShapelyCircles
 
     def getAreaCovered(self):
-        if not self.areaCovered or True:
+        if not self.areaCovered:
             pntsArray = self.getValidVoilesShapelyPoints()
             a = cascaded_union(pntsArray)
             self.areaCovered = a.area
@@ -117,5 +123,40 @@ class Solution(object):
                                 if not voileSkeleton.isPointValid[index]]
 
         return self.nonValidPoints
+
+    def getValidVoilesBoxes(self):
+        if not self.validBoxes:
+            allVoiles = [voile for wallSkeleton in self.levelSkeleton.wallSkeletons
+                         for voile in wallSkeleton.attachedVoiles]
+            acceptedBoxes = []
+            done = [False for v in allVoiles]
+            for cpt,voil in enumerate(allVoiles):
+                box1 = voil.getSurrondingBox()
+                for i in range(cpt+1,len(allVoiles)):
+                    if not done[i] or not done[cpt]:
+                        box2 = allVoiles[i].getSurrondingBox()
+                        if box1.intersects(box2):
+                            if not done[cpt]:
+                                acceptedBoxes.append(box1)
+                                done[cpt] = True
+                            if not done[i]:
+                                acceptedBoxes.append(box2)
+                                done[i] = True
+            self.validBoxes = acceptedBoxes
+            self.nonValidBoxes = [voil.getSurrondingBox() for i,voil in enumerate(allVoiles)
+                                                            if not done[i]]
+        return self.validBoxes
+    
+    def getAreaCoveredBoxes(self):
+        if not self.areaCoveredBoxes:
+            pntsArray = self.getValidVoilesBoxes()
+            a = cascaded_union(pntsArray)
+            self.areaCoveredBoxes = a.area
+        return self.areaCoveredBoxes
+
+    def getNonValidVoilesBoxes(self):
+        if not self.nonValidBoxes:
+            self.getValidVoilesBoxes()
+        return self.nonValidBoxes
 
 

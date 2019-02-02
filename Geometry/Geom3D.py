@@ -20,8 +20,9 @@ class Poly3D(object):
 
     def isInPlaneXY(self,z=None):
         logger = Logger.getInstance()
-        if not z:
+        if z is None:
             z = self.points[0].z
+
         logger.log("NotSlabShapeException","z is: " + str(z) + "\n")
         for point in self.points:
             logger.log("NotSlabShapeException", "pnt: " + str(point.z) + " vs " + str(z) + "\n")
@@ -32,7 +33,7 @@ class Poly3D(object):
         return True
 
     def isInPlaneXZ(self,y=None):
-        if not y:
+        if y is None:
             y = self.points[0].y
         for point in self.points:
             if point.y != y:
@@ -40,7 +41,7 @@ class Poly3D(object):
         return True
 
     def isInPlaneYZ(self,x=None):
-        if not x:
+        if x is None:
             x = self.points[0].x
         for point in self.points:
             if point.x != x:

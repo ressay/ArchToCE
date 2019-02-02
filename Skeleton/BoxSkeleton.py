@@ -5,7 +5,7 @@ class NotBoxError(Exception):
     pass
 class BoxSkeleton(PolySkeleton):
 
-    def __init__(self, poly,pnts = None):
+    def __init__(self, poly,pnts=None):
         super(BoxSkeleton, self).__init__(poly)
         if pnts:
             self.topLeftPnt, self.vecLength, self.vecWidth = pnts
@@ -51,8 +51,8 @@ class BoxSkeleton(PolySkeleton):
                     maxVec2 = vec
                     endPnt = ePnt
 
-        if maxVec.magn() - maxVec2.magn() > 0.1:
-            print "mVec: " + str(maxVec.magn()) + " mVec2: " + str(maxVec2.magn())
+        # if maxVec.magn() - maxVec2.magn() > 0.1:
+        #     print "mVec: " + str(maxVec.magn()) + " mVec2: " + str(maxVec2.magn())
         self.vecLength = maxVec
         self.vecWidth = endPnt - topPnt
         self.topLeftPnt = topPnt

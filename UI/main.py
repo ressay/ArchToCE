@@ -5,7 +5,7 @@ from PyQt4 import QtGui
 
 import Show2DWindow
 # from Optimization.Genetic import GeneticOperations2
-from Geometry.Geom2D import Pnt, Ellip
+from Geometry.Geom2D import Pnt, Ellip, Poly
 from Optimization.Genetic import GeneticOperations2
 from Optimization.Genetic.GeneticAlgorithm import search
 from Optimization.Genetic.GeneticOperations import merge
@@ -13,6 +13,7 @@ from Optimization.Solution import Solution
 from Skeleton.LevelSkeleton import LevelSkeleton
 from Structures.Level import Level
 from Ifc import IfcUtils
+from UI.Plotter import plotPolys
 
 load_backend("qt-pyqt4")   #here you need to tell OCC.Display to load qt4 backend
 
@@ -25,14 +26,30 @@ class TryApp(QtGui.QMainWindow, Show2DWindow.Ui_MainWindow):
         super(TryApp, self).__init__(parent)
         self.setupUi(self)
         self.levels = Level.generateLevelsFromShapes(wallShapes,slabShapes)
+        print("INFO INIT: DONE GENERATING LEVELS FROM SHAPES")
+        self.levels.sort(key=lambda lvl: lvl.getHeight())
         self.skeletonLevels = [LevelSkeleton.createSkeletonFromLevel(level) for level in self.levels]
 
-
+        print("INFO INIT: DONE GENERATING LEVELSKELETONS FROM LEVELS")
+        # from matplotlib import pyplot as plt
+        prevLevel = None
+        for i,levelSkeleton in enumerate(self.skeletonLevels):
+            if not i:
+                continue
+            if not prevLevel:
+                prevLevel = levelSkeleton
+                # plotPolys(levelSkeleton.getPolys(),i,'first')
+                continue
+            # plotPolys(levelSkeleton.getPolys(),i+len(self.skeletonLevels),'original')
+            levelSkeleton.restrictLevelUsableWalls(prevLevel)
+            # plotPolys(levelSkeleton.getPolys(),i)
+            prevLevel = levelSkeleton
+        # plt.show()
+        self.skeletonLevels = [levelSkeleton for levelSkeleton in self.skeletonLevels if len(levelSkeleton.getPolys())]
         # for skeletonLevel in self.skeletonLevels:
         #     # print("needed ratio: " + str(skeletonLevel.getRatio()))
         #     for wallSkeleton in skeletonLevel.wallSkeletons:
         #         wallSkeleton.attachVoile(wallSkeleton.createRandomVoileFromRatio(0.5))
-
 
         self.solutions1 = [Solution.createRandomSolutionFromSkeleton2(skeletonLevel)
                            for skeletonLevel in self.skeletonLevels]
@@ -55,6 +72,7 @@ class TryApp(QtGui.QMainWindow, Show2DWindow.Ui_MainWindow):
         self.sol2.clicked.connect(self.sol2CB)
         self.merge.clicked.connect(self.mergeCB)
         self.cross.clicked.connect(self.crossCB)
+        self.showLower.clicked.connect(self.showLowerFun)
 
 
         self.scrollTab = QtGui.QScrollArea()
@@ -85,6 +103,12 @@ class TryApp(QtGui.QMainWindow, Show2DWindow.Ui_MainWindow):
         polys = self.getPolygonsFromLevelSkeletons(self.solutions2[self.selectedRow].levelSkeleton)
         self.draw(polys)
 
+    def showLowerFun(self):
+        if self.selectedRow:
+            level = self.levels[self.selectedRow]
+            polys = self.getPolygonsFromLevels(level.getLowerLevels())
+            self.draw(polys)
+
     def mergeCB(self):
         solution = search(self.skeletonLevels[self.selectedRow])
         polys = self.getPolygonsFromLevelSkeletons(solution.levelSkeleton)
@@ -105,18 +129,32 @@ class TryApp(QtGui.QMainWindow, Show2DWindow.Ui_MainWindow):
         #         colors.append(q1)
         #         colors.append(q2)
         d = 8.
-        for pnt in solution.getValidVoilesPoints():
-            ells.append(Ellip(pnt - Pnt(d/2, d/2), d))
+        ellipses = []
+        # for pnt in solution.getValidVoilesPoints():
+        #     ells.append(Ellip(pnt - Pnt(d/2, d/2), d))
+        #     q1 = QtGui.QColor(0, 255, 0)
+        #     q1.setAlpha(20)
+        #     colors.append(q1)
+        #
+        # for pnt in solution.getNonValidVoilesPoints():
+        #     ells.append(Ellip(pnt - Pnt(d/2, d/2), d))
+        #     q1 = QtGui.QColor(255, 0, 0)
+        #     q1.setAlpha(20)
+        #     colors.append(q1)
+        # ellipses = ells,colors
+        for box in solution.getValidVoilesBoxes():
+            polys[0].append(Poly([Pnt(pnt[0],pnt[1]) for pnt in box.exterior.coords]))
             q1 = QtGui.QColor(0, 255, 0)
-            q1.setAlpha(60)
-            colors.append(q1)
+            q1.setAlpha(20)
+            polys[1].append(q1)
 
-        for pnt in solution.getNonValidVoilesPoints():
-            ells.append(Ellip(pnt - Pnt(d/2, d/2), d))
+        for box in solution.getNonValidVoilesBoxes():
+            polys[0].append(Poly([Pnt(pnt[0],pnt[1]) for pnt in box.exterior.coords]))
             q1 = QtGui.QColor(255, 0, 0)
-            q1.setAlpha(60)
-            colors.append(q1)
-        ellipses = ells,colors
+            q1.setAlpha(20)
+            polys[1].append(q1)
+
+
         self.draw(polys,ellipses)
 
     def crossCB(self):
@@ -146,15 +184,24 @@ class TryApp(QtGui.QMainWindow, Show2DWindow.Ui_MainWindow):
 
     def initListView(self):
         i = 0
-        for level in self.levels:
+        for level in self.skeletonLevels:
             item = QtGui.QStandardItem("level " + str(i))
             i += 1
             self.model.appendRow(item)
+
+    def getPolygonsFromLevels(self,levels):
+        polys = []
+        for level in levels:
+            polys += self.getPolygonsFromLevelSkeletons(
+                LevelSkeleton.createSkeletonFromLevel(level))
+        return polys
+
 
     def getPolygonsFromLevelSkeletons(self, levelSkeleton):
         print ("size: " + str(len(levelSkeleton.wallSkeletons)))
         polygons = [wallSkeleton.poly.copy() for wallSkeleton in levelSkeleton.wallSkeletons]
         colors = [QtGui.QColor(220, 220, 220) for wallSkeleton in levelSkeleton.wallSkeletons]
+
         polygons += [voileSkeleton.poly.copy()
                      for wallSkeleton in levelSkeleton.wallSkeletons
                      for voileSkeleton in wallSkeleton.getVoilesBetween()]
@@ -217,7 +264,7 @@ def createShapes(file):
     return wShapes,sShapes
 
 def main():
-    file = "../IFCFiles/villa2.ifc"
+    file = "../IFCFiles/Immeuble2.ifc"
     wShapes,sShapes = createShapes(file)
     app = QtGui.QApplication(sys.argv)
     form = TryApp(wallShapes=wShapes,slabShapes=sShapes)
