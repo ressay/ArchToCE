@@ -35,6 +35,9 @@ class LevelSkeleton(Skelet):
             length += wallSkeleton.vecLength.magn()
         return length
 
+    def getVoilesTotalLength(self):
+        return sum(wallSkeleton.getVoilesLength() for wallSkeleton in self.wallSkeletons)
+
     def getRatio(self):
         if self.getWallsTotalLength() == 0:
             return 1
@@ -93,5 +96,19 @@ class LevelSkeleton(Skelet):
 
         self.wallSkeletons = resultWalls
 
+    def copyLevelsVoiles(self,levelSkeleton):
+        aboveWalls = levelSkeleton.wallSkeletons
+        for wallSkeleton in aboveWalls:
+            if not wallSkeleton.getVoilesLength():
+                continue
+            for wallSkeleton2 in self.wallSkeletons:
+                intersection = wallSkeleton.poly.intersection(wallSkeleton2.poly)
+                if intersection and wallSkeleton.poly.area() == intersection.area(): # test if polygons are equal
+                    voiles = wallSkeleton.getAllVoiles()
+                    for voileSkeleton in voiles:
+                        voileSkeleton = voileSkeleton.copy()
+                        voileSkeleton.setParentWall(wallSkeleton2,True)
+                        wallSkeleton2.attachFixedVoile(voileSkeleton)
+                    break
     def getPolys(self):
         return [wallSkeleton.poly for wallSkeleton in self.wallSkeletons]

@@ -17,8 +17,11 @@ class VoileSkeleton(BoxSkeleton):
         self.pointsList = None
         self.isPointValid = None
 
-    def setParentWall(self,wallSkeleton):
+    def setParentWall(self,wallSkeleton,update=False):
         self.parentWall = wallSkeleton
+        if update:
+            return self.updateStartEnd()
+        return True
 
     def getPolyFromStartEnd(self,start,end):
         parent = self.parentWall
@@ -34,6 +37,24 @@ class VoileSkeleton(BoxSkeleton):
         pnt3 = topLeftPnt + newLengthVec
         poly = Poly([topLeftPnt, pnt1, pnt2, pnt3])
         return poly
+
+    def updateStartEnd(self):
+        parent = self.parentWall
+        vecL = parent.vecLength
+        topLeftPnt = parent.topLeftPnt
+        vecs = []
+        for pnt in self.poly.points:
+            vec = pnt - topLeftPnt
+            if vec.isParallel(vecL,0.005):
+                vecs.append(vec)
+        if len(vecs) != 2:
+            print("ERROR UPDATE START END VOILESKELETON: NUMBER OF"
+                  " PARALLEL VECTORS EXPECTED: 2, FOUND: ",len(vecs))
+            return False
+        print('INFO UPDATE START END VOILESKELETON: CORRECT NUMBER')
+        self.start = min([vecs[0].magn(), vecs[1].magn()])
+        self.end = max([vecs[0].magn(), vecs[1].magn()])
+        return True
 
     def getLength(self):
         return self.end - self.start

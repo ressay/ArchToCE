@@ -21,6 +21,7 @@ class WallSkeleton(BoxSkeleton):
     def __init__(self, poly,pnts=None):
         super(WallSkeleton, self).__init__(poly,pnts)
         self.attachedVoiles = []
+        self.fixedVoiles = []
         self.sums = None
 
     @staticmethod
@@ -130,9 +131,16 @@ class WallSkeleton(BoxSkeleton):
 
     def createRandomVoilesFromLengthNeeded2(self, totalLength, needed):
         lengthDiscreted = self.vecLength.magn()/WallSkeleton.discreteFactor
+        proba = min([needed / totalLength, 1])
+        if proba <= 0:
+            return 0,[]
+        if 0.8 < lengthDiscreted < 1:
+            if random.uniform(0,1) < proba:
+                return self.vecLength.magn(),[VoileSkeleton(self,0,self.vecLength.magn())]
+            return 0,[]
         minVoileLen = WallSkeleton.miniVoileLength/WallSkeleton.discreteFactor
         voiles = []
-        proba = min([needed / totalLength,1])
+
         lengthCreated = 0
         n = numpy.random.binomial(lengthDiscreted,proba)
         length = n*WallSkeleton.discreteFactor
@@ -192,6 +200,14 @@ class WallSkeleton(BoxSkeleton):
         from Optimization.Genetic.GeneticOperations import mergeVoile
         mergeVoile(self.attachedVoiles,voileSkeleton)
 
+    def attachFixedVoile(self,voileSkeleton):
+        # self.attachedVoiles.append(voileSkeleton)
+        # voileSkeleton.setParentWall(self)
+        self.reInitFitness()
+        voileSkeleton.setParentWall(self)
+        from Optimization.Genetic.GeneticOperations import mergeVoile
+        mergeVoile(self.fixedVoiles,voileSkeleton)
+
     # gets voile starting from most left point to distance
     def getVoilesBetween(self, mini=0,maxi=1):
         mini = mini*self.vecLength.magn()
@@ -203,6 +219,9 @@ class WallSkeleton(BoxSkeleton):
             elif voile.start <= mini < voile.end:
                 newVoiles.append(VoileSkeleton(self, mini, min(maxi, voile.end)))
         return newVoiles
+
+    def getAllVoiles(self):
+        return self.attachedVoiles+self.fixedVoiles
 
     def removeVoile(self,index):
         self.reInitFitness()
@@ -216,11 +235,13 @@ class WallSkeleton(BoxSkeleton):
         wallSkeleton = WallSkeleton(self.poly.copy(),(self.topLeftPnt, self.vecLength, self.vecWidth))
         wallSkeleton.evalData = self.evalData
         wallSkeleton.attachVoiles([voileSkeleton.copy() for voileSkeleton in self.attachedVoiles])
+        wallSkeleton.fixedVoiles = self.fixedVoiles
         return wallSkeleton
 
     def copyWithoutVoiles(self):
         wallSkeleton = WallSkeleton(self.poly.copy(),(self.topLeftPnt, self.vecLength, self.vecWidth))
         wallSkeleton.evalData = self.evalData
+        wallSkeleton.fixedVoiles = self.fixedVoiles
         return wallSkeleton
 
     def reInitFitness(self):
@@ -234,7 +255,7 @@ class WallSkeleton(BoxSkeleton):
         sumLi2 = 0
         sumLixi = 0
         sumLiyi = 0
-        for voileSkeleton in self.attachedVoiles:
+        for voileSkeleton in self.getAllVoiles():
             centerV = voileSkeleton.poly.centroid()
             centerV = Pnt(centerV.x, centerV.y)
             x3 = math.pow(abs(voileSkeleton.vecLength.x()), 3)
@@ -245,6 +266,9 @@ class WallSkeleton(BoxSkeleton):
             sumLiyi += x3 * centerV.y()
         self.sums = sumLi1,sumLi2,sumLixi,sumLiyi
         return self.sums
+
+    def getVoilesLength(self):
+        return sum(voileSkeleton.getLength() for voileSkeleton in self.getAllVoiles())
 
 
 

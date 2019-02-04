@@ -46,6 +46,7 @@ class TryApp(QtGui.QMainWindow, Show2DWindow.Ui_MainWindow):
             prevLevel = levelSkeleton
         # plt.show()
         self.skeletonLevels = [levelSkeleton for levelSkeleton in self.skeletonLevels if len(levelSkeleton.getPolys())]
+        self.solutions = {}
         # for skeletonLevel in self.skeletonLevels:
         #     # print("needed ratio: " + str(skeletonLevel.getRatio()))
         #     for wallSkeleton in skeletonLevel.wallSkeletons:
@@ -110,52 +111,14 @@ class TryApp(QtGui.QMainWindow, Show2DWindow.Ui_MainWindow):
             self.draw(polys)
 
     def mergeCB(self):
-        solution = search(self.skeletonLevels[self.selectedRow])
-        polys = self.getPolygonsFromLevelSkeletons(solution.levelSkeleton)
-        c1 = solution.levelSkeleton.getCenterFromSlab()
-        c2 = solution.levelSkeleton.getCenterFromShear()
-        e1 = Ellip(c1,0.4)
-        e2 = Ellip(c2,0.4)
-        ells = [e1,e2]
-        colors = [QtGui.QColor(0,255,0),QtGui.QColor(0,0,255)]
-        # for wallSkeleton in solution.levelSkeleton.wallSkeletons:
-        #     for voileSkeleton in wallSkeleton.attachedVoiles:
-        #         ells.append(Ellip(voileSkeleton.getStartPoint()-Pnt(4,4), 8))
-        #         ells.append(Ellip(voileSkeleton.getEndPoint()-Pnt(4,4), 8))
-        #         q1 = QtGui.QColor(0, 255, 0)
-        #         q1.setAlpha(60)
-        #         q2 = QtGui.QColor(0, 0, 255)
-        #         q2.setAlpha(60)
-        #         colors.append(q1)
-        #         colors.append(q2)
-        d = 8.
-        ellipses = []
-        # for pnt in solution.getValidVoilesPoints():
-        #     ells.append(Ellip(pnt - Pnt(d/2, d/2), d))
-        #     q1 = QtGui.QColor(0, 255, 0)
-        #     q1.setAlpha(20)
-        #     colors.append(q1)
-        #
-        # for pnt in solution.getNonValidVoilesPoints():
-        #     ells.append(Ellip(pnt - Pnt(d/2, d/2), d))
-        #     q1 = QtGui.QColor(255, 0, 0)
-        #     q1.setAlpha(20)
-        #     colors.append(q1)
-        # ellipses = ells,colors
-        for box in solution.getValidVoilesBoxes():
-            polys[0].append(Poly([Pnt(pnt[0],pnt[1]) for pnt in box.exterior.coords]))
-            q1 = QtGui.QColor(0, 255, 0)
-            q1.setAlpha(20)
-            polys[1].append(q1)
-
-        for box in solution.getNonValidVoilesBoxes():
-            polys[0].append(Poly([Pnt(pnt[0],pnt[1]) for pnt in box.exterior.coords]))
-            q1 = QtGui.QColor(255, 0, 0)
-            q1.setAlpha(20)
-            polys[1].append(q1)
-
-
-        self.draw(polys,ellipses)
+        prev = None
+        for levelSkeleton in self.skeletonLevels[::-1]:
+            if prev:
+                levelSkeleton.copyLevelsVoiles(prev)
+            solution = search(levelSkeleton)
+            self.solutions[levelSkeleton] = solution
+            self.drawSkeleton(levelSkeleton)
+            prev = solution.levelSkeleton
 
     def crossCB(self):
 
@@ -204,11 +167,11 @@ class TryApp(QtGui.QMainWindow, Show2DWindow.Ui_MainWindow):
 
         polygons += [voileSkeleton.poly.copy()
                      for wallSkeleton in levelSkeleton.wallSkeletons
-                     for voileSkeleton in wallSkeleton.getVoilesBetween()]
+                     for voileSkeleton in wallSkeleton.getAllVoiles()]
 
         colors += [QtGui.QColor(255,0,0)
                    for wallSkeleton in levelSkeleton.wallSkeletons
-                   for voileSkeleton in wallSkeleton.attachedVoiles]
+                   for voileSkeleton in wallSkeleton.getAllVoiles()]
 
         if not len(polygons):
             return
@@ -232,14 +195,40 @@ class TryApp(QtGui.QMainWindow, Show2DWindow.Ui_MainWindow):
         from UI.DrawUtils import Window
         self.scrollTab.setWidget(Window(polygons,rect=self.scrollTab.geometry()))
 
+    def drawSkeleton(self,levelSkeleton):
+
+        ellipses = []
+        if levelSkeleton in self.solutions:
+            solution = self.solutions[levelSkeleton]
+            polys = self.getPolygonsFromLevelSkeletons(solution.levelSkeleton)
+            c1 = solution.levelSkeleton.getCenterFromSlab()
+            c2 = solution.levelSkeleton.getCenterFromShear()
+            e1 = Ellip(c1, 0.4)
+            e2 = Ellip(c2, 0.4)
+            ells = [e1, e2]
+            for box in solution.getValidVoilesBoxes():
+                polys[0].append(Poly([Pnt(pnt[0], pnt[1]) for pnt in box.exterior.coords]))
+                q1 = QtGui.QColor(0, 255, 0)
+                q1.setAlpha(20)
+                polys[1].append(q1)
+
+            for box in solution.getNonValidVoilesBoxes():
+                polys[0].append(Poly([Pnt(pnt[0], pnt[1]) for pnt in box.exterior.coords]))
+                q1 = QtGui.QColor(255, 0, 0)
+                q1.setAlpha(20)
+                polys[1].append(q1)
+        else:
+            polys = self.getPolygonsFromLevelSkeletons(levelSkeleton)
+        self.draw(polys, ellipses)
+
 
     def listViewSelected(self, index):
         self.selectedRow = row = index.row()
         # print ('selected item index found at %s with data: %s' % (index.row(), index.data().toString()))
         shapes = [wall.shape for wall in self.levels[row].walls]
         # self.drawPolygons(shapes)
-        polys = self.getPolygonsFromLevelSkeletons(self.skeletonLevels[row])
-        self.draw(polys)
+        # polys = self.getPolygonsFromLevelSkeletons(self.skeletonLevels[row])
+        self.drawSkeleton(self.skeletonLevels[row])
         shapes.append(self.levels[row].slab.shape)
         self.setViewerDisplay("Selected",shapes)
 
@@ -264,7 +253,7 @@ def createShapes(file):
     return wShapes,sShapes
 
 def main():
-    file = "../IFCFiles/Immeuble2.ifc"
+    file = "../IFCFiles/Immeuble39.ifc"
     wShapes,sShapes = createShapes(file)
     app = QtGui.QApplication(sys.argv)
     form = TryApp(wallShapes=wShapes,slabShapes=sShapes)

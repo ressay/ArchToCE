@@ -40,7 +40,7 @@ class WallEvaluator(object):
         lengthX = 0
         lengthY = 0
         vec = Pnt(0,0)
-        for voileSkeleton in wallSkeleton.attachedVoiles:
+        for voileSkeleton in wallSkeleton.getAllVoiles():
             # for voileSkeleton in voiles:
             # print ("looping")
             centerV = voileSkeleton.poly.centroid()

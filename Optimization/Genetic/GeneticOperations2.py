@@ -1,5 +1,4 @@
 import random
-import timeit
 
 from Optimization.Solution import Solution
 from Skeleton.LevelSkeleton import LevelSkeleton
@@ -46,8 +45,12 @@ def mutateWall(wallSkeleton,positive=True,mutationSize=1):
     if positive or len(wallSkeleton.attachedVoiles) == 0:
         r = random.uniform(0,1)
         if r < 0.5 or len(wallSkeleton.attachedVoiles) == 0: #add new shear wall
-            start = int(random.uniform(0,wallSkeleton.vecLength.magn()-WallSkeleton.miniVoileLength))
-            end = start + WallSkeleton.miniVoileLength
+            if WallSkeleton.miniVoileLength*0.8 < wallSkeleton.vecLength.magn() <= WallSkeleton.miniVoileLength:
+                start = 0
+                end = wallSkeleton.vecLength.magn()
+            else:
+                start = int(random.uniform(0,wallSkeleton.vecLength.magn()-WallSkeleton.miniVoileLength))
+                end = start + WallSkeleton.miniVoileLength
             wallSkeleton.attachVoile(VoileSkeleton(wallSkeleton,start,end))
         else: # change shear wall size
             rand = int(random.uniform(0,len(wallSkeleton.attachedVoiles)-0.1))

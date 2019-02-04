@@ -53,9 +53,9 @@ class Solution(object):
         # print ("time it took copy1: " + str(e - s))
         levelSkeleton = LevelSkeleton(walls,levelS.slabSkeleton.copy(),levelS.level)
 
-
-        totalLength = levelSkeleton.getWallsTotalLength()
-        needed = levelSkeleton.getVoileLengthNeeded()*2
+        voilesfixedLength = levelSkeleton.getVoilesTotalLength()
+        totalLength = levelSkeleton.getWallsTotalLength() - voilesfixedLength
+        needed = levelSkeleton.getVoileLengthNeeded()*2 - voilesfixedLength
         # print("needed : " + str(needed) + " total length: " + str(totalLength))
         size = len(levelSkeleton.wallSkeletons)
         indexes = range(size)
@@ -69,9 +69,10 @@ class Solution(object):
             length, voiles = wallSkeleton.createRandomVoilesFromLengthNeeded(totalLength, needed)
             # e = timeit.default_timer()
             # print ("time it took create voiles: " + str(e - s))
+            totalLength -= (wallSkeleton.vecLength.magn() - wallSkeleton.getVoilesLength())
             wallSkeleton.attachVoiles(voiles)
             needed -= length
-            totalLength -= wallSkeleton.vecLength.magn()
+
 
         # print("total length left: " + str(totalLength) + " needed left: " + str(needed))
         # e1 = timeit.default_timer()
@@ -82,7 +83,7 @@ class Solution(object):
         if not self.validPoints:
 
             allVoiles = [voile for wallSkeleton in self.levelSkeleton.wallSkeletons
-                         for voile in wallSkeleton.attachedVoiles]
+                         for voile in wallSkeleton.getAllVoiles()]
 
             for cpt,voileSkeleton in enumerate(allVoiles):
                 for i in range(cpt+1,len(allVoiles)):
@@ -117,7 +118,7 @@ class Solution(object):
         if not self.nonValidPoints:
             validPoints = self.getValidVoilesPoints()
             allVoiles = [voile for wallSkeleton in self.levelSkeleton.wallSkeletons
-                         for voile in wallSkeleton.attachedVoiles]
+                         for voile in wallSkeleton.getAllVoiles()]
             self.nonValidPoints = [pnt for voileSkeleton in allVoiles
                                 for index, pnt in enumerate(voileSkeleton.getPointsList())
                                 if not voileSkeleton.isPointValid[index]]
@@ -127,7 +128,7 @@ class Solution(object):
     def getValidVoilesBoxes(self):
         if not self.validBoxes:
             allVoiles = [voile for wallSkeleton in self.levelSkeleton.wallSkeletons
-                         for voile in wallSkeleton.attachedVoiles]
+                         for voile in wallSkeleton.getAllVoiles()]
             acceptedBoxes = []
             done = [False for v in allVoiles]
             for cpt,voil in enumerate(allVoiles):
