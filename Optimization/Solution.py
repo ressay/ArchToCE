@@ -22,6 +22,9 @@ class Solution(object):
         self.areaCovered = None
         self.validBoxes = None
         self.nonValidBoxes = None
+        self.areaCoveredBoxes2 = None
+        self.validBoxes2 = None
+        self.nonValidBoxes2 = None
 
     def getFitness(self):
         if self.fitness is None:
@@ -36,6 +39,9 @@ class Solution(object):
         self.validBoxes = None
         self.nonValidBoxes = None
         self.areaCoveredBoxes = None
+        self.areaCoveredBoxes2 = None
+        self.validBoxes2 = None
+        self.nonValidBoxes2 = None
 
     @staticmethod
     def createRandomSolutionFromSkeleton(levelSkeleton):
@@ -147,13 +153,67 @@ class Solution(object):
             self.nonValidBoxes = [voil.getSurrondingBox() for i,voil in enumerate(allVoiles)
                                                             if not done[i]]
         return self.validBoxes
+
+    def getValidVoilesBoxesBis(self):
+
+        def boxesOr(a,b):
+            return [(x or y) for (x,y) in zip(a,b)]
+
+        def intersect(boxes1,boxes2):
+            result1 = [0,0,0,0]
+            result2 = [0,0,0,0]
+            for i,box in enumerate(boxes1):
+                for j,box2 in enumerate(boxes2):
+                    if box.intersects(box2):
+                        result1[i] = 1
+                        result2[j] = 1
+            return result1,result2
+
+        if not self.validBoxes2:
+            allVoiles = [voile for wallSkeleton in self.levelSkeleton.wallSkeletons
+                         for voile in wallSkeleton.getAllVoiles()]
+            done = [[0,0,0,0] for v in allVoiles]
+            for cpt,voil in enumerate(allVoiles):
+                boxes1 = voil.getSurrondingBoxes()
+                for i in range(cpt+1,len(allVoiles)):
+                    boxes2 = allVoiles[i].getSurrondingBoxes()
+                    r1,r2 = intersect(boxes1,boxes2)
+                    done[cpt] = boxesOr(done[cpt],r1)
+                    done[i] = boxesOr(done[i],r2)
+
+
+            self.validBoxes2 = [box for i,voil in enumerate(allVoiles)
+                                for box in voil.getSurrondingBoxes(done[i])]
+            self.nonValidBoxes2 = []
+        return self.validBoxes2
     
+    def getAreaCoveredBoxesBis(self):
+        if not self.areaCoveredBoxes2:
+            pntsArray = self.getValidVoilesBoxesBis()
+            a = cascaded_union(pntsArray)
+            a = a.intersection(self.levelSkeleton.slabSkeleton.poly.poly)
+            self.areaCoveredBoxes2 = a.area
+        return self.areaCoveredBoxes2
+
+    def getNonValidVoilesBoxesBis(self):
+        if not self.nonValidBoxes2:
+            self.getValidVoilesBoxesBis()
+        return self.nonValidBoxes2
+
     def getAreaCoveredBoxes(self):
         if not self.areaCoveredBoxes:
             pntsArray = self.getValidVoilesBoxes()
             a = cascaded_union(pntsArray)
+            # a = a.intersection(self.levelSkeleton.slabSkeleton.poly.poly)
             self.areaCoveredBoxes = a.area
         return self.areaCoveredBoxes
+
+    def getOverlappedArea(self):
+        coveredArea = self.getAreaCoveredBoxes()
+        levelSkeleton = self.levelSkeleton
+        area = sum(voileSkeleton.getSurrondingBox().area for wallSkeleton in levelSkeleton.wallSkeletons
+                   for voileSkeleton in wallSkeleton.getAllVoiles())
+        return area - coveredArea
 
     def getNonValidVoilesBoxes(self):
         if not self.nonValidBoxes:

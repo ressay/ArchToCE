@@ -1,5 +1,5 @@
 #TODO change name
-from shapely.geometry import Polygon
+from shapely.geometry import Polygon, Point
 
 from Geometry.Geom2D import Poly, Pnt
 from Skeleton.BoxSkeleton import BoxSkeleton
@@ -16,6 +16,8 @@ class VoileSkeleton(BoxSkeleton):
         super(VoileSkeleton, self).__init__(poly)
         self.pointsList = None
         self.isPointValid = None
+        self.surrondingBox = None
+        self.surrondingBoxes = None
 
     def setParentWall(self,wallSkeleton,update=False):
         self.parentWall = wallSkeleton
@@ -39,6 +41,7 @@ class VoileSkeleton(BoxSkeleton):
         return poly
 
     def updateStartEnd(self):
+        self.surrondingBox = None
         parent = self.parentWall
         vecL = parent.vecLength
         topLeftPnt = parent.topLeftPnt
@@ -92,15 +95,74 @@ class VoileSkeleton(BoxSkeleton):
         self.isPointValid[index] = True
 
     def getSurrondingBox(self):
+        if self.surrondingBox:
+            return self.surrondingBox
         distance = 4
         wid = Pnt(self.vecLength.y(),-self.vecLength.x())
         wid = wid.copy().resize(distance)*2 + wid.copy().resize(self.vecWidth.magn())
-        leng = self.vecLength.copy().resize(distance)*2 + self.vecLength
+        # leng = self.vecLength.copy().resize(distance)*2 + self.vecLength
+        leng = self.vecLength
         center = self.topLeftPnt + self.vecLength/2 + self.vecWidth/2
-        pnts = []
-        pnts.append(center - leng/2 - wid/2)
-        pnts.append(pnts[0] + leng)
-        pnts.append(pnts[1] + wid)
-        pnts.append(pnts[0] + wid)
+        pnt1 = center - leng/2 - wid/2
+        pnts = [pnt1, pnt1 + leng, pnt1 + leng + wid, pnt1 + wid]
         polyPnts = [[pnt.x(),pnt.y()] for pnt in pnts]
-        return Polygon(polyPnts)
+        polygon = Polygon(polyPnts)
+        p = center - leng/2
+        p = Point(p.x(),p.y())
+        p2 = center + leng/2
+        p2 = Point(p2.x(),p2.y())
+        circle = p.buffer(distance+self.vecWidth.magn()/2)
+        circle2 = p2.buffer(distance+self.vecWidth.magn()/2)
+        result = polygon.union(circle).union(circle2)
+        self.surrondingBox = result
+        return result
+
+    def getSurrondingBoxes(self,selected=None):
+        if self.surrondingBoxes:
+            return self.surrondingBoxes
+        if selected is None:
+            selected = [1,1,1,1]
+        distance = 4
+        distance2 = 1
+        wid = Pnt(self.vecLength.y(),-self.vecLength.x())
+        wid2 = wid.copy().resize(distance2)*2 + wid.copy().resize(self.vecWidth.magn())
+        wid1 = wid.copy().resize(distance)*2 + wid.copy().resize(self.vecWidth.magn())
+        # leng = self.vecLength.copy().resize(distance)*2 + self.vecLength
+        leng = self.vecLength
+        center = self.topLeftPnt + self.vecLength/2 + self.vecWidth/2
+
+        if selected[0]:
+            wid = wid1
+        else:
+            wid = wid2
+        pnt1 = center - leng / 2 - wid / 2
+        pnts = [pnt1, pnt1 + leng, pnt1 + leng + wid/2, pnt1 + wid/2]
+        polygon = Polygon([[pnt.x(), pnt.y()] for pnt in pnts])
+
+        if selected[1]:
+            wid = wid1
+        else:
+            wid = wid2
+        pnt1 = center - leng / 2 + wid / 2
+        pnts = [pnt1, pnt1 + leng, pnt1 + leng - wid/2, pnt1 - wid/2]
+        polygon2 = Polygon([[pnt.x(), pnt.y()] for pnt in pnts])
+
+        if selected[2]:
+            d = distance
+        else:
+            d = distance2
+        p = center - leng/2
+        p = Point(p.x(),p.y())
+        circle = p.buffer(d+self.vecWidth.magn()/2)
+
+        if selected[3]:
+            d = distance
+        else:
+            d = distance2
+        p2 = center + leng / 2
+        p2 = Point(p2.x(), p2.y())
+        circle2 = p2.buffer(d+self.vecWidth.magn()/2)
+
+        result = [polygon,polygon2,circle,circle2]
+        self.surrondingBoxes = result
+        return result

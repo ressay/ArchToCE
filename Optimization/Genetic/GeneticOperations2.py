@@ -41,11 +41,13 @@ def mutate(solution,mutationSize=None):
 
 
 def mutateWall(wallSkeleton,positive=True,mutationSize=1):
+    if WallSkeleton.miniVoileLength > wallSkeleton.vecLength.magn():
+        return
     # wallSkeleton.reInitFitness()
     if positive or len(wallSkeleton.attachedVoiles) == 0:
         r = random.uniform(0,1)
         if r < 0.5 or len(wallSkeleton.attachedVoiles) == 0: #add new shear wall
-            if WallSkeleton.miniVoileLength*0.8 < wallSkeleton.vecLength.magn() <= WallSkeleton.miniVoileLength:
+            if wallSkeleton.vecLength.magn() == WallSkeleton.miniVoileLength:
                 start = 0
                 end = wallSkeleton.vecLength.magn()
             else:

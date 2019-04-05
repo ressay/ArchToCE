@@ -119,6 +119,9 @@ class Poly(object):
             return None
         return None
 
+    def union(self,poly): #does not return a Poly object
+        return self.poly.union(poly.poly)
+
     def subtractPoly(self,poly):
         spoints = list(self.points)
         if len(self.points) > 4:
@@ -167,9 +170,9 @@ class Poly(object):
         if not pPntM:
             # from UI import Plotter
             # from matplotlib import pyplot as plt
-            print("ERROR GEOM2D: NO PARALLELISM")
-            print(self)
-            print(poly)
+            # print("ERROR GEOM2D: NO PARALLELISM")
+            # print(self)
+            # print(poly)
             # Plotter.plotPolys([self],1)
             # Plotter.plotPolys([poly], 2)
             # Plotter.plotPolys([self,poly], 2)
@@ -194,9 +197,9 @@ class Poly(object):
         vecp = pPntM - pntM
         if pntM.x() == pPntM.x() and pntM.y() == pPntM.y():
             if pvecL.magn() == vecL.magn():
-                print("REMOVING IT ALL!!!")
-                print(self)
-                print(poly)
+                # print("REMOVING IT ALL!!!")
+                # print(self)
+                # print(poly)
                 return []
             return [Poly([pPntM+pvecL,pPntM+pvecL+pvecW,pntM+vecL+pvecW,pntM+vecL])]
         if vecp.magn()+pvecL.magn() == vecL.magn():

@@ -1,4 +1,5 @@
 import math
+import timeit
 
 from shapely.ops import cascaded_union
 
@@ -83,6 +84,7 @@ def calculateFitnessSolution(solution):
     centerV = levelSkeleton.slabSkeleton.poly.centroid()
     centerV = Pnt(centerV.x, centerV.y)
     vecUni = Pnt(0,0)
+    start = timeit.default_timer()
     for wallSkeleton in levelSkeleton.wallSkeletons:
         # print "attached voiles : " + str(len(wallSkeleton.attachedVoiles))
         evalData = wallEvaluator.calculateFitnessWall(wallSkeleton)
@@ -94,16 +96,23 @@ def calculateFitnessSolution(solution):
         lengthX += evalData.lengthX
         lengthY += evalData.lengthY
         vecUni += evalData.vecUni
-
+    stop = timeit.default_timer()
+    # print ("time it took loop walls: " + str(stop - start))
+    start = timeit.default_timer()
     cntr = levelSkeleton.getCenterFromShear()
+    stop = timeit.default_timer()
+    # print ("time it took calculate center from shear: " + str(stop - start))
+    start = timeit.default_timer()
     area = solution.getAreaCoveredBoxes()
-
+    stop = timeit.default_timer()
+    # print ("time it took calculate area: " + str(stop - start))
     coeffs = {
-        # 'sym': 0,
-        'lengthShearX': 0.5,
-        'lengthShearY': 0.5,
+        # 'sym': -0.5,
+        'lengthShearX': 1,
+        'lengthShearY': 1,
+        # 'overlapped': -1,
         # 'unif': 0,
-        'area': 2
+        'area': 3
     }
     def getScoreLength(lengthA,total):
         if lengthA < needed:
@@ -114,13 +123,20 @@ def calculateFitnessSolution(solution):
 
     scoreLengthX = getScoreLength(lengthX,totalX)
     scoreLengthY = getScoreLength(lengthY,totalY)
-
+    areaNorm = sum(voileSkeleton.getSurrondingBox().area for wallSkeleton in levelSkeleton.wallSkeletons
+               for voileSkeleton in wallSkeleton.getAllVoiles())
+    if areaNorm == 0:
+        areaNorm = -1
+        ar = -1
+    else:
+        ar = math.sqrt(areaNorm)
     fitV = {
-        'sym': distance(cntr,centerV),
+        'sym': max([0,distance(cntr,centerV)/ar]),
         'lengthShearX': scoreLengthX,
         'lengthShearY': scoreLengthY,
         'unif': vecUni.magn(),
         'area': area/levelSkeleton.getSlabArea(),
+        'overlapped': max([0,solution.getOverlappedArea()/areaNorm]),
         'lengthX': lengthX,
         'lengthY': lengthY
         }

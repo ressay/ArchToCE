@@ -13,10 +13,10 @@ from UI import Plotter
 
 class WallSkeleton(BoxSkeleton):
     discreteFactor = 0.1 # each 0.1 m
-    miniVoileLength = 1.5
+    miniVoileLength = 0.8
     maxVoileLength = 4
     optimumVoileLength = 2.5
-    startFromZeroProba = 0.5
+    startFromZeroProba = 0.7
     # attachedVoiles = []
     def __init__(self, poly,pnts=None):
         super(WallSkeleton, self).__init__(poly,pnts)
@@ -131,13 +131,13 @@ class WallSkeleton(BoxSkeleton):
 
     def createRandomVoilesFromLengthNeeded2(self, totalLength, needed):
         lengthDiscreted = self.vecLength.magn()/WallSkeleton.discreteFactor
+        if totalLength <= 0 or needed <= 0 or lengthDiscreted < 1:
+            return 0,[]
         proba = min([needed / totalLength, 1])
-        if proba <= 0:
-            return 0,[]
-        if 0.8 < lengthDiscreted < 1:
-            if random.uniform(0,1) < proba:
-                return self.vecLength.magn(),[VoileSkeleton(self,0,self.vecLength.magn())]
-            return 0,[]
+        # if lengthDiscreted < 1:
+        #     if random.uniform(0,1) < proba:
+        #         return self.vecLength.magn(),[VoileSkeleton(self,0,self.vecLength.magn())]
+        #     return 0,[]
         minVoileLen = WallSkeleton.miniVoileLength/WallSkeleton.discreteFactor
         voiles = []
 
@@ -155,7 +155,7 @@ class WallSkeleton(BoxSkeleton):
             length -= toAdd
         # first voile start from 0
         s,e = 0,self.vecLength.magn()
-        left = self.vecLength.magn() - lengthCreated
+        left = max([0,self.vecLength.magn() - lengthCreated])
         lengthCreated = 0
         if random.uniform(0,1) < WallSkeleton.startFromZeroProba:
             if len(listToAdd) > 0:
@@ -179,12 +179,13 @@ class WallSkeleton(BoxSkeleton):
             left = max([0,left-leave])
             start = s+leave
             end = min([start+listToAdd[0],e])
+            if end - start > self.vecLength.magn():
+                print ("ERROR FROM WALL SKELETON RANDOM",end-start,self.vecLength.magn(),left,start,end,s,leave)
             voile = VoileSkeleton(self,start,end)
             voiles.append(voile)
             s = end
             lengthCreated += voile.getLength()
             del listToAdd[0]
-
 
         return lengthCreated,voiles
 
@@ -198,6 +199,10 @@ class WallSkeleton(BoxSkeleton):
         self.reInitFitness()
         voileSkeleton.setParentWall(self)
         from Optimization.Genetic.GeneticOperations import mergeVoile
+        start = voileSkeleton.start
+        end = voileSkeleton.end
+        if end-start > self.vecLength.magn():
+            print('PROBLEM VOILE LENGTH',end-start,self.vecLength.magn())
         mergeVoile(self.attachedVoiles,voileSkeleton)
 
     def attachFixedVoile(self,voileSkeleton):

@@ -1,3 +1,6 @@
+from shapely.geometry import Polygon
+from shapely.ops import cascaded_union
+
 from Geometry.Geom2D import Pnt
 from Skeleton.BoxSkeleton import NotBoxError
 from Skeleton.SlabSkeleton import SlabSkeleton
@@ -27,7 +30,11 @@ class LevelSkeleton(Skelet):
         return LevelSkeleton(wallSkeletons,slabSkeleton,level)
 
     def getVoileLengthNeeded(self):
-        return 1.3*self.height*self.slabSkeleton.poly.area()/100
+        height = self.level.heighestZ
+        coeff = 1.3
+        if height < 30:
+            coeff = 0.7
+        return coeff*height*self.slabSkeleton.poly.area()/100
 
     def getWallsTotalLength(self):
         length = 0
@@ -85,8 +92,17 @@ class LevelSkeleton(Skelet):
 
         return cntr
 
-    def restrictLevelUsableWalls(self,levelSkeleton):
-        restrictWalls = levelSkeleton.wallSkeletons
+    def restrictLevelUsableWalls(self,levelSkeletons):
+        restrictWalls = []
+        for levelSkeleton in levelSkeletons:
+            toAdd = []
+            upperLvlsPolys = [lvl.level.slab.getBasePolygon().poly for lvl in levelSkeletons if lvl.level.getHeight() > levelSkeleton.level.getHeight()]
+            upperPoly = cascaded_union(upperLvlsPolys)
+            for wallSkeleton in levelSkeleton.wallSkeletons:
+                intersection = wallSkeleton.poly.poly.intersection(upperPoly)
+                if type(intersection) is not Polygon or intersection.area != wallSkeleton.poly.area():
+                    toAdd.append(wallSkeleton)
+            restrictWalls += toAdd
         resultWalls = []
         for wallSkeleton in restrictWalls:
             for wallSkeleton2 in self.wallSkeletons:
@@ -96,8 +112,10 @@ class LevelSkeleton(Skelet):
 
         self.wallSkeletons = resultWalls
 
-    def copyLevelsVoiles(self,levelSkeleton):
-        aboveWalls = levelSkeleton.wallSkeletons
+    def copyLevelsVoiles(self,levelSkeletons):
+        aboveWalls = []
+        for levelSkeleton in levelSkeletons:
+            aboveWalls += levelSkeleton.wallSkeletons
         for wallSkeleton in aboveWalls:
             if not wallSkeleton.getVoilesLength():
                 continue

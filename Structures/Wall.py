@@ -19,12 +19,19 @@ class Wall(Structure):
 
     def isSupporting(self,slab):
         tolerance = 0.2
+        miniArea = self.getBasePolygon().area()/5
         lowestW = self.getLowestPoint()
         lowestS = slab.getLowestPoint()
 
         if lowestS and lowestW and lowestW.z < lowestS.z:
             if self.getHighestPoint().z >= lowestS.z-tolerance and self._isUnderSlab(slab):
-                return True
+                polygons = self.getBasePolygons()
+                s = 0
+                for poly in polygons:
+                    inters = poly.intersection(slab.getBasePolygon())
+                    if inters:
+                        s += inters.area()
+                return float(s) > miniArea
 
         return False
 

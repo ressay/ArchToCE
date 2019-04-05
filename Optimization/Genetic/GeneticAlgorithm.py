@@ -36,9 +36,9 @@ def mutationSelection(mutationRate,population):
         if random.uniform(0,1) < mutationRate:
             yield p
 
-def search(levelSkeleton,popSize=30,crossRate=0.3,mutRate=0.5,maxIterations=70
-           ,geneticOps=GeneticOperations2):
-    start = timeit.default_timer()
+def search(levelSkeleton,popSize=50,crossRate=0.3,mutRate=0.3,maxIterations=100
+           ,geneticOps=GeneticOperations2,filename='default'):
+    start1 = timeit.default_timer()
     population = generatePopulation(levelSkeleton,popSize)
     # tracker = SummaryTracker()
 
@@ -94,12 +94,23 @@ def search(levelSkeleton,popSize=30,crossRate=0.3,mutRate=0.5,maxIterations=70
     fitnesses = calculateFitnessPopulation(population)
     bestIndex = max(range(len(fitnesses)), key=lambda a: fitnesses[a])
     stop = timeit.default_timer()
-    print ("time it took: " + str(stop - start))
+    print ("time it took: " + str(stop - start1))
     solution = population[bestIndex]
     fitness = solution.getFitness()
     print ("in x: " + str(fitness['lengthX']) + " in y: " + str(fitness['lengthY']))
     print ("score in x: " + str(fitness['lengthShearX']) + " in y: " + str(fitness['lengthShearY']))
     print ("needed: " + str(solution.levelSkeleton.getVoileLengthNeeded()))
+    f = open(filename,'w')
+    f.write("in x: " + str(fitness['lengthX']) + " in y: " + str(fitness['lengthY']))
+    f.write("needed: " + str(solution.levelSkeleton.getVoileLengthNeeded()))
+    f.write("covered area: " + str(solution.getAreaCoveredBoxes()))
+    f.write("overlapped area: " + str(solution.getOverlappedArea()))
+    f.close()
+    levelSkeleton = solution.levelSkeleton
+    for wallSkeleton in levelSkeleton.wallSkeletons:
+        for voileSkeleton in wallSkeleton.getAllVoiles():
+            if voileSkeleton.end - voileSkeleton.start > wallSkeleton.vecLength.magn():
+                print("problem: voile is ", voileSkeleton.end - voileSkeleton.start, wallSkeleton.vecLength.magn())
     return solution
 
 

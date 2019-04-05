@@ -13,6 +13,7 @@ from Optimization.Solution import Solution
 from Skeleton.LevelSkeleton import LevelSkeleton
 from Structures.Level import Level
 from Ifc import IfcUtils
+from UI import Plotter
 from UI.Plotter import plotPolys
 
 load_backend("qt-pyqt4")   #here you need to tell OCC.Display to load qt4 backend
@@ -28,23 +29,41 @@ class TryApp(QtGui.QMainWindow, Show2DWindow.Ui_MainWindow):
         self.levels = Level.generateLevelsFromShapes(wallShapes,slabShapes)
         print("INFO INIT: DONE GENERATING LEVELS FROM SHAPES")
         self.levels.sort(key=lambda lvl: lvl.getHeight())
-        self.skeletonLevels = [LevelSkeleton.createSkeletonFromLevel(level) for level in self.levels]
 
+        self.skeletonLevels = [LevelSkeleton.createSkeletonFromLevel(level) for level in self.levels]
+        self.levelsHash = dict(zip(self.levels, self.skeletonLevels))
+        self.skeletonLevelsHash = dict(zip(self.skeletonLevels,self.levels))
         print("INFO INIT: DONE GENERATING LEVELSKELETONS FROM LEVELS")
-        # from matplotlib import pyplot as plt
-        prevLevel = None
+        baseSlabHeight = 0
+        for level in self.levels:
+            print("length",len(self.levelsHash[level].getPolys()),level.getHeight())
+            if not len(self.levelsHash[level].getPolys()):# or level.getHeight() <= 0:
+                baseSlabHeight = level.getHeight()
+            else:
+                break
+        print("SLAB BASE HEIGHT",baseSlabHeight)
         for i,levelSkeleton in enumerate(self.skeletonLevels):
-            if not i:
-                continue
-            if not prevLevel:
-                prevLevel = levelSkeleton
-                # plotPolys(levelSkeleton.getPolys(),i,'first')
-                continue
+            # if not len(levelSkeleton.getPolys()):
+            #     continue
+            # if not prevLevel:
+            #     prevLevel = levelSkeleton
+            #     # plotPolys(levelSkeleton.getPolys(),i,'first')
+            #     continue
             # plotPolys(levelSkeleton.getPolys(),i+len(self.skeletonLevels),'original')
-            levelSkeleton.restrictLevelUsableWalls(prevLevel)
+
+            prevLevels = self.skeletonLevelsHash[levelSkeleton].getRightLowerLevels()
+            print("**LENGTH BEFORE FILTER:", len(prevLevels))
+            if not prevLevels:
+                continue
+
+            prevLevels = [self.levelsHash[level] for level in prevLevels if level.getHeight() > baseSlabHeight]
+            print("**NUMBER OF LEVELS: ",len(prevLevels))
+            if not len(prevLevels):
+                continue
+            levelSkeleton.restrictLevelUsableWalls(prevLevels)
             # plotPolys(levelSkeleton.getPolys(),i)
-            prevLevel = levelSkeleton
         # plt.show()
+        self.levels = [level for level in self.levels if len(self.levelsHash[level].getPolys())]
         self.skeletonLevels = [levelSkeleton for levelSkeleton in self.skeletonLevels if len(levelSkeleton.getPolys())]
         self.solutions = {}
         # for skeletonLevel in self.skeletonLevels:
@@ -105,20 +124,41 @@ class TryApp(QtGui.QMainWindow, Show2DWindow.Ui_MainWindow):
         self.draw(polys)
 
     def showLowerFun(self):
-        if self.selectedRow:
-            level = self.levels[self.selectedRow]
-            polys = self.getPolygonsFromLevels(level.getLowerLevels())
-            self.draw(polys)
+        if self.selectedRow is not None:
+            from matplotlib import pyplot as plt
+            levelSkeleton = self.skeletonLevels[self.selectedRow]
+            if levelSkeleton in self.solutions:
+                levelSkeleton = self.solutions[levelSkeleton].levelSkeleton
+            polys,colors = self.getPolygonsFromLevelSkeletons(levelSkeleton)
+            colors = [[c.red()/255.,c.green()/255.,c.blue()/255.,0.8] for c in colors]
+            c = colors[-1]
+            print('COLOR IN SHOW LOWER IS: ',c[0],c[1],c[2])
+            Plotter.plotPolys(polys,self.selectedRow,"plan",colors)
+            polys = [poly.poly for poly in polys]
+            alphas = [1 for poly in polys]
+            boxes = [voileSkeleton.getSurrondingBox()
+                     for wallSkeleton in levelSkeleton.wallSkeletons
+                     for voileSkeleton in wallSkeleton.getAllVoiles()]
+            colors += [[0.5,1,0.5] for box in boxes]
+            polys += boxes
+            alphas += [0.2 for poly in boxes]
+            Plotter.plotShapely(polys,colors,alphas,20)
+            plt.show()
+            # self.draw(polys)
 
     def mergeCB(self):
         prev = None
         for levelSkeleton in self.skeletonLevels[::-1]:
-            if prev:
-                levelSkeleton.copyLevelsVoiles(prev)
-            solution = search(levelSkeleton)
+            level = self.skeletonLevelsHash[levelSkeleton]
+            prevs = [self.solutions[self.levelsHash[p]].levelSkeleton for p in level.getUpperLevels()
+                     if self.levelsHash[p] in self.solutions]
+            print("PREVS LENGTH IS",len(prevs))
+            if len(prevs):
+                levelSkeleton.copyLevelsVoiles(prevs)
+            i = self.skeletonLevels.index(levelSkeleton)
+            solution = search(levelSkeleton,filename="level"+str(i))
             self.solutions[levelSkeleton] = solution
             self.drawSkeleton(levelSkeleton)
-            prev = solution.levelSkeleton
 
     def crossCB(self):
 
@@ -161,10 +201,8 @@ class TryApp(QtGui.QMainWindow, Show2DWindow.Ui_MainWindow):
 
 
     def getPolygonsFromLevelSkeletons(self, levelSkeleton):
-        print ("size: " + str(len(levelSkeleton.wallSkeletons)))
         polygons = [wallSkeleton.poly.copy() for wallSkeleton in levelSkeleton.wallSkeletons]
         colors = [QtGui.QColor(220, 220, 220) for wallSkeleton in levelSkeleton.wallSkeletons]
-
         polygons += [voileSkeleton.poly.copy()
                      for wallSkeleton in levelSkeleton.wallSkeletons
                      for voileSkeleton in wallSkeleton.getAllVoiles()]
@@ -172,7 +210,6 @@ class TryApp(QtGui.QMainWindow, Show2DWindow.Ui_MainWindow):
         colors += [QtGui.QColor(255,0,0)
                    for wallSkeleton in levelSkeleton.wallSkeletons
                    for voileSkeleton in wallSkeleton.getAllVoiles()]
-
         if not len(polygons):
             return
         polys = (polygons,colors)
