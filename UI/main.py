@@ -290,7 +290,7 @@ def createShapes(file):
     return wShapes,sShapes
 
 def main():
-    file = "../IFCFiles/Immeuble39.ifc"
+    file = "../IFCFiles/ifc_adv5.ifc"
     wShapes,sShapes = createShapes(file)
     app = QtGui.QApplication(sys.argv)
     form = TryApp(wallShapes=wShapes,slabShapes=sShapes)

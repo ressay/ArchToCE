@@ -9,8 +9,7 @@ from Skeleton.Skelet import Skelet
 
 
 class LevelSkeleton(Skelet):
-
-    def __init__(self,walls,slab,level):
+    def __init__(self, walls, slab, level):
         super(LevelSkeleton, self).__init__()
         self.wallSkeletons = walls
         self.notModifiedWalls = walls
@@ -22,19 +21,21 @@ class LevelSkeleton(Skelet):
     def createSkeletonFromLevel(level):
         slabSkeleton = SlabSkeleton.createSkeletonFromSlab(level.slab)
         wallSkeletons = []
+        lowerlevel = level.getLowerLevel()
+        lowZ = None if lowerlevel is None else lowerlevel.slab.getHighestZ()
         for wall in level.walls:
             wallSkeletons += WallSkeleton.createSkeletonsFromWall(wall,
-                                                        level.getLowerLevel().slab.getHighestZ(),
+                                                                  lowZ,
                                                                   level.slab.getLowestZ())
         # wallSkeletons = [WallSkeleton.createSkeletonFromWall(wall) for wall in level.walls]
-        return LevelSkeleton(wallSkeletons,slabSkeleton,level)
+        return LevelSkeleton(wallSkeletons, slabSkeleton, level)
 
     def getVoileLengthNeeded(self):
         height = self.level.heighestZ
         coeff = 1.3
         if height < 30:
             coeff = 0.7
-        return coeff*height*self.slabSkeleton.poly.area()/100
+        return coeff * height * self.slabSkeleton.poly.area() / 100
 
     def getWallsTotalLength(self):
         length = 0
@@ -48,11 +49,11 @@ class LevelSkeleton(Skelet):
     def getRatio(self):
         if self.getWallsTotalLength() == 0:
             return 1
-        return self.getVoileLengthNeeded()/self.getWallsTotalLength()
+        return self.getVoileLengthNeeded() / self.getWallsTotalLength()
 
     def copy(self):
         walls = [wallSkeleton.copy() for wallSkeleton in self.wallSkeletons]
-        levelSkeleton = LevelSkeleton(walls,self.slabSkeleton.copy(),self.level)
+        levelSkeleton = LevelSkeleton(walls, self.slabSkeleton.copy(), self.level)
         levelSkeleton.evalData = self.evalData
         return levelSkeleton
 
@@ -92,11 +93,12 @@ class LevelSkeleton(Skelet):
 
         return cntr
 
-    def restrictLevelUsableWalls(self,levelSkeletons):
+    def restrictLevelUsableWalls(self, levelSkeletons):
         restrictWalls = []
         for levelSkeleton in levelSkeletons:
             toAdd = []
-            upperLvlsPolys = [lvl.level.slab.getBasePolygon().poly for lvl in levelSkeletons if lvl.level.getHeight() > levelSkeleton.level.getHeight()]
+            upperLvlsPolys = [lvl.level.slab.getBasePolygon().poly for lvl in levelSkeletons if
+                              lvl.level.getHeight() > levelSkeleton.level.getHeight()]
             upperPoly = cascaded_union(upperLvlsPolys)
             for wallSkeleton in levelSkeleton.wallSkeletons:
                 intersection = wallSkeleton.poly.poly.intersection(upperPoly)
@@ -112,7 +114,7 @@ class LevelSkeleton(Skelet):
 
         self.wallSkeletons = resultWalls
 
-    def copyLevelsVoiles(self,levelSkeletons):
+    def copyLevelsVoiles(self, levelSkeletons):
         aboveWalls = []
         for levelSkeleton in levelSkeletons:
             aboveWalls += levelSkeleton.wallSkeletons
@@ -121,12 +123,13 @@ class LevelSkeleton(Skelet):
                 continue
             for wallSkeleton2 in self.wallSkeletons:
                 intersection = wallSkeleton.poly.intersection(wallSkeleton2.poly)
-                if intersection and wallSkeleton.poly.area() == intersection.area(): # test if polygons are equal
+                if intersection and wallSkeleton.poly.area() == intersection.area():  # test if polygons are equal
                     voiles = wallSkeleton.getAllVoiles()
                     for voileSkeleton in voiles:
                         voileSkeleton = voileSkeleton.copy()
-                        voileSkeleton.setParentWall(wallSkeleton2,True)
+                        voileSkeleton.setParentWall(wallSkeleton2, True)
                         wallSkeleton2.attachFixedVoile(voileSkeleton)
                     break
+
     def getPolys(self):
         return [wallSkeleton.poly for wallSkeleton in self.wallSkeletons]
