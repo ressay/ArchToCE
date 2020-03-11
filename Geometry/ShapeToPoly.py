@@ -46,7 +46,7 @@ def getShapeBasePolygons(shape):
     from Geometry.Geom2D import Pnt,Poly
     polygons = getPolygonesFromShape(shape)
     minZ = min([pnt.z for polygon in polygons for pnt in polygon.points])
-    polys = []
+    polys = []()
     # print "min z: " + str(minZ)
     for polygon in polygons:
         points = []

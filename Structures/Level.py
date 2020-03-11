@@ -1,11 +1,11 @@
-# from Structure.Slab import Slab
-# from Structures.Wall import Wall
+from Structures.Slab import Slab
+from Structures.Wall import Wall
 from Debugging.Logger import Logger
 from Geometry.ShapeToPoly import getBaseOfShapeZ, getTopOfShapeZ
-from Slab import Slab
+#from Slab import Slab
 from Structures.StructureExceptions.NotSlabShapeException import NotSlabShapeException
 from Structures.StructureExceptions.NotWallShapeException import NotWallShapeException
-from Wall import Wall
+#from Wall import Wall
 
 class Level(object):
 

@@ -1,10 +1,12 @@
 import sys
+import os
 from OCC.Display.backend import load_backend
 from PyQt4 import QtGui
 
 
 import Show2DWindow
 # from Optimization.Genetic import GeneticOperations2
+sys.path.append(os.path.abspath('..'))
 from Geometry.Geom2D import Pnt, Ellip, Poly
 from Optimization.Genetic import GeneticOperations2
 from Optimization.Genetic.GeneticAlgorithm import search
@@ -114,12 +116,12 @@ class TryApp(QtGui.QMainWindow, Show2DWindow.Ui_MainWindow):
         self.pend = True
 
     def sol1CB(self):
-        print "s1: " + str(self.solutions1[self.selectedRow].getFitness())
+        print ("s1: " + str(self.solutions1[self.selectedRow].getFitness()))
         polys = self.getPolygonsFromLevelSkeletons(self.solutions1[self.selectedRow].levelSkeleton)
         self.draw(polys)
 
     def sol2CB(self):
-        print "s2: " + str(self.solutions2[self.selectedRow].getFitness())
+        print ("s2: " + str(self.solutions2[self.selectedRow].getFitness()))
         polys = self.getPolygonsFromLevelSkeletons(self.solutions2[self.selectedRow].levelSkeleton)
         self.draw(polys)
 

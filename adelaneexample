@@ -1,0 +1,24 @@
+import ifcopenshell as ifc
+from ifcopenshell import geom
+
+settings = geom.settings()
+settings.set(settings.USE_PYTHON_OPENCASCADE, True)
+
+def getWallShapesFromIfc(fileName):
+
+    f = ifc.open(fileName)
+    # Get a list of all walls in the file
+    walls = f.by_type("IfcWall")
+    # Create a list of wall representation shapes
+    wall_shapes = []
+
+    for wall in walls:
+        # print("doing stuff")
+        shape = geom.create_shape(settings, wall).geometry
+        if shape:
+            # print("doing stuff22")
+            wall_shapes.append((wall, shape))
+
+    return wall_shapes
+
+getWallShapesFromIfc(blida)

@@ -66,7 +66,7 @@ def mergeWalls(wallSkeleton1 ,wallSkeleton2):
     return resWall
 
 def crossWalls(wallSkeleton1 ,wallSkeleton2,crossPoint=0.5):
-    print "cross Point: " + str(crossPoint)
+    print ("cross Point: " + str(crossPoint))
     #select random space from both walls
     voiles1 = wallSkeleton1.getVoilesBetween(0, crossPoint)
     voiles2 = wallSkeleton2.getVoilesBetween(crossPoint, 1)
