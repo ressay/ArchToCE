@@ -23,6 +23,7 @@ class WallSkeleton(BoxSkeleton):
         self.attachedVoiles = []
         self.fixedVoiles = []
         self.sums = None
+        self.sums2 = None
 
     @staticmethod
     def createSkeletonFromWall(wall):
@@ -253,8 +254,27 @@ class WallSkeleton(BoxSkeleton):
         super(WallSkeleton, self).reInitFitness()
         self.sums = None
 
+    def getSums2(self, origin):
+        if self.sums2 is not None:
+            return self.sums2
+        sumLx3 = 0
+        sumLy3 = 0
+        sumX2Ly3 = 0
+        sumY2Lx3 = 0
+        for voileSkeleton in self.getAllVoiles():
+            centerV = voileSkeleton.poly.centroid()
+            centerV = Pnt(centerV.x - origin.x(), centerV.y - origin.y())
+            Lx3 = math.pow(abs(voileSkeleton.vecLength.x()), 3)
+            Ly3 = math.pow(abs(voileSkeleton.vecLength.y()), 3)
+            sumLx3 += Lx3
+            sumLy3 += Ly3
+            sumX2Ly3 += Ly3 * math.pow(centerV.x(),2)
+            sumY2Lx3 += Lx3 * math.pow(centerV.y(),2)
+        self.sums2 = sumLx3,sumLy3,sumX2Ly3,sumY2Lx3
+        return self.sums2
+
     def getSums(self):
-        if self.sums:
+        if self.sums is not None:
             return self.sums
         sumLi1 = 0
         sumLi2 = 0

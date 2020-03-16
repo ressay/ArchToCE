@@ -6,6 +6,7 @@ from Skeleton.BoxSkeleton import NotBoxError
 from Skeleton.SlabSkeleton import SlabSkeleton
 from Skeleton.WallSkeleton import WallSkeleton
 from Skeleton.Skelet import Skelet
+import math
 
 
 class LevelSkeleton(Skelet):
@@ -30,11 +31,11 @@ class LevelSkeleton(Skelet):
         # wallSkeletons = [WallSkeleton.createSkeletonFromWall(wall) for wall in level.walls]
         return LevelSkeleton(wallSkeletons, slabSkeleton, level)
 
-    def getVoileLengthNeeded(self):
+    def getVoileLengthNeeded(self, weight=1):
         height = self.level.heighestZ
-        coeff = 1.3
+        coeff = 1.3*weight
         if height < 30:
-            coeff = 0.7
+            coeff = 0.7*weight
         return coeff * height * self.slabSkeleton.poly.area() / 100
 
     def getWallsTotalLength(self):
@@ -46,10 +47,10 @@ class LevelSkeleton(Skelet):
     def getVoilesTotalLength(self):
         return sum(wallSkeleton.getVoilesLength() for wallSkeleton in self.wallSkeletons)
 
-    def getRatio(self):
+    def getRatio(self, ratio=1):
         if self.getWallsTotalLength() == 0:
             return 1
-        return self.getVoileLengthNeeded() / self.getWallsTotalLength()
+        return self.getVoileLengthNeeded(ratio) / self.getWallsTotalLength()
 
     def copy(self):
         walls = [wallSkeleton.copy() for wallSkeleton in self.wallSkeletons]
@@ -63,13 +64,36 @@ class LevelSkeleton(Skelet):
     def getSlabArea(self):
         return self.slabSkeleton.poly.area()
 
+    def getTorsionalRadius(self, origin):
+        ssumX2Ly3 = 0
+        ssumY2Lx3 = 0
+        ssumLx3 = 0
+        ssumLy3 = 0
+
+        for wallSkeleton in self.wallSkeletons:
+            sumLx3, sumLy3, sumX2Ly3, sumY2Lx3 = wallSkeleton.getSums2(origin)
+            ssumX2Ly3 += sumX2Ly3
+            ssumY2Lx3 += sumY2Lx3
+            ssumLx3 += sumLx3
+            ssumLy3 += sumLy3
+
+        Rx, Ry = 0, 0
+        if ssumLx3 != 0:
+            Ry = math.sqrt((ssumX2Ly3 + ssumY2Lx3)/ssumLx3)
+        if ssumLy3 != 0:
+            Rx = math.sqrt((ssumY2Lx3 + ssumX2Ly3)/ssumLy3)
+        return math.sqrt(Rx), math.sqrt(Ry)
+
     def getCenterFromShear(self):
         sumLiX = 0
         sumLiY = 0
         sumLixi = 0
         sumLiyi = 0
+
+        nShears = 0
         for wallSkeleton in self.wallSkeletons:
             sLiX, sLiY, sLixi, sLiyi = wallSkeleton.getSums()
+            nShears += len(wallSkeleton.getAllVoiles())
             sumLiX += sLiX
             sumLiY += sLiY
             sumLixi += sLixi
@@ -89,7 +113,7 @@ class LevelSkeleton(Skelet):
             print("sumLiX is 0")
             if sumLixi != 0:
                 print("hummm error")
-        cntr = Pnt(y, x)
+        cntr = Pnt(x, y)
 
         return cntr
 

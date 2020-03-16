@@ -11,7 +11,7 @@ from Geometry.Geom2D import Poly, Pnt
 def plotPolys(polys,f,title='figure',colors=None):
     if not len(polys):
         return
-    fig = plt.figure(f, figsize=(5, 5), dpi=90)
+    fig = plt.figure(f, figsize=(15, 15), dpi=90)
     fig.canvas.set_window_title(title+str(f))
     X = [pnt.x() for poly in polys for pnt in poly.points]
     Y = [pnt.y() for poly in polys for pnt in poly.points]
@@ -42,7 +42,7 @@ def plotPolys(polys,f,title='figure',colors=None):
 def plotShapely(shapes,colors,alphas,f,title='figure'):
     if not len(shapes):
         return
-    fig = plt.figure(f, figsize=(5, 5), dpi=90)
+    fig = plt.figure(f, figsize=(15, 15), dpi=90)
     fig.canvas.set_window_title(title+str(f))
     ax = fig.add_subplot(111)
     for shape,c,a in zip(shapes,colors,alphas):

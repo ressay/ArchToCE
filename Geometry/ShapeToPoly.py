@@ -1,29 +1,36 @@
-import OCC.Core.BRep
-import OCC.Core.BRepBndLib
-import OCC.Core.BRepBndLib
-import OCC.Core.Bnd
-import OCC.Core.Bnd
-import OCC.Core.Geom
-import OCC.Core.TopAbs
-import OCC.Core.TopExp
-import OCC.Core.TopoDS
-import OCC.Core.gp
-
+try:
+    import OCC.Core.BRep as BRep
+    import OCC.Core.BRepBndLib as BRepBndLib
+    import OCC.Core.Bnd as Bnd
+    import OCC.Core.Geom as Geom
+    import OCC.Core.TopAbs as TopAbs
+    import OCC.Core.TopExp as TopExp
+    import OCC.Core.TopoDS as TopoDS
+    import OCC.Core.gp as gp
+except:
+    import OCC.BRep as BRep
+    import OCC.BRepBndLib as BRepBndLib
+    import OCC.Bnd as Bnd
+    import OCC.Geom as Geom
+    import OCC.TopAbs as TopAbs
+    import OCC.TopExp as TopExp
+    import OCC.TopoDS as TopoDS
+    import OCC.gp as gp
 
 def getPolygonesFromShape(shape):
     from Geometry.Geom3D import Pnt3D,Poly3D
 
-    exp = OCC.Core.TopExp.TopExp_Explorer(shape, OCC.Core.TopAbs.TopAbs_WIRE)  # .TopAbs_FACE)
+    exp = TopExp.TopExp_Explorer(shape, TopAbs.TopAbs_WIRE)  # .TopAbs_FACE)
     polygons = []
     while exp.More():
-        wire = OCC.Core.TopoDS.topods.Wire(OCC.Core.TopoDS.topods.Wire(exp.Current()))
+        wire = TopoDS.topods.Wire(TopoDS.topods.Wire(exp.Current()))
         exp.Next()
         points = []
         from OCCUtils import Topology
         explorer = Topology.WireExplorer(wire)
         vertices = explorer.ordered_vertices()
         for vertex in vertices:
-            pnt = OCC.Core.BRep.BRep_Tool_Pnt(vertex)
+            pnt = BRep.BRep_Tool_Pnt(vertex)
             points.append(Pnt3D(pnt.X(),pnt.Y(),pnt.Z()))
         polygons.append(Poly3D(points))
 

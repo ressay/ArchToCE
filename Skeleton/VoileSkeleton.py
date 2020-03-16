@@ -94,10 +94,10 @@ class VoileSkeleton(BoxSkeleton):
     def setPointValid(self,index):
         self.isPointValid[index] = True
 
-    def getSurrondingBox(self):
+    def getSurrondingBox(self, d_ratio):
         if self.surrondingBox:
             return self.surrondingBox
-        distance = 4
+        distance = 4*d_ratio
         wid = Pnt(self.vecLength.y(),-self.vecLength.x())
         wid = wid.copy().resize(distance)*2 + wid.copy().resize(self.vecWidth.magn())
         # leng = self.vecLength.copy().resize(distance)*2 + self.vecLength

@@ -26,9 +26,9 @@ class Solution(object):
         self.validBoxes2 = None
         self.nonValidBoxes2 = None
 
-    def getFitness(self):
+    def getFitness(self, constraints=None):
         if self.fitness is None:
-            self.fitness = calculateFitnessSolution(self)
+            self.fitness = calculateFitnessSolution(self,constraints)
         return self.fitness
 
     def reInitFitness(self):
@@ -44,15 +44,15 @@ class Solution(object):
         self.nonValidBoxes2 = None
 
     @staticmethod
-    def createRandomSolutionFromSkeleton(levelSkeleton):
-        ratio = levelSkeleton.getRatio()
+    def createRandomSolutionFromSkeleton(levelSkeleton, ratio):
+        ratio = levelSkeleton.getRatio(ratio)
         for wallSkeleton in levelSkeleton.wallSkeletons:
             wallSkeleton.attachVoile(wallSkeleton.createRandomVoileFromRatio(ratio))
         return Solution(levelSkeleton)
 
 
     @staticmethod
-    def createRandomSolutionFromSkeleton2(levelS):
+    def createRandomSolutionFromSkeleton2(levelS, ratio):
         # s = timeit.default_timer()
         walls = [wallSkeleton.copyWithoutVoiles() for wallSkeleton in levelS.wallSkeletons]
         # e = timeit.default_timer()
@@ -61,7 +61,7 @@ class Solution(object):
 
         voilesfixedLength = levelSkeleton.getVoilesTotalLength()
         totalLength = levelSkeleton.getWallsTotalLength() - voilesfixedLength
-        needed = levelSkeleton.getVoileLengthNeeded()*2 - voilesfixedLength
+        needed = levelSkeleton.getVoileLengthNeeded(ratio)*2 - voilesfixedLength
         # print("needed : " + str(needed) + " total length: " + str(totalLength))
         size = len(levelSkeleton.wallSkeletons)
         indexes = range(size)
@@ -131,17 +131,17 @@ class Solution(object):
 
         return self.nonValidPoints
 
-    def getValidVoilesBoxes(self):
+    def getValidVoilesBoxes(self, ratio):
         if not self.validBoxes:
             allVoiles = [voile for wallSkeleton in self.levelSkeleton.wallSkeletons
                          for voile in wallSkeleton.getAllVoiles()]
             acceptedBoxes = []
             done = [False for v in allVoiles]
             for cpt,voil in enumerate(allVoiles):
-                box1 = voil.getSurrondingBox()
+                box1 = voil.getSurrondingBox(ratio)
                 for i in range(cpt+1,len(allVoiles)):
                     if not done[i] or not done[cpt]:
-                        box2 = allVoiles[i].getSurrondingBox()
+                        box2 = allVoiles[i].getSurrondingBox(ratio)
                         if box1.intersects(box2):
                             if not done[cpt]:
                                 acceptedBoxes.append(box1)
@@ -150,7 +150,7 @@ class Solution(object):
                                 acceptedBoxes.append(box2)
                                 done[i] = True
             self.validBoxes = acceptedBoxes
-            self.nonValidBoxes = [voil.getSurrondingBox() for i,voil in enumerate(allVoiles)
+            self.nonValidBoxes = [voil.getSurrondingBox(ratio) for i,voil in enumerate(allVoiles)
                                                             if not done[i]]
         return self.validBoxes
 
@@ -200,24 +200,24 @@ class Solution(object):
             self.getValidVoilesBoxesBis()
         return self.nonValidBoxes2
 
-    def getAreaCoveredBoxes(self):
+    def getAreaCoveredBoxes(self, d_ratio):
         if not self.areaCoveredBoxes:
-            pntsArray = self.getValidVoilesBoxes()
+            pntsArray = self.getValidVoilesBoxes(d_ratio)
             a = cascaded_union(pntsArray)
             # a = a.intersection(self.levelSkeleton.slabSkeleton.poly.poly)
             self.areaCoveredBoxes = a.area
         return self.areaCoveredBoxes
 
-    def getOverlappedArea(self):
-        coveredArea = self.getAreaCoveredBoxes()
+    def getOverlappedArea(self, d_ratio):
+        coveredArea = self.getAreaCoveredBoxes(d_ratio)
         levelSkeleton = self.levelSkeleton
-        area = sum(voileSkeleton.getSurrondingBox().area for wallSkeleton in levelSkeleton.wallSkeletons
+        area = sum(voileSkeleton.getSurrondingBox(d_ratio).area for wallSkeleton in levelSkeleton.wallSkeletons
                    for voileSkeleton in wallSkeleton.getAllVoiles())
         return area - coveredArea
 
-    def getNonValidVoilesBoxes(self):
+    def getNonValidVoilesBoxes(self, d_ratio):
         if not self.nonValidBoxes:
-            self.getValidVoilesBoxes()
+            self.getValidVoilesBoxes(d_ratio)
         return self.nonValidBoxes
 
 

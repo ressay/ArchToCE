@@ -23,12 +23,12 @@ class Poly3D(object):
         if z is None:
             z = self.points[0].z
 
-        logger.log("NotSlabShapeException","z is: " + str(z) + "\n")
+        # logger.log("NotSlabShapeException","z is: " + str(z) + "\n")
         for point in self.points:
-            logger.log("NotSlabShapeException", "pnt: " + str(point.z) + " vs " + str(z) + "\n")
+            # logger.log("NotSlabShapeException", "pnt: " + str(point.z) + " vs " + str(z) + "\n")
             if abs(point.z - z) > Pnt3D.accuracy:
-                logger.log("NotSlabShapeException", "result: " + str(point.z - z) + "\n")
-                logger.log("NotSlabShapeException","out\n")
+                # logger.log("NotSlabShapeException", "result: " + str(point.z - z) + "\n")
+                # logger.log("NotSlabShapeException","out\n")
                 return False
         return True
 

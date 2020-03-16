@@ -1,9 +1,5 @@
 import os
 import sys
-from OCC.Display.backend import load_backend
-from PyQt4 import QtGui
-
-import UI.Show2DWindow as Show2DWindow
 # from Optimization.Genetic import GeneticOperations2
 from Geometry.Geom2D import Pnt, Ellip, Poly
 from Optimization.Genetic import GeneticOperations2
@@ -14,17 +10,32 @@ from Ifc import IfcUtils
 from UI import Plotter
 from shapely.geometry import Point
 
-load_backend("qt-pyqt4")  # here you need to tell OCC.Display to load qt4 backend
+
+class Color(object):
+
+    def __init__(self, red, green, blue):
+        super(Color, self).__init__()
+        self.r = red
+        self.g = green
+        self.b = blue
+
+    def red(self):
+        return self.r
+
+    def green(self):
+        return self.g
+
+    def blue(self):
+        return self.b
 
 
-class TryApp(QtGui.QMainWindow, Show2DWindow.Ui_MainWindow):
-    model = QtGui.QStandardItemModel()
+class Launcher(object):
     levels = []
     skeletonLevels = []
     viewerTabs = {}
 
     def __init__(self, parent=None, wallShapes=None, slabShapes=None):
-        super(TryApp, self).__init__(parent)
+        super(Launcher, self).__init__()
         self.constraints = {
             "ecc_w": -0.5,
             "area_w": 1,
@@ -32,7 +43,6 @@ class TryApp(QtGui.QMainWindow, Show2DWindow.Ui_MainWindow):
             "ratio": 1,
             "d": 1,
         }
-        self.setupUi(self)
         self.levels = Level.generateLevelsFromShapes(wallShapes, slabShapes)
         print("INFO INIT: DONE GENERATING LEVELS FROM SHAPES")
         self.levels.sort(key=lambda lvl: lvl.getHeight())
@@ -63,31 +73,6 @@ class TryApp(QtGui.QMainWindow, Show2DWindow.Ui_MainWindow):
         self.solutions = {}
 
         self.selectedRow = 1
-        self.initListView()
-        self.listView.setModel(self.model)
-        self.listView.clicked.connect(self.listViewSelected)
-        self.sol1.clicked.connect(self.sol1CB)
-        self.sol2.clicked.connect(self.sol2CB)
-        self.merge.clicked.connect(self.mergeCB)
-        self.cross.clicked.connect(self.crossCB)
-        self.showLower.clicked.connect(self.showLowerFun)
-
-        self.scrollTab = QtGui.QScrollArea()
-
-        self.tabWidget.addTab(self.scrollTab, "upperView")
-
-        self.addViewerTab("Walls")
-        self.addViewerTab("Slabs")
-        self.addViewerTab("All")
-        self.addViewerTab("Selected")
-
-        self.tabWidget.removeTab(0)
-        self.tabWidget.removeTab(0)
-
-        self.setViewerDisplay("Walls", wallShapes)
-        self.setViewerDisplay("Slabs", slabShapes)
-        all = wallShapes + slabShapes
-        self.setViewerDisplay("All", all)
         self.pend = True
 
     def reinit_skeletons(self):
@@ -115,16 +100,6 @@ class TryApp(QtGui.QMainWindow, Show2DWindow.Ui_MainWindow):
         self.levels = [level for level in self.levels if len(self.levelsHash[level].getPolys())]
         self.skeletonLevels = [levelSkeleton for levelSkeleton in self.skeletonLevels if len(levelSkeleton.getPolys())]
         self.solutions = {}
-
-    def sol1CB(self):
-        print("s1: " + str(self.solutions1[self.selectedRow].getFitness()))
-        polys = self.getPolygonsFromLevelSkeletons(self.solutions1[self.selectedRow].levelSkeleton)
-        self.draw(polys)
-
-    def sol2CB(self):
-        print("s2: " + str(self.solutions2[self.selectedRow].getFitness()))
-        polys = self.getPolygonsFromLevelSkeletons(self.solutions2[self.selectedRow].levelSkeleton)
-        self.draw(polys)
 
     def showLowerFun(self):
         if self.selectedRow is not None:
@@ -206,14 +181,6 @@ class TryApp(QtGui.QMainWindow, Show2DWindow.Ui_MainWindow):
                 yield c
 
             c['ecc_w'] = -0.5
-            # for lr in length_ratio:
-            #     c['ratio'] = lr
-            #     yield c
-            # c['ratio'] = 1
-            # for d in d_ratios:
-            #     c['d'] = d
-            #     yield c
-            # c['d'] = 1
 
         count = 1
         for consts in mygenprov():
@@ -293,52 +260,6 @@ class TryApp(QtGui.QMainWindow, Show2DWindow.Ui_MainWindow):
             f.write("covered area: " + str(solution.getAreaCoveredBoxes(constraints['d'])))
             f.write("overlapped area: " + str(solution.getOverlappedArea(constraints['d'])))
 
-    def mergeCB(self):
-        self.multiSearch()
-        # self.solutions = {}
-        # for levelSkeleton in self.skeletonLevels[::-1]:
-        #     level = self.skeletonLevelsHash[levelSkeleton]
-        #     prevs = [self.solutions[self.levelsHash[p]].levelSkeleton for p in level.getUpperLevels()
-        #              if self.levelsHash[p] in self.solutions]
-        #     print("PREVS LENGTH IS",len(prevs))
-        #     if len(prevs):
-        #         levelSkeleton.copyLevelsVoiles(prevs)
-        #     i = self.skeletonLevels.index(levelSkeleton)
-        #     solution = search(levelSkeleton,filename="level"+str(i), constraints=self.constraints)
-        #     self.solutions[levelSkeleton] = solution
-        #     self.drawSkeleton(levelSkeleton)
-
-    def crossCB(self):
-
-        s1 = self.solutions1[self.selectedRow]
-        s2 = self.solutions2[self.selectedRow]
-        s, b = GeneticOperations2.cross(s1, s2)
-        # print "s fitness: " + str(s.getFitness())
-        polys = self.getPolygonsFromLevelSkeletons(s.levelSkeleton)
-        self.draw(polys)
-
-    def addViewerTab(self, name):
-        from OCC.Display import qtDisplay
-        self.viewerTabs[name] = qtDisplay.qtViewer3d(self)
-        self.tabWidget.addTab(self.viewerTabs[name], name)
-        self.viewerTabs[name].InitDriver()
-
-    def setViewerDisplay(self, name, shapes):
-        display = self.viewerTabs[name]._display
-        display.EraseAll()
-        self.initDisplayer(display, shapes)
-
-    def initDisplayer(self, display, shapes):
-        for shape in shapes:
-            display.DisplayShape(shape)
-
-    def initListView(self):
-        i = 0
-        for level in self.skeletonLevels:
-            item = QtGui.QStandardItem("level " + str(i))
-            i += 1
-            self.model.appendRow(item)
-
     def getPolygonsFromLevels(self, levels):
         polys = []
         for level in levels:
@@ -348,12 +269,12 @@ class TryApp(QtGui.QMainWindow, Show2DWindow.Ui_MainWindow):
 
     def getPolygonsFromLevelSkeletons(self, levelSkeleton):
         polygons = [wallSkeleton.poly.copy() for wallSkeleton in levelSkeleton.wallSkeletons]
-        colors = [QtGui.QColor(220, 220, 220) for wallSkeleton in levelSkeleton.wallSkeletons]
+        colors = [Color(220, 220, 220) for wallSkeleton in levelSkeleton.wallSkeletons]
         polygons += [voileSkeleton.poly.copy()
                      for wallSkeleton in levelSkeleton.wallSkeletons
                      for voileSkeleton in wallSkeleton.getAllVoiles()]
 
-        colors += [QtGui.QColor(255, 0, 0)
+        colors += [Color(255, 0, 0)
                    for wallSkeleton in levelSkeleton.wallSkeletons
                    for voileSkeleton in wallSkeleton.getAllVoiles()]
         if not len(polygons):
@@ -364,57 +285,7 @@ class TryApp(QtGui.QMainWindow, Show2DWindow.Ui_MainWindow):
         # ellipses = ([Ellip(center, 0.5)], [QtGui.QColor(0, 255, 0)])
         # self.draw(polys,ellipses)
 
-    def draw(self, polys=None, ellipses=None):
-        from UI.DrawUtils import Window
-        self.scrollTab.setWidget(Window(polys, ellipses=ellipses, rect=self.scrollTab.geometry()))
 
-    def drawPolygons(self, shapes):
-        from Geometry import ShapeToPoly
-        polygons = ShapeToPoly.getShapesBasePolygons(shapes)
-        if not len(polygons):
-            return
-
-        from UI.DrawUtils import Window
-        self.scrollTab.setWidget(Window(polygons, rect=self.scrollTab.geometry()))
-
-    def drawSkeleton(self, levelSkeleton):
-
-        ellipses = []
-        if levelSkeleton in self.solutions:
-            solution = self.solutions[levelSkeleton]
-            polys = self.getPolygonsFromLevelSkeletons(solution.levelSkeleton)
-            c1 = solution.levelSkeleton.getCenterFromSlab()
-            c2 = solution.levelSkeleton.getCenterFromShear()
-            print("point in draw: ", str(c2))
-            print("point in draw2: ", str(c1))
-            e1 = Ellip(c1, 0.4)
-            e2 = Ellip(c2, 0.4)
-            ells = [e1, e2]
-            ellipses = [ells, [QtGui.QColor(255, 0, 0), QtGui.QColor(0, 255, 0)]]
-            for box in solution.getValidVoilesBoxes(self.constraints['d']):
-                polys[0].append(Poly([Pnt(pnt[0], pnt[1]) for pnt in box.exterior.coords]))
-                q1 = QtGui.QColor(0, 255, 0)
-                q1.setAlpha(20)
-                polys[1].append(q1)
-
-            for box in solution.getNonValidVoilesBoxes(self.constraints['d']):
-                polys[0].append(Poly([Pnt(pnt[0], pnt[1]) for pnt in box.exterior.coords]))
-                q1 = QtGui.QColor(255, 0, 0)
-                q1.setAlpha(20)
-                polys[1].append(q1)
-        else:
-            polys = self.getPolygonsFromLevelSkeletons(levelSkeleton)
-        self.draw(polys, ellipses)
-
-    def listViewSelected(self, index):
-        self.selectedRow = row = index.row()
-        # print ('selected item index found at %s with data: %s' % (index.row(), index.data().toString()))
-        shapes = [wall.shape for wall in self.levels[row].walls]
-        # self.drawPolygons(shapes)
-        # polys = self.getPolygonsFromLevelSkeletons(self.skeletonLevels[row])
-        self.drawSkeleton(self.skeletonLevels[row])
-        shapes.append(self.levels[row].slab.shape)
-        self.setViewerDisplay("Selected", shapes)
 
 
 def createShapes(file):
@@ -435,11 +306,8 @@ def createShapes(file):
 def main():
     file = "../IFCFiles/model_001.ifc"
     wShapes, sShapes = createShapes(file)
-    app = QtGui.QApplication(sys.argv)
-    form = TryApp(wallShapes=wShapes, slabShapes=sShapes)
-    form.show()
-    app.exec_()
-
+    launcher = Launcher(wallShapes=wShapes, slabShapes=sShapes)
+    launcher.multiSearch()
 
 if __name__ == '__main__':
     main()

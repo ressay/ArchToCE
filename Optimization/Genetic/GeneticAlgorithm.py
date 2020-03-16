@@ -5,13 +5,12 @@ from Optimization.Genetic import GeneticOperations2
 from Optimization.Genetic.Evaluator import calculateFitnessPopulation
 from Optimization.Genetic.GeneticOperations2 import mutate
 from Optimization.Solution import Solution
-from pympler.tracker import SummaryTracker
 
 
-def generatePopulation(levelSkeleton,popSize):
+def generatePopulation(levelSkeleton,popSize, ratio):
     solutions = []
     for i in range(popSize):
-        solutions.append(Solution.createRandomSolutionFromSkeleton2(levelSkeleton))
+        solutions.append(Solution.createRandomSolutionFromSkeleton2(levelSkeleton, ratio))
     return solutions
 
 
@@ -36,10 +35,10 @@ def mutationSelection(mutationRate,population):
         if random.uniform(0,1) < mutationRate:
             yield p
 
-def search(levelSkeleton,popSize=50,crossRate=0.3,mutRate=0.3,maxIterations=100
-           ,geneticOps=GeneticOperations2,filename='default'):
+def search(levelSkeleton,popSize=80,crossRate=0.3,mutRate=0.3,maxIterations=100
+           ,geneticOps=GeneticOperations2,filename='default', constraints=None):
     start1 = timeit.default_timer()
-    population = generatePopulation(levelSkeleton,popSize)
+    population = generatePopulation(levelSkeleton,popSize, constraints['ratio'])
     # tracker = SummaryTracker()
 
     for i in range(maxIterations):
@@ -47,7 +46,7 @@ def search(levelSkeleton,popSize=50,crossRate=0.3,mutRate=0.3,maxIterations=100
         print("len population: " + str(len(population)))
         print ("iteration: " + str(i))
         start = timeit.default_timer()
-        fitnesses = calculateFitnessPopulation(population)
+        fitnesses = calculateFitnessPopulation(population,constraints)
         stop = timeit.default_timer()
         print ("time it took fitness: " + str(stop - start))
 
@@ -78,7 +77,7 @@ def search(levelSkeleton,popSize=50,crossRate=0.3,mutRate=0.3,maxIterations=100
         print ("time it took mutation: " + str(stop - start))
 
         start = timeit.default_timer()
-        fits = calculateFitnessPopulation(population)
+        fits = calculateFitnessPopulation(population, constraints)
         stop = timeit.default_timer()
         print ("time it took fitness2: " + str(stop - start))
         start = timeit.default_timer()
@@ -91,20 +90,20 @@ def search(levelSkeleton,popSize=50,crossRate=0.3,mutRate=0.3,maxIterations=100
         print ("time it took delete: " + str(stop - start))
 
 
-    fitnesses = calculateFitnessPopulation(population)
+    fitnesses = calculateFitnessPopulation(population, constraints)
     bestIndex = max(range(len(fitnesses)), key=lambda a: fitnesses[a])
     stop = timeit.default_timer()
     print ("time it took: " + str(stop - start1))
     solution = population[bestIndex]
     fitness = solution.getFitness()
-    print ("in x: " + str(fitness['lengthX']) + " in y: " + str(fitness['lengthY']))
+    print ("in x: " + str(fitness['radX']) + " in y: " + str(fitness['radY']))
     print ("score in x: " + str(fitness['lengthShearX']) + " in y: " + str(fitness['lengthShearY']))
-    print ("needed: " + str(solution.levelSkeleton.getVoileLengthNeeded()))
+    print ("needed: " + str(solution.levelSkeleton.getVoileLengthNeeded(constraints['ratio'])))
     f = open(filename,'w')
     f.write("in x: " + str(fitness['lengthX']) + " in y: " + str(fitness['lengthY']))
-    f.write("needed: " + str(solution.levelSkeleton.getVoileLengthNeeded()))
-    f.write("covered area: " + str(solution.getAreaCoveredBoxes()))
-    f.write("overlapped area: " + str(solution.getOverlappedArea()))
+    f.write("needed: " + str(solution.levelSkeleton.getVoileLengthNeeded(constraints['ratio'])))
+    f.write("covered area: " + str(solution.getAreaCoveredBoxes(constraints['d'])))
+    f.write("overlapped area: " + str(solution.getOverlappedArea(constraints['d'])))
     f.close()
     levelSkeleton = solution.levelSkeleton
     for wallSkeleton in levelSkeleton.wallSkeletons:

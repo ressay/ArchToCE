@@ -64,27 +64,25 @@ class WallEvaluator(object):
 
 
 
-def calculateFitnessSolution(solution):
+def calculateFitnessSolution(solution, constraints=None):
     levelSkeleton = solution.levelSkeleton
     wallEvaluator = WallEvaluator(levelSkeleton)
-    # print ("before looping")
-    # voiles = [voile for wallSkeleton in levelSkeleton.wallSkeletons
-    #                       for voile in wallSkeleton.attachedVoiles]
+
+    if constraints is not None:
+        rad_w, ecc_w, area_w, length_w = constraints['rad_w'], constraints['ecc_w'],\
+                                         constraints['area_w'], constraints['length_w']
+    else:
+        rad_w, ecc_w, area_w, length_w = 0.5, -0.5, 1, 1
     size = 0
     dis = 0
     totalX = 0
     totalY = 0
     lengthX = 0
     lengthY = 0
-    sumLiX = 0
-    sumLiY = 0
-    sumLixi = 0
-    sumLiyi = 0
-    needed = levelSkeleton.getVoileLengthNeeded()
+    needed = levelSkeleton.getVoileLengthNeeded(constraints['ratio'])
     centerV = levelSkeleton.slabSkeleton.poly.centroid()
     centerV = Pnt(centerV.x, centerV.y)
     vecUni = Pnt(0,0)
-    start = timeit.default_timer()
     for wallSkeleton in levelSkeleton.wallSkeletons:
         # print "attached voiles : " + str(len(wallSkeleton.attachedVoiles))
         evalData = wallEvaluator.calculateFitnessWall(wallSkeleton)
@@ -96,24 +94,25 @@ def calculateFitnessSolution(solution):
         lengthX += evalData.lengthX
         lengthY += evalData.lengthY
         vecUni += evalData.vecUni
-    stop = timeit.default_timer()
-    # print ("time it took loop walls: " + str(stop - start))
-    start = timeit.default_timer()
     cntr = levelSkeleton.getCenterFromShear()
-    stop = timeit.default_timer()
-    # print ("time it took calculate center from shear: " + str(stop - start))
-    start = timeit.default_timer()
-    area = solution.getAreaCoveredBoxes()
-    stop = timeit.default_timer()
-    # print ("time it took calculate area: " + str(stop - start))
+    Rx, Ry = levelSkeleton.getTorsionalRadius(centerV)
+    momentx, momenty = levelSkeleton.slabSkeleton.poly.momentX(), levelSkeleton.slabSkeleton.poly.momentY()
+    if momentx < 0 or momenty < 0:
+        print (momentx, momenty)
+        input()
+    radiuses = (Rx + Ry)/(abs(Rx-Ry)+0.000001) #abs(1-(Ry/(momentx+momenty))) + abs(1-(Rx/(momentx+momenty)))
+
+    area = solution.getAreaCoveredBoxes(constraints['d'])
     coeffs = {
-        # 'sym': -0.5,
-        'lengthShearX': 1,
-        'lengthShearY': 1,
+        'rad': rad_w,
+        'sym': ecc_w,
+        'lengthShearX': length_w/2.,
+        'lengthShearY': length_w/2.,
         # 'overlapped': -1,
         # 'unif': 0,
-        'area': 3
+        'area': area_w
     }
+
     def getScoreLength(lengthA,total):
         if lengthA < needed:
             scoreLengthA = math.pow(lengthA/needed,3)
@@ -123,7 +122,7 @@ def calculateFitnessSolution(solution):
 
     scoreLengthX = getScoreLength(lengthX,totalX)
     scoreLengthY = getScoreLength(lengthY,totalY)
-    areaNorm = sum(voileSkeleton.getSurrondingBox().area for wallSkeleton in levelSkeleton.wallSkeletons
+    areaNorm = sum(voileSkeleton.getSurrondingBox(constraints['d']).area for wallSkeleton in levelSkeleton.wallSkeletons
                for voileSkeleton in wallSkeleton.getAllVoiles())
     if areaNorm == 0:
         areaNorm = -1
@@ -131,12 +130,15 @@ def calculateFitnessSolution(solution):
     else:
         ar = math.sqrt(areaNorm)
     fitV = {
+        'radX': Rx,
+        'radY': Ry,
+        'rad': radiuses,
         'sym': max([0,distance(cntr,centerV)/ar]),
         'lengthShearX': scoreLengthX,
         'lengthShearY': scoreLengthY,
         'unif': vecUni.magn(),
         'area': area/levelSkeleton.getSlabArea(),
-        'overlapped': max([0,solution.getOverlappedArea()/areaNorm]),
+        'overlapped': max([0,solution.getOverlappedArea(constraints['d'])/areaNorm]),
         'lengthX': lengthX,
         'lengthY': lengthY
         }
@@ -148,10 +150,10 @@ def calculateFitnessSolution(solution):
     return fitV
 
 
-def calculateFitnessPopulation(population):
+def calculateFitnessPopulation(population, constraints=None):
     fitnesses = []
     for solution in population:
         # print("calculating:")
-        fitnesses.append(solution.getFitness()['totalScore'])
+        fitnesses.append(solution.getFitness(constraints)['totalScore'])
 
     return fitnesses
