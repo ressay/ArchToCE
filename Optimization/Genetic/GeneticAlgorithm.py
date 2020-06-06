@@ -35,7 +35,7 @@ def mutationSelection(mutationRate,population):
         if random.uniform(0,1) < mutationRate:
             yield p
 
-def search(levelSkeleton,popSize=80,crossRate=0.3,mutRate=0.3,maxIterations=100
+def search(levelSkeleton,popSize=50,crossRate=0.3,mutRate=0.5,maxIterations=200
            ,geneticOps=GeneticOperations2,filename='default', constraints=None):
     start1 = timeit.default_timer()
     population = generatePopulation(levelSkeleton,popSize, constraints['ratio'])

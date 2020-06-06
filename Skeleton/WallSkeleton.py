@@ -29,21 +29,6 @@ class WallSkeleton(BoxSkeleton):
     def createSkeletonFromWall(wall):
         return WallSkeleton(wall.getBasePolygon())
 
-    # @staticmethod
-    # def createSkeletonsFromWall(wall, minZ=None,maxZ=None):
-    #     polygons = wall.getBasePolygons()
-    #     print("size is: ", len(polygons))
-    #     wallSkeletons = []
-    #     for polygon in polygons:
-    #         try:
-    #             wallSkeleton = WallSkeleton(polygon)
-    #         except NotBoxError:
-    #             print("not box error damn")
-    #             continue
-    #         wallSkeletons.append(wallSkeleton)
-    #
-    #     return wallSkeletons
-
     @staticmethod
     def createSkeletonsFromWall(wall, minZ=None,maxZ=None):
         e = 0.2

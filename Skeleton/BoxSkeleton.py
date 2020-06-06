@@ -55,6 +55,13 @@ class BoxSkeleton(PolySkeleton):
         #     print "mVec: " + str(maxVec.magn()) + " mVec2: " + str(maxVec2.magn())
         self.vecLength = maxVec
         self.vecWidth = endPnt - topPnt
+        if self.vecWidth.magn() == 0:
+            self.vecWidth = Pnt(0.00000001, 0.00000001)
+        #     print ("end", endPnt, "start", topPnt, "1", endPnt.x(), endPnt.y(), topPnt.x(), topPnt.y())
+        #     for pnt in pnts:
+        #         print (pnt, pnt.x(), pnt.y())
+        #
+        # print "ennnnnddddd"
         self.topLeftPnt = topPnt
 
             

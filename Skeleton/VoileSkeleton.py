@@ -99,6 +99,8 @@ class VoileSkeleton(BoxSkeleton):
             return self.surrondingBox
         distance = 4*d_ratio
         wid = Pnt(self.vecLength.y(),-self.vecLength.x())
+        # if distance == 0 or self.vecWidth.magn() == 0:
+        #     print ("distance: ", distance, "vecWidth: ", self.vecWidth.magn())
         wid = wid.copy().resize(distance)*2 + wid.copy().resize(self.vecWidth.magn())
         # leng = self.vecLength.copy().resize(distance)*2 + self.vecLength
         leng = self.vecLength

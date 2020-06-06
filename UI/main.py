@@ -1,14 +1,18 @@
 import os
 import sys
+from random import random
+
 from OCC.Display.backend import load_backend
 from PyQt4 import QtGui
 
 import UI.Show2DWindow as Show2DWindow
 # from Optimization.Genetic import GeneticOperations2
 from Geometry.Geom2D import Pnt, Ellip, Poly
+from Ifc.IfcUtils import getSpaceShapesFromIfc
 from Optimization.Genetic import GeneticOperations2
 from Optimization.Genetic.GeneticAlgorithm import search
 from Skeleton.LevelSkeleton import LevelSkeleton
+from Skeleton.StoreySkeleton import StoreySkeleton
 from Structures.Level import Level
 from Ifc import IfcUtils
 from UI import Plotter
@@ -23,7 +27,7 @@ class TryApp(QtGui.QMainWindow, Show2DWindow.Ui_MainWindow):
     skeletonLevels = []
     viewerTabs = {}
 
-    def __init__(self, parent=None, wallShapes=None, slabShapes=None):
+    def __init__(self, parent=None, wallShapes=None, slabShapes=None, spaceShapes=None):
         super(TryApp, self).__init__(parent)
         self.constraints = {
             "ecc_w": -0.5,
@@ -48,8 +52,10 @@ class TryApp(QtGui.QMainWindow, Show2DWindow.Ui_MainWindow):
             else:
                 break
 
+        print("getting lower levels", len(self.skeletonLevels))
         for i, levelSkeleton in enumerate(self.skeletonLevels):
             prevLevels = self.skeletonLevelsHash[levelSkeleton].getRightLowerLevels()
+            print("getting for level", i)
             if not prevLevels:
                 continue
 
@@ -58,12 +64,25 @@ class TryApp(QtGui.QMainWindow, Show2DWindow.Ui_MainWindow):
                 continue
             levelSkeleton.restrictLevelUsableWalls(prevLevels)
 
+        self.storey_mode = False
         self.levels = [level for level in self.levels if len(self.levelsHash[level].getPolys())]
         self.skeletonLevels = [levelSkeleton for levelSkeleton in self.skeletonLevels if len(levelSkeleton.getPolys())]
+        self.storeySkeletons = []
+        heights = []
+        for levelSkeleton in self.skeletonLevels:
+            height = levelSkeleton.level.getHeight()
+            if height not in heights:
+                skeletons = [levelSkeleton]
+                heights.append(height)
+                for ls in self.skeletonLevels:
+                    if ls.level.getHeight() == height:
+                        skeletons.append(ls)
+
+                self.storeySkeletons.append(StoreySkeleton(skeletons))
         self.solutions = {}
 
         self.selectedRow = 1
-        self.initListView()
+        self.initListView(self.storey_mode)
         self.listView.setModel(self.model)
         self.listView.clicked.connect(self.listViewSelected)
         self.sol1.clicked.connect(self.sol1CB)
@@ -191,33 +210,26 @@ class TryApp(QtGui.QMainWindow, Show2DWindow.Ui_MainWindow):
 
         def mygen():
             c = {
-                "rad_w": 0.5,
+                "rad_w": 0,
                 "ecc_w": -0.5,
                 "area_w": 1,
                 "length_w": 1,
                 "ratio": 1,
                 "d": 1,
             }
-            ecc_w = [-0.1]
-            length_ratio = [1.2, 1.5, 2, 0.75, 0.5]
-            d_ratios = [0.75, 1.25, 1.5]
-            for w in ecc_w:
-                c['ecc_w'] = w
-                yield c
-
-            c['ecc_w'] = -0.5
-            # for lr in length_ratio:
-            #     c['ratio'] = lr
-            #     yield c
-            # c['ratio'] = 1
-            # for d in d_ratios:
-            #     c['d'] = d
-            #     yield c
-            # c['d'] = 1
+            area_w = [1.5, 2, 3, 4, 10]
+            d_ratios = [0.25, 0.5, 0.75]
+            for d in d_ratios:
+                c['d'] = d
+                for w in area_w:
+                    c['area_w'] = w
+                    yield c
+                    break
+                break
 
         count = 1
-        for consts in mygenprov():
-            dirname = 'savedtry/constraints' + str(count) + '/'
+        for consts in mygen():
+            dirname = 'savedWrong/constraints' + str(count) + '/'
             if not os.path.exists(dirname):
                 os.makedirs(dirname)
             open(dirname + 'constraints.txt', 'w').write("Torsional radius weight: " +
@@ -332,12 +344,18 @@ class TryApp(QtGui.QMainWindow, Show2DWindow.Ui_MainWindow):
         for shape in shapes:
             display.DisplayShape(shape)
 
-    def initListView(self):
+    def initListView(self, storey_mode):
         i = 0
-        for level in self.skeletonLevels:
-            item = QtGui.QStandardItem("level " + str(i))
-            i += 1
-            self.model.appendRow(item)
+        if not storey_mode:
+            for level in self.skeletonLevels:
+                item = QtGui.QStandardItem("level " + str(i))
+                i += 1
+                self.model.appendRow(item)
+        else:
+            for storey in self.storeySkeletons:
+                item = QtGui.QStandardItem("storey " + str(i))
+                i += 1
+                self.model.appendRow(item)
 
     def getPolygonsFromLevels(self, levels):
         polys = []
@@ -359,7 +377,7 @@ class TryApp(QtGui.QMainWindow, Show2DWindow.Ui_MainWindow):
         if not len(polygons):
             return
         polys = (polygons, colors)
-        center = Pnt.createPointFromShapely(levelSkeleton.slabSkeleton.poly.centroid())
+        # center = Pnt.createPointFromShapely(levelSkeleton.slabSkeleton.poly.centroid())
         return polys
         # ellipses = ([Ellip(center, 0.5)], [QtGui.QColor(0, 255, 0)])
         # self.draw(polys,ellipses)
@@ -404,17 +422,38 @@ class TryApp(QtGui.QMainWindow, Show2DWindow.Ui_MainWindow):
                 polys[1].append(q1)
         else:
             polys = self.getPolygonsFromLevelSkeletons(levelSkeleton)
+            if self.storey_mode:
+                polys[0].extend([lvlSkel.slabSkeleton.poly.copy() for lvlSkel in levelSkeleton.levelSkeletons])
+                for _ in levelSkeleton.levelSkeletons:
+                    q1 = QtGui.QColor(random()*255, random()*255, random()*255)
+                    q1.setAlpha(20)
+                    polys[1].append(q1)
+            else:
+                polys[0].append(levelSkeleton.slabSkeleton.poly.copy())
+                q1 = QtGui.QColor(random() * 255, random() * 255, random() * 255)
+                q1.setAlpha(20)
+                polys[1].append(q1)
         self.draw(polys, ellipses)
 
     def listViewSelected(self, index):
-        self.selectedRow = row = index.row()
-        # print ('selected item index found at %s with data: %s' % (index.row(), index.data().toString()))
-        shapes = [wall.shape for wall in self.levels[row].walls]
-        # self.drawPolygons(shapes)
-        # polys = self.getPolygonsFromLevelSkeletons(self.skeletonLevels[row])
-        self.drawSkeleton(self.skeletonLevels[row])
-        shapes.append(self.levels[row].slab.shape)
-        self.setViewerDisplay("Selected", shapes)
+        if not self.storey_mode:
+            self.selectedRow = row = index.row()
+            # print ('selected item index found at %s with data: %s' % (index.row(), index.data().toString()))
+            shapes = [wall.shape for wall in self.levels[row].walls]
+            # self.drawPolygons(shapes)
+            # polys = self.getPolygonsFromLevelSkeletons(self.skeletonLevels[row])
+            self.drawSkeleton(self.skeletonLevels[row])
+            shapes.append(self.levels[row].slab.shape)
+            self.setViewerDisplay("Selected", shapes)
+        else:
+            self.selectedRow = row = index.row()
+            # print ('selected item index found at %s with data: %s' % (index.row(), index.data().toString()))
+            shapes = [wall.shape for wall in self.storeySkeletons[row].walls]
+            # self.drawPolygons(shapes)
+            # polys = self.getPolygonsFromLevelSkeletons(self.skeletonLevels[row])
+            self.drawSkeleton(self.storeySkeletons[row])
+            shapes += [l.slab.shape for l in self.storeySkeletons[row].levels]
+            self.setViewerDisplay("Selected", shapes)
 
 
 def createShapes(file):
@@ -433,10 +472,12 @@ def createShapes(file):
 
 
 def main():
-    file = "../IFCFiles/model_001.ifc"
+    file = "../IFCFiles/B09_mod.ifc"
     wShapes, sShapes = createShapes(file)
+    space_shapes = getSpaceShapesFromIfc(file)
+    space_shapes = [s for _, s in space_shapes]
     app = QtGui.QApplication(sys.argv)
-    form = TryApp(wallShapes=wShapes, slabShapes=sShapes)
+    form = TryApp(wallShapes=wShapes, slabShapes=sShapes, spaceShapes=space_shapes)
     form.show()
     app.exec_()
 

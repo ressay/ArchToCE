@@ -3,7 +3,7 @@ from OCC.Display.qtDisplay import qtViewer3d
 from PyQt4 import QtGui,QtCore
 
 
-from UI.test2 import AppGUI
+from UI.ptest import AppGUI
 
 
 class ViewerMainWindow(QtGui.QMainWindow):

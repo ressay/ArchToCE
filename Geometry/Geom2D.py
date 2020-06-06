@@ -31,8 +31,6 @@ class Pnt(object):
     def isInPolygon(self,poly):
         return poly.containsPoint(self)
 
-
-
     def scale(self,r):
         self.pnt = Point(self.pnt.x*r, self.pnt.y*r)
         return self
@@ -89,6 +87,53 @@ def area(pts):
         s += x[i] * y[i + 1] - x[i + 1] * y[i]
     return s / 2
 
+
+def line_intersection(line1, line2):
+    xdiff = Pnt(line1[0].x() - line1[1].x(), line2[0].x() - line2[1].x())
+    ydiff = Pnt(line1[0].y() - line1[1].y(), line2[0].y() - line2[1].y())
+
+    def det(a, b):
+        return a.x() * b.y() - a.y() * b.x()
+
+    div = det(xdiff, ydiff)
+    if div == 0:
+       return None
+
+    d = Pnt(det(*line1), det(*line2))
+    x = det(d, xdiff) / div
+    y = det(d, ydiff) / div
+    return Pnt(x, y)
+
+def seg_intersection(line1, line2):
+    pnt = line_intersection(line1, line2)
+    # print(str(line1[0]), str(line1[1]))
+    # print(str(line2[0]), str(line2[1]))
+    # print("result", str(pnt))
+
+    if pnt is None:
+        return None
+
+    def between(x1, x2, x3):
+        e = 0.00001
+        return min((x2, x3)) - e <= x1 <= (max((x2, x3)) + e)
+
+    if not between(pnt.x(), line1[0].x(), line1[1].x()):
+        return None
+
+    if not between(pnt.x(), line2[0].x(), line2[1].x()):
+        return None
+
+    if not between(pnt.y(), line1[0].y(), line1[1].y()):
+        return None
+
+    if not between(pnt.y(), line2[0].y(), line2[1].y()):
+        return None
+
+    # print(str(pnt))
+    # print(str(line1[0]), str(line1[1]))
+    # print(str(line2[0]), str(line2[1]))
+
+    return pnt
 
 def centroid(pts):
     'Location of centroid.'
@@ -148,7 +193,7 @@ class Poly(object):
         # self.poly = Polygon([(1,2),(1,1),(5,5)])
 
     def containsPoint(self,pnt):
-        self.poly.contains(pnt.pnt)
+        return self.poly.contains(pnt.pnt)
 
     def intersects(self,poly):
         return self.poly.intersects(poly.poly)

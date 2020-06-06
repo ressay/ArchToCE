@@ -1,12 +1,15 @@
 import os
 import sys
-# from Optimization.Genetic import GeneticOperations2
+import inspect
+from random import random
+
+from Code import *
+
 from Geometry.Geom2D import Pnt, Ellip, Poly
-from Geometry.ShapeToPoly import getPolygonesFromShape
-from Ifc.IfcUtils import getSpaceShapesFromIfc
 from Optimization.Genetic import GeneticOperations2
 from Optimization.Genetic.GeneticAlgorithm import search
 from Skeleton.LevelSkeleton import LevelSkeleton
+from Skeleton.StoreySkeleton import StoreySkeleton
 from Structures.Level import Level
 from Ifc import IfcUtils
 from UI import Plotter
@@ -70,15 +73,63 @@ class Launcher(object):
                 continue
             levelSkeleton.restrictLevelUsableWalls(prevLevels)
 
+        self.storey_mode = False
         self.levels = [level for level in self.levels if len(self.levelsHash[level].getPolys())]
-        for level in self.levels:
-            level.relatedLevels = self.levels
-            level.rlowerLevels = None
         self.skeletonLevels = [levelSkeleton for levelSkeleton in self.skeletonLevels if len(levelSkeleton.getPolys())]
+        self.storeySkeletons = []
+        heights = []
+        for levelSkeleton in self.skeletonLevels:
+            height = levelSkeleton.level.getHeight()
+            if height not in heights:
+                skeletons = [levelSkeleton]
+                heights.append(height)
+                for ls in self.skeletonLevels:
+                    if ls.level.getHeight() == height:
+                        skeletons.append(ls)
+
+                self.storeySkeletons.append(StoreySkeleton(skeletons))
+        self.solutions = {}
         self.solutions = {}
 
         self.selectedRow = 1
         self.pend = True
+
+        # Vertical Loads
+        Sdiv = SlabDivision(self.storeySkeletons[0])
+        # Sdiv.importWalls(self.skeletonLevels[0])
+        # Seg = Sdiv.createSlabSegments()
+        # f2 = plt.figure(3,)
+        # for segment in Sdiv.createSlabSegments():
+        #     segment.End1.plotEnd()
+        #     segment.End2.plotEnd()
+        #     segment.PlotSeg()
+
+        for room in Sdiv.rooms:
+            # 0x7fd0cba0b9e0 >
+            print("room", room)
+            fig, ax = plt.subplots()
+            color = (random(), random(), random())
+            color2 = (random(), random(), random())
+            for segment in room.get_segments():
+                e1, e2 = segment.End1.PntCoord, segment.End2.PntCoord
+                pnt1 = Pnt(e1.x, e1.y)
+                pnt2 = Pnt(e2.x, e2.y)
+                c = color if pnt1.isInPolygon(room.slab_poly) else "r"
+                segment.End1.plot(c, (fig, ax))
+                c2 = color if pnt2.isInPolygon(room.slab_poly) else "r"
+                segment.End2.plot(c2, (fig, ax))
+                segment.plot(color, (fig, ax))
+            room.plot(color2, figax=(fig, ax))
+            # axes = ax.gca()
+            ax.set_xlim([-10, 10])
+            ax.set_ylim([-8, 8])
+            plt.show()
+
+
+
+
+
+
 
     def reinit_skeletons(self):
         self.skeletonLevels = [LevelSkeleton.createSkeletonFromLevel(level) for level in self.levels]
@@ -137,36 +188,31 @@ class Launcher(object):
             # plt.savefig('try2.png', bbox_inches='tight')
             # self.draw(polys)
 
-    def multiSearch(self, diroot='saved', layers=None, iterations=1):
+    def multiSearch(self):
 
-        def mygen2():
-            c = {
-                "rad_w": 0,
-                "ecc_w": -0.5,
-                "area_w": 1,
-                "length_w": 1,
-                "ratio": 1,
-                "d": 1,
-            }
-            area_w = [0.1, 0.5, 1, 1.5, 2]
-            length_w = [0.1, 0.5, 1, 1.5, 2]
-            ecc_w = [-0.1, -1, -1.5]
-            for aw in area_w:
-                c['area_w'] = aw
-                yield c
-            c['area_w'] = 1
-            for lw in length_w:
-                c['length_w'] = lw
-                yield c
-            c['length_w'] = 1
-            for ew in ecc_w:
-                c['ecc_w'] = ew
-                yield c
+        # def mygen2():
+        #     c = {
+        #         "rad_w": 1,
+        #         "ecc_w": -0.5,
+        #         "area_w": 1,
+        #         "length_w": 1,
+        #         "ratio": 1,
+        #         "d": 1,
+        #     }
+        #     area_w = [0.1, 0.5, 1, 1.5, 2]
+        #     length_w = [0.1, 0.5, 1, 1.5, 2]
+        #     for aw in area_w:
+        #         c['area_w'] = aw
+        #         yield c
+        #     c['area_w'] = 1
+        #     for lw in length_w:
+        #         c['length_w'] = lw
+        #         yield c
 
         def mygenprov():
             c = {
-                "rad_w": 0,
-                "ecc_w": -0.5,
+                "rad_w": 0.1,
+                "ecc_w": -1,
                 "area_w": 1,
                 "length_w": 1,
                 "ratio": 1,
@@ -174,72 +220,55 @@ class Launcher(object):
             }
             yield c
 
-        def mygen():
-            c = {
-                "rad_w": 0,
-                "ecc_w": -0.5,
-                "area_w": 1,
-                "length_w": 1,
-                "ratio": 1,
-                "d": 1,
-            }
-            area_w = [1.5, 2, 4]
-            d_ratios = [0.25, 0.5, 0.75]
-            for d in d_ratios:
-                c['d'] = d
-                for w in area_w:
-                    c['area_w'] = w
-                    yield c
-
-
+        # def mygen():
+        #     c = {
+        #         "rad_w": 0.5,
+        #         "ecc_w": -0.5,
+        #         "area_w": 1,
+        #         "length_w": 1,
+        #         "ratio": 1,
+        #         "d": 1,
+        #     }
+        #     ecc_w = [-0.1]
+        #     length_ratio = [1.2, 1.5, 2, 0.75, 0.5]
+        #     d_ratios = [0.75, 1.25, 1.5]
+        #     for w in ecc_w:
+        #         c['ecc_w'] = w
+        #         yield c
+        #
+        #     c['ecc_w'] = -0.5
 
         count = 1
         for consts in mygenprov():
-            dirname = diroot+'/constraints' + str(count) + '/'
+            dirname = 'savedtry/constraints' + str(count) + '/'
             if not os.path.exists(dirname):
                 os.makedirs(dirname)
             open(dirname + 'constraints.txt', 'w').write("Torsional radius weight: " +
                                                          str(consts['rad_w']) +
-                                                         "\nEccentricity weight: " +
+                                                         "Eccentricity weight: " +
                                                          str(consts['ecc_w']) +
                                                          "\nShear Wall length weight: " +
                                                          str(consts['length_w']) +
                                                          "\nShear Wall cover area weight: " +
-                                                         str(consts['area_w']) +
-                                                         "\nArea Distance ratio: " +
-                                                         str(consts['d']))
-            for iteration in range(0, iterations):
-                dirIt = dirname + 'iteration' + str(iteration+1) + '/'
-                self.constraints = consts
-                self.reinit_skeletons()
-                self.solutions = {}
-                if layers is None:
-                    skeletonLevels = self.skeletonLevels
-                else:
-                    skeletonLevels = self.skeletonLevels[:layers]
-                for levelSkeleton in skeletonLevels[::-1]:
-                    level = self.skeletonLevelsHash[levelSkeleton]
-                    prevs = [self.solutions[self.levelsHash[p]].levelSkeleton for p in level.getUpperLevels()
-                             if self.levelsHash[p] in self.solutions]
-                    print("PREVS LENGTH IS", len(prevs))
-                    if len(prevs):
-                        levelSkeleton.copyLevelsVoiles(prevs)
-                    i = self.skeletonLevels.index(levelSkeleton)
-                    solution = search(levelSkeleton, filename="level" + str(i), constraints=self.constraints)
-                    self.solutions[levelSkeleton] = solution
-
-                print(self.solutions)
-                self.saveSkeletons(dirIt, consts, layers)
+                                                         str(consts['area_w']))
+            self.constraints = consts
+            self.reinit_skeletons()
+            self.solutions = {}
+            for levelSkeleton in self.skeletonLevels[::-1]:
+                level = self.skeletonLevelsHash[levelSkeleton]
+                prevs = [self.solutions[self.levelsHash[p]].levelSkeleton for p in level.getUpperLevels()
+                         if self.levelsHash[p] in self.solutions]
+                print("PREVS LENGTH IS", len(prevs))
+                if len(prevs):
+                    levelSkeleton.copyLevelsVoiles(prevs)
+                i = self.skeletonLevels.index(levelSkeleton)
+                solution = search(levelSkeleton, filename="level" + str(i), constraints=self.constraints)
+                self.solutions[levelSkeleton] = solution
+            self.saveSkeletons(dirname)
             count += 1
 
-    def saveSkeletons(self, root, consts, layers=None):
-        print(self.skeletonLevels)
-        if self.skeletonLevels is None:
-            skeletonLevels = self.skeletonLevels
-        else:
-            skeletonLevels = self.skeletonLevels[:layers]
-
-        for selectedRow in range(len(skeletonLevels)):
+    def saveSkeletons(self, root):
+        for selectedRow in range(len(self.skeletonLevels)):
             lv = "level" + str(1 + selectedRow)
             froot = root + lv + '/'
             if not os.path.exists(froot):
@@ -248,7 +277,6 @@ class Launcher(object):
 
             from matplotlib import pyplot as plt
             levelSkeleton = self.skeletonLevels[selectedRow]
-            print(levelSkeleton)
             solution = self.solutions[levelSkeleton]
             if levelSkeleton in self.solutions:
                 levelSkeleton = self.solutions[levelSkeleton].levelSkeleton
@@ -279,18 +307,7 @@ class Launcher(object):
             fitness = solution.getFitness(constraints=self.constraints)
             constraints = self.constraints
             f = open(froot + 'properties.txt', 'w')
-            f.write("constraints: \n")
-            f.write("Torsional radius weight: " +
-                                                         str(consts['rad_w']) +
-                                                         "\nEccentricity weight: " +
-                                                         str(consts['ecc_w']) +
-                                                         "\nShear Wall length weight: " +
-                                                         str(consts['length_w']) +
-                                                         "\nShear Wall cover area weight: " +
-                                                         str(consts['area_w']) +
-                                                         "\nArea Distance ratio: " +
-                                                         str(consts['d']))
-            f.write("\n\nslab center: " + str(c1) +
+            f.write("slab center: " + str(c1) +
                     "\necc center: " + str(c2) +
                     "\nlength X: " + str(fitness['lengthX']) +
                     "\nlength Y: " + str(fitness['lengthY']))
@@ -343,35 +360,10 @@ def createShapes(file):
 
 
 def main():
-    file = "../IFCFiles/ifc_adv.ifc"
+    file = "../IFCFiles/B09_mod.ifc"
     wShapes, sShapes = createShapes(file)
-    space_shapes = getSpaceShapesFromIfc(file)
-    for _, shape in space_shapes:
-        polygons = getPolygonesFromShape(shape)
-        print("shape is ************************************")
-        for polygon in polygons:
-            print "polygon:"
-            for pnt in polygon.points:
-                print("point is: (%.2f, %.2f, %.2f) " % (pnt.x, pnt.y, pnt.z))
     launcher = Launcher(wallShapes=wShapes, slabShapes=sShapes)
-    # launcher.multiSearch('saveAdv', iterations=1)
-
-    # file = "../IFCFiles/villa1.ifc"
-    # wShapes, sShapes = createShapes(file)
-    # launcher = Launcher(wallShapes=wShapes, slabShapes=sShapes)
-    # launcher.multiSearch('saved3oldEcc')
-    # file = "../IFCFiles/villa2.ifc"
-    # wShapes, sShapes = createShapes(file)
-    # launcher = Launcher(wallShapes=wShapes, slabShapes=sShapes)
-    # launcher.multiSearch('saved4oldEcc', 1)
-    # file = "../IFCFiles/Immeuble39.ifc"
-    # wShapes, sShapes = createShapes(file)
-    # launcher = Launcher(wallShapes=wShapes, slabShapes=sShapes)
-    # launcher.multiSearch('saved5oldEcc', 2)
-    # file = "../IFCFiles/Immeuble2.ifc"
-    # wShapes, sShapes = createShapes(file)
-    # launcher = Launcher(wallShapes=wShapes, slabShapes=sShapes)
-    # launcher.multiSearch('saved6oldEcc')
+    # launcher.multiSearch()
 
 if __name__ == '__main__':
     main()

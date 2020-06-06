@@ -101,9 +101,10 @@ class Level(object):
     def isUnder(self,level):
         return self.getHeight() < level.getHeight()
 
-    def isRightUnder(self,level):
+    def isRightUnder(self, level):
         if level.getHeight() <= self.getHeight():
             return False
+        return True
         lowerLevels = [lvl for lvl in level.relatedLevels if lvl.getHeight() < level.getHeight()]
         # print('LOWERLEVELS SIZE BEFORE FILTER: ', len(lowerLevels))
         lowerLevels = [lvl for lvl in lowerLevels if lvl.getHeight() > self.getHeight()]

@@ -36,6 +36,19 @@ def getSlabShapesFromIfc(fileName):
     return slab_shapes
 
 
+def getSpaceShapesFromIfc(fileName):
+    f = ifc.open(fileName)
+    # Get a list of all walls in the file
+    spaces = f.by_type("IfcSpace")
+    # Create a list of wall representation shapes
+    space_shapes = []
+
+    for space in spaces:
+        shape = geom.create_shape(settings, space).geometry
+        space_shapes.append((space, shape))
+
+    return space_shapes
+
 
 def displayShapes(shapes):
     from OCC.Display.SimpleGui import init_display
