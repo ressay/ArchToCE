@@ -17,8 +17,8 @@ a = cascaded_union(arr)
 area = a.area
 stop = timeit.default_timer()
 un = gpd.GeoSeries(a)
-print ("time it took: " + str(stop - start))
-print ("area is: " + str(area))
+print(("time it took: " + str(stop - start)))
+print(("area is: " + str(area)))
 un.plot(color='green')
 plt.show()
 

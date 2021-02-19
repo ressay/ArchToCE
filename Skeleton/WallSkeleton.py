@@ -166,7 +166,7 @@ class WallSkeleton(BoxSkeleton):
             start = s+leave
             end = min([start+listToAdd[0],e])
             if end - start > self.vecLength.magn():
-                print ("ERROR FROM WALL SKELETON RANDOM",end-start,self.vecLength.magn(),left,start,end,s,leave)
+                print(("ERROR FROM WALL SKELETON RANDOM",end-start,self.vecLength.magn(),left,start,end,s,leave))
             voile = VoileSkeleton(self,start,end)
             voiles.append(voile)
             s = end
@@ -188,7 +188,7 @@ class WallSkeleton(BoxSkeleton):
         start = voileSkeleton.start
         end = voileSkeleton.end
         if end-start > self.vecLength.magn():
-            print('PROBLEM VOILE LENGTH',end-start,self.vecLength.magn())
+            print(('PROBLEM VOILE LENGTH',end-start,self.vecLength.magn()))
         mergeVoile(self.attachedVoiles,voileSkeleton)
 
     def attachFixedVoile(self,voileSkeleton):

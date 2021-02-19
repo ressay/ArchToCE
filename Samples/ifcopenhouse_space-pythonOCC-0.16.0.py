@@ -69,7 +69,7 @@ for wall in walls:
 #
 # occ_display.DisplayMessage(bounding_box_center, "Center", update=True)
 
-raw_input()
+input()
 occ_display.EraseAll()
 
 occ_display.DisplayMessage(bounding_box_center, "Center", update=True)
@@ -107,7 +107,7 @@ for wall, shape in wall_shapes:
                 halfspace = OCC.Core.BRepPrimAPI.BRepPrimAPI_MakeHalfSpace(new_face, bounding_box_center).Solid()
                 halfspaces.append(halfspace)
 
-raw_input()
+input()
 occ_display.EraseAll()
 
 # Create halfspace solids from the bottom faces of the roofs
@@ -139,7 +139,7 @@ ifcopenshell.geom.utils.display_shape(common_shape)
 # Calculate the volume properties of the resulting space shape
 props = OCC.Core.GProp.GProp_GProps()
 OCC.Core.BRepGProp.brepgprop_VolumeProperties(shape, props)
-print "Space volume: %.3f cubic meter" % props.Mass()
+print("Space volume: %.3f cubic meter" % props.Mass())
 
 # Enter the main loop so that the user can navigate
 ifcopenshell.geom.utils.main_loop()

@@ -3,7 +3,7 @@ import sys
 import inspect
 from random import random
 
-from Code import *
+from .Code import *
 
 from Geometry.Geom2D import Pnt, Ellip, Poly
 from Optimization.Genetic import GeneticOperations2
@@ -53,8 +53,8 @@ class Launcher(object):
         self.levels.sort(key=lambda lvl: lvl.getHeight())
 
         self.skeletonLevels = [LevelSkeleton.createSkeletonFromLevel(level) for level in self.levels]
-        self.levelsHash = dict(zip(self.levels, self.skeletonLevels))
-        self.skeletonLevelsHash = dict(zip(self.skeletonLevels, self.levels))
+        self.levelsHash = dict(list(zip(self.levels, self.skeletonLevels)))
+        self.skeletonLevelsHash = dict(list(zip(self.skeletonLevels, self.levels)))
         print("INFO INIT: DONE GENERATING LEVELSKELETONS FROM LEVELS")
         baseSlabHeight = 0
         for level in self.levels:
@@ -106,7 +106,7 @@ class Launcher(object):
 
         for room in Sdiv.rooms:
             # 0x7fd0cba0b9e0 >
-            print("room", room)
+            print(("room", room))
             fig, ax = plt.subplots()
             color = (random(), random(), random())
             color2 = (random(), random(), random())
@@ -133,8 +133,8 @@ class Launcher(object):
 
     def reinit_skeletons(self):
         self.skeletonLevels = [LevelSkeleton.createSkeletonFromLevel(level) for level in self.levels]
-        self.levelsHash = dict(zip(self.levels, self.skeletonLevels))
-        self.skeletonLevelsHash = dict(zip(self.skeletonLevels, self.levels))
+        self.levelsHash = dict(list(zip(self.levels, self.skeletonLevels)))
+        self.skeletonLevelsHash = dict(list(zip(self.skeletonLevels, self.levels)))
         print("INFO INIT: DONE GENERATING LEVELSKELETONS FROM LEVELS")
         baseSlabHeight = 0
         for level in self.levels:
@@ -258,7 +258,7 @@ class Launcher(object):
                 level = self.skeletonLevelsHash[levelSkeleton]
                 prevs = [self.solutions[self.levelsHash[p]].levelSkeleton for p in level.getUpperLevels()
                          if self.levelsHash[p] in self.solutions]
-                print("PREVS LENGTH IS", len(prevs))
+                print(("PREVS LENGTH IS", len(prevs)))
                 if len(prevs):
                     levelSkeleton.copyLevelsVoiles(prevs)
                 i = self.skeletonLevels.index(levelSkeleton)

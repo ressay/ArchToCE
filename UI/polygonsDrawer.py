@@ -1,5 +1,5 @@
 from PyQt4 import QtGui,QtCore
-import scrollable
+from . import scrollable
 
 class cell(object):
     poly = None

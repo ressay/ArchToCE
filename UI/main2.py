@@ -50,8 +50,8 @@ class Launcher(object):
         self.levels.sort(key=lambda lvl: lvl.getHeight())
 
         self.skeletonLevels = [LevelSkeleton.createSkeletonFromLevel(level) for level in self.levels]
-        self.levelsHash = dict(zip(self.levels, self.skeletonLevels))
-        self.skeletonLevelsHash = dict(zip(self.skeletonLevels, self.levels))
+        self.levelsHash = dict(list(zip(self.levels, self.skeletonLevels)))
+        self.skeletonLevelsHash = dict(list(zip(self.skeletonLevels, self.levels)))
         print("INFO INIT: DONE GENERATING LEVELSKELETONS FROM LEVELS")
         baseSlabHeight = 0
         for level in self.levels:
@@ -82,8 +82,8 @@ class Launcher(object):
 
     def reinit_skeletons(self):
         self.skeletonLevels = [LevelSkeleton.createSkeletonFromLevel(level) for level in self.levels]
-        self.levelsHash = dict(zip(self.levels, self.skeletonLevels))
-        self.skeletonLevelsHash = dict(zip(self.skeletonLevels, self.levels))
+        self.levelsHash = dict(list(zip(self.levels, self.skeletonLevels)))
+        self.skeletonLevelsHash = dict(list(zip(self.skeletonLevels, self.levels)))
         print("INFO INIT: DONE GENERATING LEVELSKELETONS FROM LEVELS")
         baseSlabHeight = 0
         for level in self.levels:
@@ -221,19 +221,19 @@ class Launcher(object):
                     level = self.skeletonLevelsHash[levelSkeleton]
                     prevs = [self.solutions[self.levelsHash[p]].levelSkeleton for p in level.getUpperLevels()
                              if self.levelsHash[p] in self.solutions]
-                    print("PREVS LENGTH IS", len(prevs))
+                    print(("PREVS LENGTH IS", len(prevs)))
                     if len(prevs):
                         levelSkeleton.copyLevelsVoiles(prevs)
                     i = self.skeletonLevels.index(levelSkeleton)
                     solution = search(levelSkeleton, filename="level" + str(i), constraints=self.constraints)
                     self.solutions[levelSkeleton] = solution
 
-                print(self.solutions)
+                print((self.solutions))
                 self.saveSkeletons(dirIt, consts, layers)
             count += 1
 
     def saveSkeletons(self, root, consts, layers=None):
-        print(self.skeletonLevels)
+        print((self.skeletonLevels))
         if self.skeletonLevels is None:
             skeletonLevels = self.skeletonLevels
         else:
@@ -343,18 +343,18 @@ def createShapes(file):
 
 
 def main():
-    file = "../IFCFiles/ifc_adv.ifc"
+    file = "../IFCFiles/ifc_adv1.ifc"
     wShapes, sShapes = createShapes(file)
     space_shapes = getSpaceShapesFromIfc(file)
     for _, shape in space_shapes:
         polygons = getPolygonesFromShape(shape)
         print("shape is ************************************")
         for polygon in polygons:
-            print "polygon:"
+            print("polygon:")
             for pnt in polygon.points:
-                print("point is: (%.2f, %.2f, %.2f) " % (pnt.x, pnt.y, pnt.z))
+                print(("point is: (%.2f, %.2f, %.2f) " % (pnt.x, pnt.y, pnt.z)))
     launcher = Launcher(wallShapes=wShapes, slabShapes=sShapes)
-    # launcher.multiSearch('saveAdv', iterations=1)
+    launcher.multiSearch('saveAdv', iterations=1)
 
     # file = "../IFCFiles/villa1.ifc"
     # wShapes, sShapes = createShapes(file)

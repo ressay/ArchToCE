@@ -64,7 +64,7 @@ class Solution(object):
         needed = levelSkeleton.getVoileLengthNeeded(ratio)*2 - voilesfixedLength
         # print("needed : " + str(needed) + " total length: " + str(totalLength))
         size = len(levelSkeleton.wallSkeletons)
-        indexes = range(size)
+        indexes = list(range(size))
         # s1 = timeit.default_timer()
         while len(indexes) > 0 and needed > 0:
             ind = int(random.uniform(0,len(indexes)-0.1))

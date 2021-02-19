@@ -64,7 +64,10 @@ class Pnt(object):
     def __mul__(self, other):
         return self.copy().scale(other)
 
-    def __div__(self, other):
+    def __truediv__(self, other):
+        return self * (1.0 / other)
+
+    def __floordiv__(self, other):
         return self*(1.0/other)
 
     def __str__(self):

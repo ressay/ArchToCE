@@ -28,7 +28,7 @@ for polygon in polygons:
     # polygon.move(-lx,-ly)
     print ("polygon is: ")
     for pnt in polygon.points:
-        print("point is: (%.2f, %.2f) " % (pnt.x, pnt.y))
+        print(("point is: (%.2f, %.2f) " % (pnt.x, pnt.y)))
 
 # app = QtGui.QApplication(sys.argv)
 # w = Window(polygons)

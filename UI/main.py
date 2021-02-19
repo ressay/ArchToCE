@@ -42,8 +42,8 @@ class TryApp(QtGui.QMainWindow, Show2DWindow.Ui_MainWindow):
         self.levels.sort(key=lambda lvl: lvl.getHeight())
 
         self.skeletonLevels = [LevelSkeleton.createSkeletonFromLevel(level) for level in self.levels]
-        self.levelsHash = dict(zip(self.levels, self.skeletonLevels))
-        self.skeletonLevelsHash = dict(zip(self.skeletonLevels, self.levels))
+        self.levelsHash = dict(list(zip(self.levels, self.skeletonLevels)))
+        self.skeletonLevelsHash = dict(list(zip(self.skeletonLevels, self.levels)))
         print("INFO INIT: DONE GENERATING LEVELSKELETONS FROM LEVELS")
         baseSlabHeight = 0
         for level in self.levels:
@@ -52,10 +52,10 @@ class TryApp(QtGui.QMainWindow, Show2DWindow.Ui_MainWindow):
             else:
                 break
 
-        print("getting lower levels", len(self.skeletonLevels))
+        print(("getting lower levels", len(self.skeletonLevels)))
         for i, levelSkeleton in enumerate(self.skeletonLevels):
             prevLevels = self.skeletonLevelsHash[levelSkeleton].getRightLowerLevels()
-            print("getting for level", i)
+            print(("getting for level", i))
             if not prevLevels:
                 continue
 
@@ -111,8 +111,8 @@ class TryApp(QtGui.QMainWindow, Show2DWindow.Ui_MainWindow):
 
     def reinit_skeletons(self):
         self.skeletonLevels = [LevelSkeleton.createSkeletonFromLevel(level) for level in self.levels]
-        self.levelsHash = dict(zip(self.levels, self.skeletonLevels))
-        self.skeletonLevelsHash = dict(zip(self.skeletonLevels, self.levels))
+        self.levelsHash = dict(list(zip(self.levels, self.skeletonLevels)))
+        self.skeletonLevelsHash = dict(list(zip(self.skeletonLevels, self.levels)))
         print("INFO INIT: DONE GENERATING LEVELSKELETONS FROM LEVELS")
         baseSlabHeight = 0
         for level in self.levels:
@@ -136,12 +136,12 @@ class TryApp(QtGui.QMainWindow, Show2DWindow.Ui_MainWindow):
         self.solutions = {}
 
     def sol1CB(self):
-        print("s1: " + str(self.solutions1[self.selectedRow].getFitness()))
+        print(("s1: " + str(self.solutions1[self.selectedRow].getFitness())))
         polys = self.getPolygonsFromLevelSkeletons(self.solutions1[self.selectedRow].levelSkeleton)
         self.draw(polys)
 
     def sol2CB(self):
-        print("s2: " + str(self.solutions2[self.selectedRow].getFitness()))
+        print(("s2: " + str(self.solutions2[self.selectedRow].getFitness())))
         polys = self.getPolygonsFromLevelSkeletons(self.solutions2[self.selectedRow].levelSkeleton)
         self.draw(polys)
 
@@ -247,7 +247,7 @@ class TryApp(QtGui.QMainWindow, Show2DWindow.Ui_MainWindow):
                 level = self.skeletonLevelsHash[levelSkeleton]
                 prevs = [self.solutions[self.levelsHash[p]].levelSkeleton for p in level.getUpperLevels()
                          if self.levelsHash[p] in self.solutions]
-                print("PREVS LENGTH IS", len(prevs))
+                print(("PREVS LENGTH IS", len(prevs)))
                 if len(prevs):
                     levelSkeleton.copyLevelsVoiles(prevs)
                 i = self.skeletonLevels.index(levelSkeleton)
@@ -403,8 +403,8 @@ class TryApp(QtGui.QMainWindow, Show2DWindow.Ui_MainWindow):
             polys = self.getPolygonsFromLevelSkeletons(solution.levelSkeleton)
             c1 = solution.levelSkeleton.getCenterFromSlab()
             c2 = solution.levelSkeleton.getCenterFromShear()
-            print("point in draw: ", str(c2))
-            print("point in draw2: ", str(c1))
+            print(("point in draw: ", str(c2)))
+            print(("point in draw2: ", str(c1)))
             e1 = Ellip(c1, 0.4)
             e2 = Ellip(c2, 0.4)
             ells = [e1, e2]

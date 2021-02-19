@@ -19,7 +19,7 @@ class Logger(object):
         return self.logs[track]
 
     def printTrack(self,track):
-        print ("track " + track + ": " + self.logs[track])
+        print(("track " + track + ": " + self.logs[track]))
 
 
     @staticmethod

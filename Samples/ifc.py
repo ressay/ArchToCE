@@ -20,11 +20,11 @@ for wall in walls:
     occ_display = ifcopenshell.geom.utils.initialize_display()
     ifcopenshell.geom.utils.display_shape(shape)
     shape_gpXYZ = shape.Location().Transformation().TranslationPart()
-    print(shape_gpXYZ.X(), shape_gpXYZ.Y(), shape_gpXYZ.Z())
+    print((shape_gpXYZ.X(), shape_gpXYZ.Y(), shape_gpXYZ.Z()))
     break
     # wire = TopoDS.topods_Wire(product)
     # explorer = Topology.WireExplorer(wire)
     # vertices = explorer.ordered_vertices()
     # for vertex in vertices:
     #     print vertex
-raw_input()
+input()

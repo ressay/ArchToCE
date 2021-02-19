@@ -51,8 +51,8 @@ class VoileSkeleton(BoxSkeleton):
             if vec.isParallel(vecL,0.005):
                 vecs.append(vec)
         if len(vecs) != 2:
-            print("ERROR UPDATE START END VOILESKELETON: NUMBER OF"
-                  " PARALLEL VECTORS EXPECTED: 2, FOUND: ",len(vecs))
+            print(("ERROR UPDATE START END VOILESKELETON: NUMBER OF"
+                  " PARALLEL VECTORS EXPECTED: 2, FOUND: ",len(vecs)))
             return False
         print('INFO UPDATE START END VOILESKELETON: CORRECT NUMBER')
         self.start = min([vecs[0].magn(), vecs[1].magn()])

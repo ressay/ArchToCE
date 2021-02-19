@@ -98,8 +98,8 @@ def calculateFitnessSolution(solution, constraints=None):
     Rx, Ry = levelSkeleton.getTorsionalRadius(centerV)
     momentx, momenty = levelSkeleton.slabSkeleton.poly.momentX(), levelSkeleton.slabSkeleton.poly.momentY()
     if momentx < 0 or momenty < 0:
-        print (momentx, momenty)
-        input()
+        print((momentx, momenty))
+        eval(input())
     radiuses = (Rx + Ry)/(abs(Rx-Ry)+0.000001) #abs(1-(Ry/(momentx+momenty))) + abs(1-(Rx/(momentx+momenty)))
 
     area = solution.getAreaCoveredBoxes(constraints['d'])

@@ -1,6 +1,6 @@
 from Geometry.ShapeToPoly import getShapeBasePolygon
 from Geometry.ShapeToPoly import getPolygonesFromShape
-from Structure import Structure
+from .Structure import Structure
 from Structures.StructureExceptions.NotWallShapeException import NotWallShapeException
 
 
@@ -10,9 +10,9 @@ class Wall(Structure):
         if not getShapeBasePolygon(shape):
             polygons = getPolygonesFromShape(shape)
             for polygon in polygons:
-                print "polygon:"
+                print("polygon:")
                 for pnt in polygon.points:
-                    print("point is: (%.2f, %.2f, %.2f) " % (pnt.x, pnt.y, pnt.z))
+                    print(("point is: (%.2f, %.2f, %.2f) " % (pnt.x, pnt.y, pnt.z)))
             raise NotWallShapeException("wall doesn't have base polygon")
         super(Wall, self).__init__(shape)
 

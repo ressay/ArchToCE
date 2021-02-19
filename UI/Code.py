@@ -38,12 +38,12 @@ class SlabDivision:
         rooms = []
         cnt = 1
         for levelSkeleton in self.storeySkeleton.levelSkeletons:
-            print("room", cnt)
+            print(("room", cnt))
 
             cnt += 1
             segments = self.createSlabSegments(levelSkeleton.wallSkeletons, levelSkeleton.slabSkeleton.poly.copy())
             room = Room(segments, levelSkeleton.slabSkeleton.poly.copy())
-            print("room", room)
+            print(("room", room))
             # room.LocateAll(segments)
             rooms.append(room)
 
@@ -71,7 +71,7 @@ class SlabDivision:
         l = len(poly.points)
         intersections = []
         # print("start for poly")
-        print('***************', str(pnt1))
+        print(('***************', str(pnt1)))
         for i in range(l):
             p1, p2 = poly.points[i % l], poly.points[(i + 1) % l]
             inters = seg_intersection((pnt1, pnt2), (p1, p2))
@@ -102,17 +102,17 @@ class SlabDivision:
             end2 = self.get_closest_intersection(pnt2, pnt1, slab_poly)
 
         if end1 is not None and end2 is None:
-            print(e1.x, e1.y, e2.x, e2.y)
+            print((e1.x, e1.y, e2.x, e2.y))
             print("polygon")
             for pnt in slab_poly.points:
-                print(pnt.x(), pnt.y())
+                print((pnt.x(), pnt.y()))
             raise Exception
 
         if end1 is None and end2 is not None:
-            print(e1.x, e1.y, e2.x, e2.y)
+            print((e1.x, e1.y, e2.x, e2.y))
             print("polygon")
             for pnt in slab_poly.points:
-                print(pnt.x(), pnt.y())
+                print((pnt.x(), pnt.y()))
             raise Exception
 
         # start

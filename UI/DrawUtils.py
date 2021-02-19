@@ -91,8 +91,8 @@ class Window(QtGui.QWidget):
         x,y,w,h = self.geometry().getRect()
         x2 = x+w
         y2 = y+h
-        print(str(x) + "," + str(y)+ "  " + str(x2) + "," + str(y2))
-        print(str(minX) + "," + str(minY)+ "  " + str(maxX) + "," + str(maxY))
+        print((str(x) + "," + str(y)+ "  " + str(x2) + "," + str(y2)))
+        print((str(minX) + "," + str(minY)+ "  " + str(maxX) + "," + str(maxY)))
         w2 = maxX - minX
         h2 = maxY - minY
         r1 = w/w2

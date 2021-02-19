@@ -34,9 +34,9 @@ def plotPolys(polys,f,title='figure',colors=None):
     xrange = [minX-4, maxX+4]
     yrange = [minY-4, maxY+4]
     ax.set_xlim(*xrange)
-    ax.set_xticks(range(*xrange) + [xrange[-1]])
+    ax.set_xticks(list(range(*xrange)) + [xrange[-1]])
     ax.set_ylim(*yrange)
-    ax.set_yticks(range(*yrange) + [yrange[-1]])
+    ax.set_yticks(list(range(*yrange)) + [yrange[-1]])
     ax.set_aspect(1)
 
 def plotShapely(shapes,colors,alphas,f,title='figure'):

@@ -1,5 +1,5 @@
 from Geometry.ShapeToPoly import getShapeBasePolygon, getBaseOfShapeZ
-from Structure import Structure
+from .Structure import Structure
 from Structures.StructureExceptions.NotSlabShapeException import NotSlabShapeException
 
 
