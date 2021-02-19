@@ -1,54 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="970fbb92-1777-4107-8d6b-9f3c4b97d9d9" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/OCCUtils/Common.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/OCCUtils/Construct.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/OCCUtils/Image.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/OCCUtils/Iteration.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/OCCUtils/Topology.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/OCCUtils/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/OCCUtils/base.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/OCCUtils/edge.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/OCCUtils/face.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/OCCUtils/shell.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/OCCUtils/solid.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/OCCUtils/types_lut.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/OCCUtils/vertex.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/OCCUtils/wire.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/IfcProject.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/IfcProject.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debugging/Logger.py" beforeDir="false" afterPath="$PROJECT_DIR$/Debugging/Logger.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Optimization/Genetic/Evaluator.py" beforeDir="false" afterPath="$PROJECT_DIR$/Optimization/Genetic/Evaluator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Optimization/Genetic/GeneticAlgorithm.py" beforeDir="false" afterPath="$PROJECT_DIR$/Optimization/Genetic/GeneticAlgorithm.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Optimization/Genetic/GeneticOperations.py" beforeDir="false" afterPath="$PROJECT_DIR$/Optimization/Genetic/GeneticOperations.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Optimization/Solution.py" beforeDir="false" afterPath="$PROJECT_DIR$/Optimization/Solution.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Samples/DrawUtils.py" beforeDir="false" afterPath="$PROJECT_DIR$/Samples/DrawUtils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Samples/ifc.py" beforeDir="false" afterPath="$PROJECT_DIR$/Samples/ifc.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Samples/ifcopenhouse_space-pythonOCC-0.16.0.py" beforeDir="false" afterPath="$PROJECT_DIR$/Samples/ifcopenhouse_space-pythonOCC-0.16.0.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Samples/tries.py" beforeDir="false" afterPath="$PROJECT_DIR$/Samples/tries.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Samples/tuto.py" beforeDir="false" afterPath="$PROJECT_DIR$/Samples/tuto.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Skeleton/VoileSkeleton.py" beforeDir="false" afterPath="$PROJECT_DIR$/Skeleton/VoileSkeleton.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Skeleton/WallSkeleton.py" beforeDir="false" afterPath="$PROJECT_DIR$/Skeleton/WallSkeleton.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Structures/Level.py" beforeDir="false" afterPath="$PROJECT_DIR$/Structures/Level.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Structures/Slab.py" beforeDir="false" afterPath="$PROJECT_DIR$/Structures/Slab.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Structures/Wall.py" beforeDir="false" afterPath="$PROJECT_DIR$/Structures/Wall.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/Code.py" beforeDir="false" afterPath="$PROJECT_DIR$/UI/Code.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/DrawUtils.py" beforeDir="false" afterPath="$PROJECT_DIR$/UI/DrawUtils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/Plotter.py" beforeDir="false" afterPath="$PROJECT_DIR$/UI/Plotter.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/level0" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/level1" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/level2" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/level3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/level4" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/level5" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/level6" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/UI/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/main2.py" beforeDir="false" afterPath="$PROJECT_DIR$/UI/main2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/main3.py" beforeDir="false" afterPath="$PROJECT_DIR$/UI/main3.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/polygonsDrawer.py" beforeDir="false" afterPath="$PROJECT_DIR$/UI/polygonsDrawer.py" afterDir="false" />
-    </list>
+    <list default="true" id="970fbb92-1777-4107-8d6b-9f3c4b97d9d9" name="Default" comment="changed boxes shapes" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -322,7 +275,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1523551818664</updated>
-      <workItem from="1613674446008" duration="6248000" />
+      <workItem from="1613674446008" duration="6596000" />
     </task>
     <task id="LOCAL-00001" summary="initial commit">
       <created>1528726008936</created>
@@ -394,7 +347,14 @@
       <option name="project" value="LOCAL" />
       <updated>1554494441353</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="changed boxes shapes">
+      <created>1613763660472</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1613763660472</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TestHistory">
