@@ -52,7 +52,7 @@ def getSpaceShapesFromIfc(fileName):
 
 def displayShapes(shapes):
     from OCC.Display.SimpleGui import init_display
-    display, start_display, add_menu, add_function_to_menu = init_display("qt-pyqt4")
+    display, start_display, add_menu, add_function_to_menu = init_display("qt-pyqt5")
     for shape in shapes:
         display.DisplayShape(shape)
     start_display()

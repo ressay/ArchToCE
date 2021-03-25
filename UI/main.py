@@ -3,8 +3,7 @@ import sys
 from random import random
 
 from OCC.Display.backend import load_backend
-from PyQt4 import QtGui
-
+from PyQt5 import QtGui, QtWidgets   # change was here
 import UI.Show2DWindow as Show2DWindow
 # from Optimization.Genetic import GeneticOperations2
 from Geometry.Geom2D import Pnt, Ellip, Poly
@@ -18,10 +17,10 @@ from Ifc import IfcUtils
 from UI import Plotter
 from shapely.geometry import Point
 
-load_backend("qt-pyqt4")  # here you need to tell OCC.Display to load qt4 backend
+load_backend("qt-pyqt5")  # here you need to tell OCC.Display to load qt5 backend
 
 
-class TryApp(QtGui.QMainWindow, Show2DWindow.Ui_MainWindow):
+class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
     model = QtGui.QStandardItemModel()
     levels = []
     skeletonLevels = []
@@ -91,7 +90,7 @@ class TryApp(QtGui.QMainWindow, Show2DWindow.Ui_MainWindow):
         self.cross.clicked.connect(self.crossCB)
         self.showLower.clicked.connect(self.showLowerFun)
 
-        self.scrollTab = QtGui.QScrollArea()
+        self.scrollTab = QtWidgets.QScrollArea()
 
         self.tabWidget.addTab(self.scrollTab, "upperView")
 
@@ -430,7 +429,7 @@ class TryApp(QtGui.QMainWindow, Show2DWindow.Ui_MainWindow):
                     polys[1].append(q1)
             else:
                 polys[0].append(levelSkeleton.slabSkeleton.poly.copy())
-                q1 = QtGui.QColor(random() * 255, random() * 255, random() * 255)
+                q1 = QtWidgets.QColor(random() * 255, random() * 255, random() * 255)
                 q1.setAlpha(20)
                 polys[1].append(q1)
         self.draw(polys, ellipses)
@@ -476,7 +475,7 @@ def main():
     wShapes, sShapes = createShapes(file)
     space_shapes = getSpaceShapesFromIfc(file)
     space_shapes = [s for _, s in space_shapes]
-    app = QtGui.QApplication(sys.argv)
+    app = QtWidgets.QApplication(sys.argv)
     form = TryApp(wallShapes=wShapes, slabShapes=sShapes, spaceShapes=space_shapes)
     form.show()
     app.exec_()

@@ -1,0 +1,4 @@
+slab center: (-2.8998679403727694,-3.47308377118206)
+ecc center: (0.0,0.0)
+length X: 0
+length Y: 0needed: 0.44130554999999994covered area: 0.0overlapped area: 0.0

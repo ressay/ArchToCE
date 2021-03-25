@@ -53,6 +53,7 @@ class Launcher(object):
         self.levelsHash = dict(list(zip(self.levels, self.skeletonLevels)))
         self.skeletonLevelsHash = dict(list(zip(self.skeletonLevels, self.levels)))
         print("INFO INIT: DONE GENERATING LEVELSKELETONS FROM LEVELS")
+
         baseSlabHeight = 0
         for level in self.levels:
             if not len(self.levelsHash[level].getPolys()):  # or level.getHeight() <= 0:
@@ -340,7 +341,6 @@ def createShapes(file):
         sShapes.append(shape)
 
     return wShapes, sShapes
-
 
 def main():
     file = "IFCFiles/ifc_adv1.ifc"

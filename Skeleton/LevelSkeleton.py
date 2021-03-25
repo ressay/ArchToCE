@@ -8,6 +8,7 @@ from Skeleton.WallSkeleton import WallSkeleton
 from Skeleton.Skelet import Skelet
 import math
 
+# Add intersection of two walls same level  (axes or polygons)
 
 class LevelSkeleton(Skelet):
     def __init__(self, walls, slab, level):

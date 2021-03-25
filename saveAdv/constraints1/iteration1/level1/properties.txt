@@ -1,0 +1,11 @@
+constraints: 
+Torsional radius weight: 0
+Eccentricity weight: -0.5
+Shear Wall length weight: 1
+Shear Wall cover area weight: 1
+Area Distance ratio: 1
+
+slab center: (7.295277114875324,-13.725609987064912)
+ecc center: (7.312400000000004,-13.930858014459599)
+length X: 3.586902260021672
+length Y: 4.000000000000003needed: 3.4161518191499995covered area: 402.1657527541271overlapped area: 149.34961778833815

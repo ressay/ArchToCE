@@ -1,4 +1,4 @@
-from shapely.geometry import Point,Polygon
+from shapely.geometry import Point, Polygon
 import math
 from math import atan2, sin, cos, sqrt, pi, degrees
 
@@ -8,7 +8,7 @@ class Pnt(object):
 
     def __init__(self,x,y):
         super(Pnt, self).__init__()
-        self.pnt = Point(x,y)
+        self.pnt = Point(x, y)
 
     def x(self):
         return self.pnt.x
