@@ -429,7 +429,7 @@ class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
                     polys[1].append(q1)
             else:
                 polys[0].append(levelSkeleton.slabSkeleton.poly.copy())
-                q1 = QtWidgets.QColor(random() * 255, random() * 255, random() * 255)
+                q1 = QtGui.QColor(random() * 255, random() * 255, random() * 255)
                 q1.setAlpha(20)
                 polys[1].append(q1)
         self.draw(polys, ellipses)
@@ -471,7 +471,7 @@ def createShapes(file):
 
 
 def main():
-    file = "../IFCFiles/B09_mod.ifc"
+    file = "../IFCFiles/villa2.ifc"
     wShapes, sShapes = createShapes(file)
     space_shapes = getSpaceShapesFromIfc(file)
     space_shapes = [s for _, s in space_shapes]

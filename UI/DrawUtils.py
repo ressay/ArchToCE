@@ -1,5 +1,5 @@
 import sys
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore, QtWidgets
 
 from Geometry import ShapeToPoly
 
@@ -58,7 +58,7 @@ class cell(drawable):
 
 
 
-class Window(QtGui.QWidget):
+class Window(QtWidgets.QWidget):
     polys = []
     colorsP = []
     def __init__(self,polys,rect=None,ellipses=None):
