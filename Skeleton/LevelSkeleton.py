@@ -25,6 +25,9 @@ class LevelSkeleton(Skelet):
         wallSkeletons = []
         lowerlevel = level.getLowerLevel()
         lowZ = None if lowerlevel is None else lowerlevel.slab.getHighestZ()
+        print("for ", level, "lowz is: ", lowZ)
+        if lowZ is None:
+            lowZ = 0
         for wall in level.walls:
             wallSkeletons += WallSkeleton.createSkeletonsFromWall(wall,
                                                                   lowZ,

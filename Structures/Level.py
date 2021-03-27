@@ -14,10 +14,6 @@ class Level(object):
         self.slab = slab
         self.walls = walls
         self.relatedLevels = []
-        self.lowerLevel = None
-        self.upperLevel = None
-        self.lowerLevels = None
-        self.rlowerLevels = None
         self.heighestZ = None
 
     @staticmethod
@@ -58,39 +54,31 @@ class Level(object):
             levels.append(Level(slab, slab.getSupportingWalls(walls)))
         for level in levels:
             level.relatedLevels = levels
+            print("In level: ",level.relatedLevels)
             level.heighestZ = heigh
         return levels
 
     def getLowerLevels(self):
-        if self.lowerLevels:
-            return self.lowerLevels
         lowerLevels = [lvl for lvl in self.relatedLevels if lvl.isUnder(self)]
-        if self.lowerLevels is None and len(lowerLevels) != 0:
+        if len(lowerLevels) != 0:
             maxVal = max([level.getHeight() for level in lowerLevels])
-            self.lowerLevels = [level for level in lowerLevels if level.getHeight() == maxVal]
-        return self.lowerLevels
+            return [level for level in lowerLevels if level.getHeight() == maxVal]
+        return []
 
     def getRightLowerLevels(self):
-        if self.rlowerLevels:
-            return self.rlowerLevels
-        self.rlowerLevels = [lvl for lvl in self.relatedLevels if lvl.isRightUnder(self)]
-        return self.rlowerLevels
+        return [lvl for lvl in self.relatedLevels if lvl.isRightUnder(self)]
 
     def getLowerLevel(self):
-        if self.lowerLevel:
-            return self.lowerLevel
         lowerLevels = self.getLowerLevels()
         if lowerLevels and len(lowerLevels) != 0:
-            self.lowerLevel = lowerLevels[0]
-        return self.lowerLevel
+            return lowerLevels[0]
+        return None
 
     def getUpperLevel(self):
-        if self.upperLevel:
-            return self.upperLevel
         upperLevels = [lvl for lvl in self.relatedLevels if lvl.isOver(self)]
-        if self.upperLevel is None and len(upperLevels) != 0:
-            self.upperLevel = min(upperLevels, key=lambda p: p.getHeight())
-        return self.upperLevel
+        if len(upperLevels) != 0:
+            return min(upperLevels, key=lambda p: p.getHeight())
+        return None
 
     def getUpperLevels(self):
         return [lvl for lvl in self.relatedLevels if lvl.isOver(self)]

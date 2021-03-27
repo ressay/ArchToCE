@@ -36,7 +36,7 @@ class WallSkeleton(BoxSkeleton):
         if maxZ is not None:
             maxZ = min([maxZ,max([pnt.z for poly in pols for pnt in poly.points])])-e
         if minZ is not None: minZ = minZ + e
-        allPolygons = wall.getXYPlanePolygons(minZ,maxZ)
+        allPolygons = wall.getXYPlanePolygons(minZ, maxZ)
 
         # print('maxZ: ',maxZ,' maxZ2: ',maxZ2)
         polygons = wall.getBasePolygons()

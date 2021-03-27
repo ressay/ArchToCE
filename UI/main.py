@@ -35,52 +35,61 @@ class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
             "ratio": 1,
             "d": 1,
         }
+        self.solutions = {}
+        self.selectedRow = 1
+        self.storey_mode = False
+        self.storeySkeletons = []
+
         self.setupUi(self)
         self.levels = Level.generateLevelsFromShapes(wallShapes, slabShapes)
         print("INFO INIT: DONE GENERATING LEVELS FROM SHAPES")
         self.levels.sort(key=lambda lvl: lvl.getHeight())
 
-        self.skeletonLevels = [LevelSkeleton.createSkeletonFromLevel(level) for level in self.levels]
-        self.levelsHash = dict(list(zip(self.levels, self.skeletonLevels)))
-        self.skeletonLevelsHash = dict(list(zip(self.skeletonLevels, self.levels)))
-        print("INFO INIT: DONE GENERATING LEVELSKELETONS FROM LEVELS")
-        baseSlabHeight = 0
-        for level in self.levels:
-            if not len(self.levelsHash[level].getPolys()):  # or level.getHeight() <= 0:
-                baseSlabHeight = level.getHeight()
-            else:
-                break
 
-        print(("getting lower levels", len(self.skeletonLevels)))
-        for i, levelSkeleton in enumerate(self.skeletonLevels):
-            prevLevels = self.skeletonLevelsHash[levelSkeleton].getRightLowerLevels()
-            print(("getting for level", i))
-            if not prevLevels:
-                continue
+        self.init_skeletons()
+        # self.skeletonLevels = [LevelSkeleton.createSkeletonFromLevel(level) for level in self.levels]
+        # self.levelsHash = dict(list(zip(self.levels, self.skeletonLevels)))
+        # self.skeletonLevelsHash = dict(list(zip(self.skeletonLevels, self.levels)))
+        # print("INFO INIT: DONE GENERATING LEVELSKELETONS FROM LEVELS")
+        # baseSlabHeight = 0
+        # for level in self.levels:
+        #     if not len(self.levelsHash[level].getPolys()):  # or level.getHeight() <= 0:
+        #         baseSlabHeight = level.getHeight()
+        #     else:
+        #         break
+        #
+        # print(("getting lower levels", len(self.skeletonLevels)))
+        # for i, levelSkeleton in enumerate(self.skeletonLevels):
+        #     prevLevels = self.skeletonLevelsHash[levelSkeleton].getRightLowerLevels()
+        #     print(("getting for level", i))
+        #     if not prevLevels:
+        #         continue
+        #
+        #     prevLevels = [self.levelsHash[level] for level in prevLevels if level.getHeight() > baseSlabHeight]
+        #     if not len(prevLevels):
+        #         continue
+        #     levelSkeleton.restrictLevelUsableWalls(prevLevels)
+        #
+        # self.levels = [level for level in self.levels if len(self.levelsHash[level].getPolys())]
+        # for level in self.levels:
+        #     level.relatedLevels = self.levels
+        #
+        # self.skeletonLevels = [levelSkeleton for levelSkeleton in self.skeletonLevels if len(levelSkeleton.getPolys())]
 
-            prevLevels = [self.levelsHash[level] for level in prevLevels if level.getHeight() > baseSlabHeight]
-            if not len(prevLevels):
-                continue
-            levelSkeleton.restrictLevelUsableWalls(prevLevels)
 
-        self.storey_mode = False
-        self.levels = [level for level in self.levels if len(self.levelsHash[level].getPolys())]
-        self.skeletonLevels = [levelSkeleton for levelSkeleton in self.skeletonLevels if len(levelSkeleton.getPolys())]
-        self.storeySkeletons = []
         heights = []
+
         for levelSkeleton in self.skeletonLevels:
             height = levelSkeleton.level.getHeight()
             if height not in heights:
-                skeletons = [levelSkeleton]
+                skeletons = []
                 heights.append(height)
                 for ls in self.skeletonLevels:
                     if ls.level.getHeight() == height:
                         skeletons.append(ls)
 
                 self.storeySkeletons.append(StoreySkeleton(skeletons))
-        self.solutions = {}
 
-        self.selectedRow = 1
         self.initListView(self.storey_mode)
         self.listView.setModel(self.model)
         self.listView.clicked.connect(self.listViewSelected)
@@ -108,10 +117,17 @@ class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
         self.setViewerDisplay("All", all)
         self.pend = True
 
-    def reinit_skeletons(self):
+    def init_skeletons(self):
         self.skeletonLevels = [LevelSkeleton.createSkeletonFromLevel(level) for level in self.levels]
         self.levelsHash = dict(list(zip(self.levels, self.skeletonLevels)))
         self.skeletonLevelsHash = dict(list(zip(self.skeletonLevels, self.levels)))
+        print(self.levels)
+        print(self.skeletonLevels)
+        self.levels = [level for level in self.levels if len(self.levelsHash[level].getPolys())]
+        for level in self.levels:
+            level.relatedLevels = self.levels
+        self.skeletonLevels = [levelSkeleton for levelSkeleton in self.skeletonLevels if len(levelSkeleton.getPolys())]
+
         print("INFO INIT: DONE GENERATING LEVELSKELETONS FROM LEVELS")
         baseSlabHeight = 0
         for level in self.levels:
@@ -120,18 +136,21 @@ class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
             else:
                 break
 
+        print(baseSlabHeight)
+
         for i, levelSkeleton in enumerate(self.skeletonLevels):
             prevLevels = self.skeletonLevelsHash[levelSkeleton].getRightLowerLevels()
+
             if not prevLevels:
                 continue
 
-            prevLevels = [self.levelsHash[level] for level in prevLevels if level.getHeight() > baseSlabHeight]
+            prevLevels = [self.levelsHash[level] for level in prevLevels if level.getHeight() >= baseSlabHeight]
+            print(prevLevels)
             if not len(prevLevels):
                 continue
             levelSkeleton.restrictLevelUsableWalls(prevLevels)
 
-        self.levels = [level for level in self.levels if len(self.levelsHash[level].getPolys())]
-        self.skeletonLevels = [levelSkeleton for levelSkeleton in self.skeletonLevels if len(levelSkeleton.getPolys())]
+
         self.solutions = {}
 
     def sol1CB(self):
@@ -198,10 +217,10 @@ class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
 
         def mygenprov():
             c = {
-                "rad_w": 1,
-                "ecc_w": 0,
-                "area_w": 0,
-                "length_w": 0,
+                "rad_w": 0,
+                "ecc_w": -0.5,
+                "area_w": 2,
+                "length_w": 1,
                 "ratio": 1,
                 "d": 1,
             }
@@ -227,7 +246,7 @@ class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
                 break
 
         count = 1
-        for consts in mygen():
+        for consts in mygenprov():
             dirname = 'savedWrong/constraints' + str(count) + '/'
             if not os.path.exists(dirname):
                 os.makedirs(dirname)
@@ -240,7 +259,7 @@ class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
                                                          "\nShear Wall cover area weight: " +
                                                          str(consts['area_w']))
             self.constraints = consts
-            self.reinit_skeletons()
+            self.init_skeletons()
             self.solutions = {}
             for levelSkeleton in self.skeletonLevels[::-1]:
                 level = self.skeletonLevelsHash[levelSkeleton]
