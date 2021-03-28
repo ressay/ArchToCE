@@ -62,12 +62,12 @@ class WallSkeleton(BoxSkeleton):
 
         wallSkeletons = []
         for polygon in polygons:
-            if Poly.isVertical(polygon):
-                try:
-                    wallSkeleton = WallSkeleton(polygon)
-                except NotBoxError:
-                    print("not box error damn")
-                    continue
+            try:
+                wallSkeleton = WallSkeleton(polygon)
+            except NotBoxError:
+                print("not box error damn")
+                continue
+            if abs(wallSkeleton.vecLength.x()) < abs(wallSkeleton.vecLength.y()):
                 wallSkeletons.append(wallSkeleton)
 
 
