@@ -3,10 +3,9 @@ import math
 from math import atan2, sin, cos, sqrt, pi, degrees
 
 
-
 class Pnt(object):
 
-    def __init__(self,x,y):
+    def __init__(self, x, y):
         super(Pnt, self).__init__()
         self.pnt = Point(x, y)
 
@@ -17,40 +16,38 @@ class Pnt(object):
         return self.pnt.y
 
     def magn(self):
-        return math.sqrt(self.x()*self.x()+self.y()*self.y())
+        return math.sqrt(self.x() * self.x() + self.y() * self.y())
 
-
-    def isParallel(self,point,threshold=0):
+    def isParallel(self, point, threshold=0):
         if abs(self.y()) <= threshold:
             return abs(point.y()) <= threshold
-        if abs(point.y()) <=threshold:
+        if abs(point.y()) <= threshold:
             return False
-        return abs(self.x()/self.y() - point.x()/point.y()) <= threshold
+        return abs(self.x() / self.y() - point.x() / point.y()) <= threshold
 
-
-    def isInPolygon(self,poly):
+    def isInPolygon(self, poly):
         return poly.containsPoint(self)
 
-    def scale(self,r):
-        self.pnt = Point(self.pnt.x*r, self.pnt.y*r)
+    def scale(self, r):
+        self.pnt = Point(self.pnt.x * r, self.pnt.y * r)
         return self
 
-    def resize(self,size):
-        self.scale(1/self.magn()).scale(size)
+    def resize(self, size):
+        self.scale(1 / self.magn()).scale(size)
         return self
 
-    def move(self,x,y):
-        self.pnt = Point(self.pnt.x+x,self.pnt.y+y)
+    def move(self, x, y):
+        self.pnt = Point(self.pnt.x + x, self.pnt.y + y)
         return self
 
-    def minus(self,pnt):
-        return Pnt(self.x()-pnt.x(),self.y()-pnt.y())
+    def minus(self, pnt):
+        return Pnt(self.x() - pnt.x(), self.y() - pnt.y())
 
-    def plus(self,pnt):
-        return Pnt(self.x()+pnt.x(),self.y()+pnt.y())
+    def plus(self, pnt):
+        return Pnt(self.x() + pnt.x(), self.y() + pnt.y())
 
     def copy(self):
-        return Pnt(self.x(),self.y())
+        return Pnt(self.x(), self.y())
 
     def __copy__(self):
         return self.copy()
@@ -68,14 +65,14 @@ class Pnt(object):
         return self * (1.0 / other)
 
     def __floordiv__(self, other):
-        return self*(1.0/other)
+        return self * (1.0 / other)
 
     def __str__(self):
-        return "("+str(self.x())+","+str(self.y())+")"
+        return "(" + str(self.x()) + "," + str(self.y()) + ")"
 
     @staticmethod
     def createPointFromShapely(point):
-        return Pnt(point.x,point.y)
+        return Pnt(point.x, point.y)
 
 
 def area(pts):
@@ -100,12 +97,13 @@ def line_intersection(line1, line2):
 
     div = det(xdiff, ydiff)
     if div == 0:
-       return None
+        return None
 
     d = Pnt(det(*line1), det(*line2))
     x = det(d, xdiff) / div
     y = det(d, ydiff) / div
     return Pnt(x, y)
+
 
 def seg_intersection(line1, line2):
     pnt = line_intersection(line1, line2)
@@ -138,6 +136,7 @@ def seg_intersection(line1, line2):
 
     return pnt
 
+
 def centroid(pts):
     'Location of centroid.'
 
@@ -151,6 +150,14 @@ def centroid(pts):
         sx += (x[i] + x[i + 1]) * (x[i] * y[i + 1] - x[i + 1] * y[i])
         sy += (y[i] + y[i + 1]) * (x[i] * y[i + 1] - x[i + 1] * y[i])
     return sx / (6 * a), sy / (6 * a)
+
+
+def edgesLength(pts):
+    x = [c[0] for c in pts]
+    y = [c[1] for c in pts]
+    edgeLength1 = x[len(pts) - 1] - x[0]
+    edgeLength2 = y[len(pts) - 1] - y[0]
+    return edgeLength1, edgeLength2
 
 
 def inertia(pts):
@@ -167,41 +174,39 @@ def inertia(pts):
         sxx += (y[i] ** 2 + y[i] * y[i + 1] + y[i + 1] ** 2) * (x[i] * y[i + 1] - x[i + 1] * y[i])
         syy += (x[i] ** 2 + x[i] * x[i + 1] + x[i + 1] ** 2) * (x[i] * y[i + 1] - x[i + 1] * y[i])
         sxy += (x[i] * y[i + 1] + 2 * x[i] * y[i] + 2 * x[i + 1] * y[i + 1] + x[i + 1] * y[i]) * (
-        x[i] * y[i + 1] - x[i + 1] * y[i])
+                x[i] * y[i + 1] - x[i + 1] * y[i])
     return sxx / 12 - a * cy ** 2, syy / 12 - a * cx ** 2, sxy / 24 - a * cx * cy
+
 
 class Poly(object):
 
-
-
-    def __init__(self,pts):
+    def __init__(self, pts):
         super(Poly, self).__init__()
         self.points = pts
         self.poly = Polygon
         self.updatePolygon()
 
-    def move(self,x,y):
+    def move(self, x, y):
         for pt in self.points:
-            pt.move(x,y)
+            pt.move(x, y)
         self.updatePolygon()
 
-    def scale(self,r):
+    def scale(self, r):
         for pt in self.points:
             pt.scale(r)
         self.updatePolygon()
-
 
     def updatePolygon(self):
         self.poly = Polygon([(pnt.x(), pnt.y()) for pnt in self.points])
         # self.poly = Polygon([(1,2),(1,1),(5,5)])
 
-    def containsPoint(self,pnt):
+    def containsPoint(self, pnt):
         return self.poly.contains(pnt.pnt)
 
-    def intersects(self,poly):
+    def intersects(self, poly):
         return self.poly.intersects(poly.poly)
 
-    def intersection(self,poly):
+    def intersection(self, poly):
         if not self.intersects(poly):
             return None
         try:
@@ -212,22 +217,23 @@ class Poly(object):
             return None
         return None
 
-    def union(self,poly): #does not return a Poly object
+    def union(self, poly):  # does not return a Poly object
         return self.poly.union(poly.poly)
 
-    def subtractPoly(self,poly):
+    def subtractPoly(self, poly):
         spoints = list(self.points)
         if len(self.points) > 4:
             pnts = self.points
             size = len(pnts)
             for i in range(size):
-                p1,p2 = pnts[(i-1)%size], pnts[(i+1)%size]
+                p1, p2 = pnts[(i - 1) % size], pnts[(i + 1) % size]
                 vec1 = pnts[i] - p1
                 vec2 = p2 - pnts[i]
-                if vec1.isParallel(vec2,0.05):
+                if vec1.isParallel(vec2, 0.05):
                     spoints.remove(pnts[i])
             if len(spoints) > 4:
                 return [self]
+
         def getTopLeft(points):
             minY = min([pnt.y() for pnt in points])
             minX = None
@@ -276,15 +282,15 @@ class Poly(object):
         pIndM = [i for i, pnt in enumerate(poly.points)
                  if pnt.x() == pPntM.x() and pnt.y() == pPntM.y()][0]
 
-        pvecL = poly.points[(pIndM+1)%len(poly.points)] - poly.points[pIndM]
-        pvecW = poly.points[(pIndM-1)%len(poly.points)] - poly.points[pIndM]
+        pvecL = poly.points[(pIndM + 1) % len(poly.points)] - poly.points[pIndM]
+        pvecW = poly.points[(pIndM - 1) % len(poly.points)] - poly.points[pIndM]
         # print(vecL)
         # print(vecW)
         # print(pvecL)
         # print(pvecW)
-        if pvecW.isParallel(vecL,0.05):
-            pvecW,pvecL = pvecL,pvecW
-        if not pvecL.isParallel(vecL,0.05):
+        if pvecW.isParallel(vecL, 0.05):
+            pvecW, pvecL = pvecL, pvecW
+        if not pvecL.isParallel(vecL, 0.05):
             print("ERROR GEOM2D SUBTRACTPOLY: NOT PARALLEL, THEY SHOULD BE PARALLEL!")
             return [self]
         vecp = pPntM - pntM
@@ -294,18 +300,16 @@ class Poly(object):
                 # print(self)
                 # print(poly)
                 return []
-            return [Poly([pPntM+pvecL,pPntM+pvecL+pvecW,pntM+vecL+pvecW,pntM+vecL])]
-        if vecp.magn()+pvecL.magn() == vecL.magn():
-            return [Poly([pntM,pPntM,pPntM+pvecW,pntM+pvecW])]
+            return [Poly([pPntM + pvecL, pPntM + pvecL + pvecW, pntM + vecL + pvecW, pntM + vecL])]
+        if vecp.magn() + pvecL.magn() == vecL.magn():
+            return [Poly([pntM, pPntM, pPntM + pvecW, pntM + pvecW])]
             # return [self]
-        polys = [Poly([pntM,pPntM,pPntM+pvecW,pntM+pvecW]),
-                Poly([pPntM+pvecL,pPntM+pvecL+pvecW,pntM+vecL+pvecW,pntM+vecL])]
+        polys = [Poly([pntM, pPntM, pPntM + pvecW, pntM + pvecW]),
+                 Poly([pPntM + pvecL, pPntM + pvecL + pvecW, pntM + vecL + pvecW, pntM + vecL])]
         # print(polys[0])
         # print(polys[1])
         return polys
         # return [self]
-
-
 
     def copy(self):
         return Poly([pnt.copy() for pnt in self.points])
@@ -324,6 +328,13 @@ class Poly(object):
         pts = [[p.x(), p.y()] for p in self.points][::-1]
         return inertia(pts)[1]
 
+    def isVertical(self):
+        pts = [[p.x(), p.y()] for p in self.points][::-1]
+        if edgesLength(pts)[0] > edgesLength(pts)[1]:
+            return 1
+        else:
+            return 0
+
     def __copy__(self):
         return self.copy()
 
@@ -337,14 +348,14 @@ class Poly(object):
     def getPointsFromShapelyPoly(polygon):
         pnts = []
         for pnt in polygon.exterior.coords:
-            pnts.append(Pnt(pnt[0],pnt[1]))
+            pnts.append(Pnt(pnt[0], pnt[1]))
         del pnts[-1]
         return pnts
 
 
 class Ellip(object):
 
-    def __init__(self,pnt,d1,d2=None):
+    def __init__(self, pnt, d1, d2=None):
         super(Ellip, self).__init__()
         self.pnt = pnt
         self.d1 = d1
@@ -353,9 +364,9 @@ class Ellip(object):
             self.d2 = d1
 
     def move(self, x, y):
-        self.pnt.move(x,y)
+        self.pnt.move(x, y)
 
-    def scale(self,r):
+    def scale(self, r):
         self.pnt.scale(r)
         self.d1 *= r
         self.d2 *= r

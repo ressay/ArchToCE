@@ -5,7 +5,7 @@ import math
 import numpy
 
 from Geometry import ShapeToPoly
-from Geometry.Geom2D import Pnt
+from Geometry.Geom2D import Pnt, Poly
 from Skeleton.BoxSkeleton import BoxSkeleton, NotBoxError
 from Skeleton.VoileSkeleton import VoileSkeleton
 from UI import Plotter
@@ -62,12 +62,14 @@ class WallSkeleton(BoxSkeleton):
 
         wallSkeletons = []
         for polygon in polygons:
-            try:
-                wallSkeleton = WallSkeleton(polygon)
-            except NotBoxError:
-                print("not box error damn")
-                continue
-            wallSkeletons.append(wallSkeleton)
+            if Poly.isVertical(polygon):
+                try:
+                    wallSkeleton = WallSkeleton(polygon)
+                except NotBoxError:
+                    print("not box error damn")
+                    continue
+                wallSkeletons.append(wallSkeleton)
+
 
         return wallSkeletons
 
