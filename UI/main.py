@@ -11,12 +11,12 @@ from Ifc.IfcUtils import getSpaceShapesFromIfc
 from Optimization.Genetic import GeneticOperations2
 from Optimization.Genetic.GeneticAlgorithm import search
 from Skeleton.LevelSkeleton import LevelSkeleton
+from Skeleton.WallSkeleton import WallSkeleton
 from Skeleton.StoreySkeleton import StoreySkeleton
 from Structures.Level import Level
 from Ifc import IfcUtils
 from UI import Plotter
 from shapely.geometry import Point
-
 load_backend("qt-pyqt5")  # here you need to tell OCC.Display to load qt5 backend
 
 
@@ -185,11 +185,20 @@ class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
             boxes = [voileSkeleton.getSurrondingBox(self.constraints['d'])
                      for wallSkeleton in levelSkeleton.wallSkeletons
                      for voileSkeleton in wallSkeleton.getAllVoiles()]
-            colors += [[0.5, 1, 0.5] for box in boxes]
+
             polys += boxes
             alphas += [0.2 for poly in boxes]
 
             Plotter.plotShapely(polys, colors, alphas, 20)
+
+            wallSkeletons = levelSkeleton.wallSkeletons
+            axes = WallSkeleton.createAxes(wallSkeletons)[0]
+            axes += WallSkeleton.createAxes(wallSkeletons)[1]
+            for axe in axes:
+                plt.plot(*axe.xy)
+            print("AXXXXXXXXXES", axes)
+
+
             plt.show()
             # plt.savefig('try2.png', bbox_inches='tight')
             # self.draw(polys)
@@ -298,6 +307,7 @@ class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
             colors += [[0, 1, 0], [1, 0, 0]]
             alphas += [1, 1]
             Plotter.plotShapely(polys, colors, alphas, 30, title="plan")
+
             plt.savefig(froot + 'layout.png', bbox_inches='tight')
             plt.clf()
             boxes = [voileSkeleton.getSurrondingBox(self.constraints['d'])
@@ -306,8 +316,11 @@ class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
             colors += [[0.5, 1, 0.5] for box in boxes]
             polys += boxes
             alphas += [0.2 for poly in boxes]
+
             Plotter.plotShapely(polys, colors, alphas, 20)
             # plt.show()
+
+
 
             plt.savefig(froot + 'layout_ranges.png', bbox_inches='tight')
             plt.clf()

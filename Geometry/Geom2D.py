@@ -1,4 +1,4 @@
-from shapely.geometry import Point, Polygon
+from shapely.geometry import Point, Polygon, linestring
 import math
 from math import atan2, sin, cos, sqrt, pi, degrees
 
@@ -73,6 +73,20 @@ class Pnt(object):
     @staticmethod
     def createPointFromShapely(point):
         return Pnt(point.x, point.y)
+
+    def getTopLeft(points):
+        minY = min([pnt.y() for pnt in points])
+        minX = None
+        minPnt = None
+        for pnt in points:
+            if pnt.y() == minY:
+                if not minPnt:
+                    minPnt = pnt
+                    minX = pnt.x()
+                if pnt.x() < minX:
+                    minPnt = pnt
+                    minX = pnt.x()
+        return minPnt
 
 
 def area(pts):
@@ -150,6 +164,7 @@ def centroid(pts):
         sx += (x[i] + x[i + 1]) * (x[i] * y[i + 1] - x[i + 1] * y[i])
         sy += (y[i] + y[i + 1]) * (x[i] * y[i + 1] - x[i + 1] * y[i])
     return sx / (6 * a), sy / (6 * a)
+
 
 
 def edgesLength(pts):
@@ -248,7 +263,7 @@ class Poly(object):
                         minX = pnt.x()
             return minPnt
 
-        pntM = getTopLeft(spoints)
+        pntM = Pnt.getTopLeft(spoints)
         indM = [i for i, pnt in enumerate(spoints)
                 if pnt.x() == pntM.x() and pnt.y() == pntM.y()][0]
         vecL = spoints[(indM + 1) % len(spoints)] - spoints[indM]
@@ -311,6 +326,18 @@ class Poly(object):
         return polys
         # return [self]
 
+    def HorzontalAxis(self, width, hight):
+        topleft = Pnt.getTopLeft(self.points)
+        midleft = (topleft.x()+width/2,topleft.y())
+        midright= (topleft.x()+width/2,topleft.y()+hight)
+        axis = linestring.LineString([midright, midleft])
+        return axis
+    def VerticalAxis (self, width, hight):
+        topleft = Pnt.getTopLeft(self.points)
+        midleft = (topleft.x(), topleft.y()+width/2)
+        midright = (topleft.x() + hight, topleft.y() + width/2)
+        axis = linestring.LineString([midright, midleft])
+        return  axis
     def copy(self):
         return Poly([pnt.copy() for pnt in self.points])
 
@@ -328,12 +355,6 @@ class Poly(object):
         pts = [[p.x(), p.y()] for p in self.points][::-1]
         return inertia(pts)[1]
 
-    def isVertical(self):
-        pts = [[p.x(), p.y()] for p in self.points][::-1]
-        if edgesLength(pts)[0] > edgesLength(pts)[1]:
-            return 1
-        else:
-            return 0
 
     def __copy__(self):
         return self.copy()
