@@ -191,13 +191,11 @@ class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
 
             Plotter.plotShapely(polys, colors, alphas, 20)
 
-            wallSkeletons = levelSkeleton.wallSkeletons
-            axes = WallSkeleton.createAxes(wallSkeletons)[0]
-            axes += WallSkeleton.createAxes(wallSkeletons)[1]
+
+            axes = WallSkeleton.createAxes(levelSkeleton.wallSkeletons,levelSkeleton.slabSkeleton)[0]
+            axes += WallSkeleton.createAxes(levelSkeleton.wallSkeletons,levelSkeleton.slabSkeleton)[1]
             for axe in axes:
                 plt.plot(*axe.xy)
-            print("AXXXXXXXXXES", axes)
-
 
             plt.show()
             # plt.savefig('try2.png', bbox_inches='tight')

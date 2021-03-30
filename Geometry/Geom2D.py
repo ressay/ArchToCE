@@ -74,6 +74,21 @@ class Pnt(object):
     def createPointFromShapely(point):
         return Pnt(point.x, point.y)
 
+
+    def getTopRight(points):
+        maxY = max([pnt.y() for pnt in points])
+        maxX = None
+        maxPnt = None
+        for pnt in points:
+            if pnt.y() == maxY:
+                if not maxPnt:
+                    maxPnt = pnt
+                    maxX = pnt.x()
+                if pnt.x() > maxX:
+                    maxPnt = pnt
+                    maxX = pnt.x()
+        return maxPnt
+
     def getTopLeft(points):
         minY = min([pnt.y() for pnt in points])
         minX = None
@@ -87,7 +102,6 @@ class Pnt(object):
                     minPnt = pnt
                     minX = pnt.x()
         return minPnt
-
 
 def area(pts):
     'Area of cross-section.'
@@ -193,6 +207,7 @@ def inertia(pts):
     return sxx / 12 - a * cy ** 2, syy / 12 - a * cx ** 2, sxy / 24 - a * cx * cy
 
 
+
 class Poly(object):
 
     def __init__(self, pts):
@@ -248,20 +263,6 @@ class Poly(object):
                     spoints.remove(pnts[i])
             if len(spoints) > 4:
                 return [self]
-
-        def getTopLeft(points):
-            minY = min([pnt.y() for pnt in points])
-            minX = None
-            minPnt = None
-            for pnt in points:
-                if pnt.y() == minY:
-                    if not minPnt:
-                        minPnt = pnt
-                        minX = pnt.x()
-                    if pnt.x() < minX:
-                        minPnt = pnt
-                        minX = pnt.x()
-            return minPnt
 
         pntM = Pnt.getTopLeft(spoints)
         indM = [i for i, pnt in enumerate(spoints)
@@ -326,18 +327,23 @@ class Poly(object):
         return polys
         # return [self]
 
-    def HorzontalAxis(self, width, hight):
+    def MaxCoords(self):
+        return Pnt.getTopRight(self.points)
+
+    def VerticalalMids(self, width, height):
         topleft = Pnt.getTopLeft(self.points)
         midleft = (topleft.x()+width/2,topleft.y())
-        midright= (topleft.x()+width/2,topleft.y()+hight)
-        axis = linestring.LineString([midright, midleft])
-        return axis
-    def VerticalAxis (self, width, hight):
+        midright= (topleft.x()+width/2,topleft.y()+height)
+        Mid = linestring.LineString([midright, midleft])
+        return Mid, midright[0]
+
+    def HorizontalMids (self, width, height):
         topleft = Pnt.getTopLeft(self.points)
         midleft = (topleft.x(), topleft.y()+width/2)
-        midright = (topleft.x() + hight, topleft.y() + width/2)
-        axis = linestring.LineString([midright, midleft])
-        return  axis
+        midright = (topleft.x() + height, topleft.y() + width/2)
+        Mid = linestring.LineString([midright, midleft])
+        return Mid, midright[1]
+
     def copy(self):
         return Poly([pnt.copy() for pnt in self.points])
 

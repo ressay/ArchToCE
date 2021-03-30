@@ -3,9 +3,10 @@ import random
 import math
 
 import numpy
+from shapely.geometry import linestring
 
 from Geometry import ShapeToPoly
-from Geometry.Geom2D import Pnt, Poly
+from Geometry.Geom2D import Pnt
 from Skeleton.BoxSkeleton import BoxSkeleton, NotBoxError
 from Skeleton.VoileSkeleton import VoileSkeleton
 from UI import Plotter
@@ -74,29 +75,44 @@ class WallSkeleton(BoxSkeleton):
         return wallSkeletons
 
     @staticmethod
-    def createAxes(wallSkeletons):
+    def createAxes(wallSkeletons,slabSkeleton):
 
         HorizontalWallSkeletons = []
-        HorizontalAxes = []
-        VerticalAxes = []
         VerticalWallSkeletons = []
-
+        HorizontalMid = []
+        VerticalMid = []
+        Haxes=[]
+        Vaxes = []
+        HaxesCoords=[]
+        VaxesCoords=[]
         for wallSkeleton in wallSkeletons:
             if abs(wallSkeleton.vecLength.x()) < abs(wallSkeleton.vecLength.y()):
-                HorizontalWallSkeletons.append(wallSkeleton)
-            else:
                 VerticalWallSkeletons.append(wallSkeleton)
-
-            for wallSkeleton in HorizontalWallSkeletons:
-                Axis = wallSkeleton.poly.HorzontalAxis(wallSkeleton.getWidth(),wallSkeleton.getHeight())
-                print("this is the axis length", Axis.length)
-                HorizontalAxes.append(Axis)
+            else:
+                HorizontalWallSkeletons.append(wallSkeleton)
 
             for wallSkeleton in VerticalWallSkeletons:
-                Axis = wallSkeleton.poly.VerticalAxis(wallSkeleton.getWidth(),wallSkeleton.getHeight())
-                print("this is the axis length", Axis.length)
-                VerticalAxes.append(Axis)
-        return HorizontalAxes, VerticalAxes
+                Mid = wallSkeleton.poly.VerticalalMids(wallSkeleton.getWidth(),wallSkeleton.getHeight())[0]
+                Coord = wallSkeleton.poly.VerticalalMids(wallSkeleton.getWidth(),wallSkeleton.getHeight())[1]
+                VerticalMid.append(Mid)
+                if Coord not in VaxesCoords: VaxesCoords.append(Coord)
+            for coord in VaxesCoords:
+                first = (coord, 0)
+                second = (coord,slabSkeleton.poly.MaxCoords().y())
+                Axis = linestring.LineString([first, second])
+                Vaxes.append(Axis)
+
+            for wallSkeleton in HorizontalWallSkeletons:
+                Mid = wallSkeleton.poly.HorizontalMids(wallSkeleton.getWidth(),wallSkeleton.getHeight())[0]
+                Coord = wallSkeleton.poly.HorizontalMids(wallSkeleton.getWidth(), wallSkeleton.getHeight())[1]
+                HorizontalMid.append(Mid)
+                if Coord not in HaxesCoords: HaxesCoords.append(Coord)
+            for coord in HaxesCoords:
+                first = (0, coord)
+                second = (slabSkeleton.poly.MaxCoords().x(), coord)
+                Axis = linestring.LineString([first, second])
+                Haxes.append(Axis)
+        return Vaxes,Haxes
 
     def createRandomVoileFromRatio(self, ratio):
         if ratio >= 1:

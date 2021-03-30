@@ -48,8 +48,6 @@ class Level(object):
             slabs.append(slab)
 
 
-
-
         for slab in slabs:
             levels.append(Level(slab, slab.getSupportingWalls(walls)))
         for level in levels:
