@@ -85,34 +85,53 @@ class WallSkeleton(BoxSkeleton):
         Vaxes = []
         HaxesCoords=[]
         VaxesCoords=[]
+        intersections=[]
+        PotentialColumns=[]
         for wallSkeleton in wallSkeletons:
             if abs(wallSkeleton.vecLength.x()) < abs(wallSkeleton.vecLength.y()):
                 VerticalWallSkeletons.append(wallSkeleton)
             else:
                 HorizontalWallSkeletons.append(wallSkeleton)
-
             for wallSkeleton in VerticalWallSkeletons:
                 Mid = wallSkeleton.poly.VerticalalMids(wallSkeleton.getWidth(),wallSkeleton.getHeight())[0]
                 Coord = wallSkeleton.poly.VerticalalMids(wallSkeleton.getWidth(),wallSkeleton.getHeight())[1]
                 VerticalMid.append(Mid)
                 if Coord not in VaxesCoords: VaxesCoords.append(Coord)
-            for coord in VaxesCoords:
-                first = (coord, 0)
-                second = (coord,slabSkeleton.poly.MaxCoords().y())
-                Axis = linestring.LineString([first, second])
-                Vaxes.append(Axis)
 
             for wallSkeleton in HorizontalWallSkeletons:
                 Mid = wallSkeleton.poly.HorizontalMids(wallSkeleton.getWidth(),wallSkeleton.getHeight())[0]
                 Coord = wallSkeleton.poly.HorizontalMids(wallSkeleton.getWidth(), wallSkeleton.getHeight())[1]
                 HorizontalMid.append(Mid)
                 if Coord not in HaxesCoords: HaxesCoords.append(Coord)
-            for coord in HaxesCoords:
-                first = (0, coord)
-                second = (slabSkeleton.poly.MaxCoords().x(), coord)
-                Axis = linestring.LineString([first, second])
-                Haxes.append(Axis)
-        return Vaxes,Haxes
+        for coord in VaxesCoords:
+            first = (coord, 0)
+            second = (coord, slabSkeleton.poly.MaxCoords().y())
+            Axis = linestring.LineString([first, second])
+            Vaxes.append(Axis)
+
+        for coord in HaxesCoords:
+            first = (0, coord)
+            second = (slabSkeleton.poly.MaxCoords().x(), coord)
+            Axis = linestring.LineString([first, second])
+            Haxes.append(Axis)
+
+        for Vaxis in Vaxes:
+            for Haxis in Haxes:
+                intersection= Vaxis.intersection(Haxis)
+                if intersection not in intersections: intersections.append(intersection)
+
+        Mids = VerticalMid+HorizontalMid
+        i=0
+
+        for pnt in intersections:
+            for mid in Mids:
+                if pnt.within(mid):
+                    i=i+1
+                    if pnt not in PotentialColumns: PotentialColumns.append(pnt)
+                    print("Here",pnt)
+
+        return VerticalMid,HorizontalMid, PotentialColumns
+
 
     def createRandomVoileFromRatio(self, ratio):
         if ratio >= 1:

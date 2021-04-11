@@ -3,7 +3,7 @@ import sys
 from random import random
 
 from OCC.Display.backend import load_backend
-from PyQt5 import QtGui, QtWidgets   # change was here
+from PyQt5 import QtGui, QtWidgets
 import UI.Show2DWindow as Show2DWindow
 # from Optimization.Genetic import GeneticOperations2
 from Geometry.Geom2D import Pnt, Ellip, Poly
@@ -87,7 +87,6 @@ class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
                 for ls in self.skeletonLevels:
                     if ls.level.getHeight() == height:
                         skeletons.append(ls)
-
                 self.storeySkeletons.append(StoreySkeleton(skeletons))
 
         self.initListView(self.storey_mode)
@@ -189,14 +188,19 @@ class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
             polys += boxes
             alphas += [0.2 for poly in boxes]
 
-            Plotter.plotShapely(polys, colors, alphas, 20)
+            vaxes,haxes,PotentialColumns = WallSkeleton.createAxes(levelSkeleton.wallSkeletons,levelSkeleton.slabSkeleton)
+            axes = vaxes
+            axes+= haxes
+            intersections=[]
 
-
-            axes = WallSkeleton.createAxes(levelSkeleton.wallSkeletons,levelSkeleton.slabSkeleton)[0]
-            axes += WallSkeleton.createAxes(levelSkeleton.wallSkeletons,levelSkeleton.slabSkeleton)[1]
+            for PotentialColumn in PotentialColumns:
+                polys += [Point(PotentialColumn.x, PotentialColumn.y).buffer(0.1)]
+                colors += [[0.5, 0.5, 0]]
+                alphas += [1, 1]
             for axe in axes:
                 plt.plot(*axe.xy)
 
+            Plotter.plotShapely(polys, colors, alphas, 20)
             plt.show()
             # plt.savefig('try2.png', bbox_inches='tight')
             # self.draw(polys)
@@ -496,12 +500,11 @@ def createShapes(file):
     sShapes = []
     for wall, shape in slab_shapes:
         sShapes.append(shape)
-
     return wShapes, sShapes
 
 
 def main():
-    file = "../IFCFiles/villa2.ifc"
+    file = "../IFCFiles/villaRdc.ifc"
     wShapes, sShapes = createShapes(file)
     space_shapes = getSpaceShapesFromIfc(file)
     space_shapes = [s for _, s in space_shapes]
@@ -509,7 +512,6 @@ def main():
     form = TryApp(wallShapes=wShapes, slabShapes=sShapes, spaceShapes=space_shapes)
     form.show()
     app.exec_()
-
 
 if __name__ == '__main__':
     main()

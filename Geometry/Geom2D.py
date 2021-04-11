@@ -379,7 +379,6 @@ class Poly(object):
         del pnts[-1]
         return pnts
 
-
 class Ellip(object):
 
     def __init__(self, pnt, d1, d2=None):
