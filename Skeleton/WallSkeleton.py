@@ -3,7 +3,7 @@ import random
 import math
 
 import numpy
-from shapely.geometry import linestring
+from shapely.geometry import linestring, Point
 
 from Geometry import ShapeToPoly
 from Geometry.Geom2D import Pnt
@@ -86,23 +86,24 @@ class WallSkeleton(BoxSkeleton):
         HaxesCoords=[]
         VaxesCoords=[]
         intersections=[]
-        PotentialColumns=[]
+        PrevPotentialColumns=[]
+        CurPotentialColumns=[]
         for wallSkeleton in wallSkeletons:
             if abs(wallSkeleton.vecLength.x()) < abs(wallSkeleton.vecLength.y()):
                 VerticalWallSkeletons.append(wallSkeleton)
             else:
                 HorizontalWallSkeletons.append(wallSkeleton)
-            for wallSkeleton in VerticalWallSkeletons:
-                Mid = wallSkeleton.poly.VerticalalMids(wallSkeleton.getWidth(),wallSkeleton.getHeight())[0]
-                Coord = wallSkeleton.poly.VerticalalMids(wallSkeleton.getWidth(),wallSkeleton.getHeight())[1]
-                VerticalMid.append(Mid)
+        for wallSkeleton in VerticalWallSkeletons:
+            Mid,Coord = wallSkeleton.poly.VerticalalMids(wallSkeleton.getWidth(),wallSkeleton.getHeight())
+            if Mid.length>0.21:
                 if Coord not in VaxesCoords: VaxesCoords.append(Coord)
+            VerticalMid.append(Mid)
 
-            for wallSkeleton in HorizontalWallSkeletons:
-                Mid = wallSkeleton.poly.HorizontalMids(wallSkeleton.getWidth(),wallSkeleton.getHeight())[0]
-                Coord = wallSkeleton.poly.HorizontalMids(wallSkeleton.getWidth(), wallSkeleton.getHeight())[1]
-                HorizontalMid.append(Mid)
+        for wallSkeleton in HorizontalWallSkeletons:
+            Mid,Coord = wallSkeleton.poly.HorizontalMids(wallSkeleton.getWidth(),wallSkeleton.getHeight())
+            if Mid.length>0.21:
                 if Coord not in HaxesCoords: HaxesCoords.append(Coord)
+            HorizontalMid.append(Mid)
         for coord in VaxesCoords:
             first = (coord, 0)
             second = (coord, slabSkeleton.poly.MaxCoords().y())
@@ -127,12 +128,99 @@ class WallSkeleton(BoxSkeleton):
             for mid in Mids:
                 if pnt.within(mid):
                     i=i+1
-                    if pnt not in PotentialColumns: PotentialColumns.append(pnt)
-                    print("Here",pnt)
+                    point = Point(round(pnt.x,2),round(pnt.y,2))
+                    if point not in CurPotentialColumns: CurPotentialColumns.append(point)
 
-        return VerticalMid,HorizontalMid, PotentialColumns
+        return Vaxes,Haxes, CurPotentialColumns
+
+    @staticmethod
+    def Columns(skeletonLevels,level):
 
 
+        levelSkeleton = skeletonLevels[level]
+        vaxes, haxes, bcolumns = WallSkeleton.createAxes(levelSkeleton.wallSkeletons,
+                                                        levelSkeleton.slabSkeleton)
+        columns = []
+        scolumns = []
+        mcolumns=[]
+        if level!=0:
+            fisrtLevelSkeleton = skeletonLevels[0]
+            fColumns = WallSkeleton.createAxes(fisrtLevelSkeleton.wallSkeletons,
+                                                                fisrtLevelSkeleton.slabSkeleton)[2]
+            for i in range(1,level+1):
+                levelSkeleton = skeletonLevels[i]
+                for column in fColumns:
+                    for wall in levelSkeleton.wallSkeletons:
+                        if wall.poly.containsPoint(column): scolumns.append(column)
+            for column in scolumns:
+                if column not in mcolumns: mcolumns.append(column)
+            for column in mcolumns:
+                # print("ujazbd", column, scolumns.count(column))
+                if scolumns.count(column)>=level:
+                    columns.append(column)
+
+
+        else: columns= bcolumns
+        axes = haxes + vaxes
+
+        ColumnDistances = WallSkeleton.ColumnDistances(columns)
+        ColumnDimensions = WallSkeleton.ColumnDimensions(ColumnDistances)
+        return columns, axes
+
+    @staticmethod
+    def ColumnDistances(PColumns):
+        pColumns=[]
+        Distances=[[],[]]
+        upyDist=0
+        xDist=0
+        for Column in PColumns:
+            pColumns.append(Column)
+            if Column.y>upyDist: upyDist=Column.y
+            if Column.x>xDist: xDist=Column.x
+        for i in range(len(pColumns)):
+            UpyDist =upyDist
+            DownyDist = upyDist
+            LeftDist = xDist
+            RightDist = xDist
+            ytest1= True
+            ytest2 = True
+            xtest1 = True
+            xtest2 = True
+            for j in range(len(pColumns)):
+                if j!=i:
+                    if pColumns[i].x == pColumns[j].x:
+                        if pColumns[i].y-pColumns[j].y>0 and pColumns[i].y-pColumns[j].y< UpyDist:
+                            UpyDist = pColumns[i].y-pColumns[j].y
+                            ytest1=False
+                        if pColumns[i].y-pColumns[j].y<0 and abs(pColumns[i].y-pColumns[j].y)< DownyDist:
+                            DownyDist=abs(pColumns[i].y-pColumns[j].y)
+                            ytest2=False
+
+                if pColumns[i].y == pColumns[j].y:
+                    if pColumns[i].x - pColumns[j].x > 0 and pColumns[i].x - pColumns[j].x < LeftDist:
+                        LeftDist = pColumns[i].x - pColumns[j].x
+                        xtest1 = False
+                    if pColumns[i].x - pColumns[j].x < 0 and abs(pColumns[i].x - pColumns[j].x) < RightDist:
+                        RightDist = abs(pColumns[i].x - pColumns[j].x)
+                        xtest2 = False
+
+            if not ytest1 and not ytest2 : finalYdist = max(UpyDist, DownyDist)
+            elif ytest1 : finalYdist = DownyDist
+            elif ytest2 : finalYdist = UpyDist
+
+            if not xtest1 and not xtest2 : finalXdist = max(LeftDist, RightDist)
+            elif xtest1 : finalXdist = RightDist
+            elif xtest2 : finalXdist = LeftDist
+            Distances[0].append(finalXdist)
+            Distances[1].append(finalYdist)
+
+            # print("Distance of the point",i,"(",pColumns[i].x,pColumns[i].y,")",finalXdist,finalYdist)
+
+        return Distances
+
+    @staticmethod
+    def ColumnDimensions(distances):
+        return 0
     def createRandomVoileFromRatio(self, ratio):
         if ratio >= 1:
             return VoileSkeleton(self, 0, self.vecLength.magn())

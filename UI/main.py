@@ -162,6 +162,7 @@ class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
         polys = self.getPolygonsFromLevelSkeletons(self.solutions2[self.selectedRow].levelSkeleton)
         self.draw(polys)
 
+
     def showLowerFun(self):
         if self.selectedRow is not None:
             from matplotlib import pyplot as plt
@@ -188,17 +189,14 @@ class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
             polys += boxes
             alphas += [0.2 for poly in boxes]
 
-            vaxes,haxes,PotentialColumns = WallSkeleton.createAxes(levelSkeleton.wallSkeletons,levelSkeleton.slabSkeleton)
-            axes = vaxes
-            axes+= haxes
-            intersections=[]
-
+            PotentialColumns, axes= WallSkeleton.Columns(self.skeletonLevels,self.selectedRow)
             for PotentialColumn in PotentialColumns:
                 polys += [Point(PotentialColumn.x, PotentialColumn.y).buffer(0.1)]
                 colors += [[0.5, 0.5, 0]]
                 alphas += [1, 1]
             for axe in axes:
                 plt.plot(*axe.xy)
+
 
             Plotter.plotShapely(polys, colors, alphas, 20)
             plt.show()
@@ -291,7 +289,6 @@ class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
             froot = root + lv + '/'
             if not os.path.exists(froot):
                 os.makedirs(froot)
-
 
             from matplotlib import pyplot as plt
             levelSkeleton = self.skeletonLevels[selectedRow]
@@ -488,7 +485,6 @@ class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
             shapes += [l.slab.shape for l in self.storeySkeletons[row].levels]
             self.setViewerDisplay("Selected", shapes)
 
-
 def createShapes(file):
     wall_shapes = IfcUtils.getWallShapesFromIfc(file)
     # wall_shapes = IfcUtils.getSlabShapesFromIfc("IFCFiles/projet.ifc")
@@ -504,7 +500,7 @@ def createShapes(file):
 
 
 def main():
-    file = "../IFCFiles/villaRdc.ifc"
+    file = "../IFCFiles/R+3.ifc"
     wShapes, sShapes = createShapes(file)
     space_shapes = getSpaceShapesFromIfc(file)
     space_shapes = [s for _, s in space_shapes]
