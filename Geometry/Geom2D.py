@@ -344,6 +344,9 @@ class Poly(object):
         Mid = linestring.LineString([midright, midleft])
         return Mid, midright[1]
 
+    def containsPoint(self, point):
+        return self.poly.contains(point)
+
     def copy(self):
         return Poly([pnt.copy() for pnt in self.points])
 
@@ -378,7 +381,6 @@ class Poly(object):
             pnts.append(Pnt(pnt[0], pnt[1]))
         del pnts[-1]
         return pnts
-
 
 class Ellip(object):
 
