@@ -332,15 +332,15 @@ class Poly(object):
 
     def VerticalalMids(self, width, height):
         topleft = Pnt.getTopLeft(self.points)
-        midleft = (topleft.x()+width/2,topleft.y())
-        midright= (topleft.x()+width/2,topleft.y()+height)
+        midleft = (round(topleft.x()+width/2,2),round(topleft.y(),2))
+        midright= (round(topleft.x()+width/2,2),round(topleft.y()+height,2))
         Mid = linestring.LineString([midright, midleft])
         return Mid, midright[0]
 
     def HorizontalMids (self, width, height):
         topleft = Pnt.getTopLeft(self.points)
-        midleft = (topleft.x(), topleft.y()+width/2)
-        midright = (topleft.x() + height, topleft.y() + width/2)
+        midleft = (round(topleft.x(),2), round(topleft.y()+width/2,2))
+        midright = (round(topleft.x() + height,2), round(topleft.y() + width/2,2))
         Mid = linestring.LineString([midright, midleft])
         return Mid, midright[1]
 

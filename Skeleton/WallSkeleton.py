@@ -86,7 +86,6 @@ class WallSkeleton(BoxSkeleton):
         HaxesCoords=[]
         VaxesCoords=[]
         intersections=[]
-        PrevPotentialColumns=[]
         CurPotentialColumns=[]
         for wallSkeleton in wallSkeletons:
             if abs(wallSkeleton.vecLength.x()) < abs(wallSkeleton.vecLength.y()):
@@ -104,15 +103,16 @@ class WallSkeleton(BoxSkeleton):
             if Mid.length>0.21:
                 if Coord not in HaxesCoords: HaxesCoords.append(Coord)
             HorizontalMid.append(Mid)
+            print("Coord",Mid.bounds)
         for coord in VaxesCoords:
             first = (coord, 0)
-            second = (coord, slabSkeleton.poly.MaxCoords().y())
+            second = (coord, round(slabSkeleton.poly.MaxCoords().y(),2))
             Axis = linestring.LineString([first, second])
             Vaxes.append(Axis)
 
         for coord in HaxesCoords:
             first = (0, coord)
-            second = (slabSkeleton.poly.MaxCoords().x(), coord)
+            second = (round(slabSkeleton.poly.MaxCoords().x(),2), coord)
             Axis = linestring.LineString([first, second])
             Haxes.append(Axis)
 
@@ -125,6 +125,7 @@ class WallSkeleton(BoxSkeleton):
         i=0
 
         for pnt in intersections:
+            print("Point",pnt.x,pnt.y)
             for mid in Mids:
                 if pnt.within(mid):
                     i=i+1
@@ -155,7 +156,6 @@ class WallSkeleton(BoxSkeleton):
             for column in scolumns:
                 if column not in mcolumns: mcolumns.append(column)
             for column in mcolumns:
-                # print("ujazbd", column, scolumns.count(column))
                 if scolumns.count(column)>=level:
                     columns.append(column)
 
@@ -165,7 +165,7 @@ class WallSkeleton(BoxSkeleton):
 
         ColumnDistances = WallSkeleton.ColumnDistances(columns)
         ColumnDimensions = WallSkeleton.ColumnDimensions(ColumnDistances)
-        return columns, axes
+        return columns, haxes, vaxes
 
     @staticmethod
     def ColumnDistances(PColumns):
@@ -214,13 +214,15 @@ class WallSkeleton(BoxSkeleton):
             Distances[0].append(finalXdist)
             Distances[1].append(finalYdist)
 
-            # print("Distance of the point",i,"(",pColumns[i].x,pColumns[i].y,")",finalXdist,finalYdist)
+            print("Distance of the point",i,"(",pColumns[i].x,pColumns[i].y,")",finalXdist,finalYdist)
 
         return Distances
 
     @staticmethod
     def ColumnDimensions(distances):
         return 0
+
+
     def createRandomVoileFromRatio(self, ratio):
         if ratio >= 1:
             return VoileSkeleton(self, 0, self.vecLength.magn())

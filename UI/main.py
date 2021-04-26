@@ -10,6 +10,7 @@ from Geometry.Geom2D import Pnt, Ellip, Poly
 from Ifc.IfcUtils import getSpaceShapesFromIfc
 from Optimization.Genetic import GeneticOperations2
 from Optimization.Genetic.GeneticAlgorithm import search
+from Optimization.TabuSearch.TabuSearch import tabu_search
 from Skeleton.LevelSkeleton import LevelSkeleton
 from Skeleton.WallSkeleton import WallSkeleton
 from Skeleton.StoreySkeleton import StoreySkeleton
@@ -189,11 +190,12 @@ class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
             polys += boxes
             alphas += [0.2 for poly in boxes]
 
-            PotentialColumns, axes= WallSkeleton.Columns(self.skeletonLevels,self.selectedRow)
+            PotentialColumns, haxes,vaxes= WallSkeleton.Columns(self.skeletonLevels,self.selectedRow)
             for PotentialColumn in PotentialColumns:
                 polys += [Point(PotentialColumn.x, PotentialColumn.y).buffer(0.1)]
                 colors += [[0.5, 0.5, 0]]
                 alphas += [1, 1]
+            axes=haxes+vaxes
             for axe in axes:
                 plt.plot(*axe.xy)
 
@@ -202,6 +204,11 @@ class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
             plt.show()
             # plt.savefig('try2.png', bbox_inches='tight')
             # self.draw(polys)
+    def columnSearch(self):
+        potentialColumns,haxes,vaxes= WallSkeleton.Columns(self.skeletonLevels,0)
+        axesSolution=tabu_search(potentialColumns,haxes,vaxes,limit=10)
+        for axis in axesSolution:
+            print("axis solution:",axis.bounds)
 
     def multiSearch(self):
 
@@ -336,7 +343,8 @@ class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
             f.write("overlapped area: " + str(solution.getOverlappedArea(constraints['d'])))
 
     def mergeCB(self):
-        self.multiSearch()
+        # self.multiSearch()
+        self.columnSearch()
         # self.solutions = {}
         # for levelSkeleton in self.skeletonLevels[::-1]:
         #     level = self.skeletonLevelsHash[levelSkeleton]
