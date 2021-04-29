@@ -20,30 +20,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="970fbb92-1777-4107-8d6b-9f3c4b97d9d9" name="Default" comment="latest update">
-      <change beforePath="$PROJECT_DIR$/.idea/IfcProject.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/IfcProject.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Geometry/Geom2D.py" beforeDir="false" afterPath="$PROJECT_DIR$/Geometry/Geom2D.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/IFCFiles/R+3.ifc" beforeDir="false" afterPath="$PROJECT_DIR$/IFCFiles/R+3.ifc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/IFCFiles/R+3.ifc.log" beforeDir="false" afterPath="$PROJECT_DIR$/IFCFiles/R+3.ifc.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Optimization/TabuSearch/AxesSolution.py" beforeDir="false" afterPath="$PROJECT_DIR$/Optimization/TabuSearch/AxesSolution.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Optimization/TabuSearch/TabuSearch.py" beforeDir="false" afterPath="$PROJECT_DIR$/Optimization/TabuSearch/TabuSearch.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Skeleton/WallSkeleton.py" beforeDir="false" afterPath="$PROJECT_DIR$/Skeleton/WallSkeleton.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/level0" beforeDir="false" afterPath="$PROJECT_DIR$/UI/level0" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/level1" beforeDir="false" afterPath="$PROJECT_DIR$/UI/level1" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/level2" beforeDir="false" afterPath="$PROJECT_DIR$/UI/level2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/level3" beforeDir="false" afterPath="$PROJECT_DIR$/UI/level3" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/UI/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/UI/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/level1/layout.png" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/level1/layout.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/level1/layout_ranges.png" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/level1/layout_ranges.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/level1/properties.txt" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/level1/properties.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/level2/layout.png" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/level2/layout.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/level2/layout_ranges.png" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/level2/layout_ranges.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/level2/properties.txt" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/level2/properties.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/level3/layout.png" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/level3/layout.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/level3/layout_ranges.png" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/level3/layout_ranges.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/level3/properties.txt" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/level3/properties.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/level4/layout.png" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/level4/layout.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/level4/layout_ranges.png" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/level4/layout_ranges.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/level4/properties.txt" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/level4/properties.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -87,7 +70,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../ArchToCeDual" />
-    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
+    <property name="settings.editor.selected.configurable" value="org.jetbrains.plugins.github.ui.GithubSettingsConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -440,7 +423,13 @@
       <option name="presentableId" value="LOCAL‎00020" />
       <updated>1619283701639</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL‎00021" summary="latest update">
+      <created>1619454974115</created>
+      <option name="number" value="LOCAL‎00021" />
+      <option name="presentableId" value="LOCAL‎00021" />
+      <updated>1619454974115</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -495,34 +484,34 @@
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state x="561" y="266" key="Github.ShareDialog/0.0.1366.738@0.0.1366.738" timestamp="1616665949724" />
-    <state width="672" height="182" key="GridCell.Tab.0.bottom" timestamp="1619454369090">
+    <state width="672" height="186" key="GridCell.Tab.0.bottom" timestamp="1619689379834">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state width="672" height="182" key="GridCell.Tab.0.bottom/0.0.1366.738@0.0.1366.738" timestamp="1619454369090" />
-    <state width="672" height="182" key="GridCell.Tab.0.center" timestamp="1619454369090">
+    <state width="672" height="186" key="GridCell.Tab.0.bottom/0.0.1366.738@0.0.1366.738" timestamp="1619689379834" />
+    <state width="672" height="186" key="GridCell.Tab.0.center" timestamp="1619689379834">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state width="672" height="182" key="GridCell.Tab.0.center/0.0.1366.738@0.0.1366.738" timestamp="1619454369090" />
-    <state width="672" height="182" key="GridCell.Tab.0.left" timestamp="1619454369089">
+    <state width="672" height="186" key="GridCell.Tab.0.center/0.0.1366.738@0.0.1366.738" timestamp="1619689379834" />
+    <state width="672" height="186" key="GridCell.Tab.0.left" timestamp="1619689379834">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state width="672" height="182" key="GridCell.Tab.0.left/0.0.1366.738@0.0.1366.738" timestamp="1619454369089" />
-    <state width="672" height="182" key="GridCell.Tab.0.right" timestamp="1619454369090">
+    <state width="672" height="186" key="GridCell.Tab.0.left/0.0.1366.738@0.0.1366.738" timestamp="1619689379834" />
+    <state width="672" height="186" key="GridCell.Tab.0.right" timestamp="1619689379834">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state width="672" height="182" key="GridCell.Tab.0.right/0.0.1366.738@0.0.1366.738" timestamp="1619454369090" />
-    <state x="184" y="13" key="SettingsEditor" timestamp="1617891886217">
+    <state width="672" height="186" key="GridCell.Tab.0.right/0.0.1366.738@0.0.1366.738" timestamp="1619689379834" />
+    <state x="184" y="13" key="SettingsEditor" timestamp="1619456147004">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state x="184" y="13" key="SettingsEditor/0.0.1366.738@0.0.1366.738" timestamp="1617891886217" />
+    <state x="184" y="13" key="SettingsEditor/0.0.1366.738@0.0.1366.738" timestamp="1619456147004" />
     <state width="498" height="446" key="SwitcherDM" timestamp="1618231086932">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state width="498" height="446" key="SwitcherDM/0.0.1366.738@0.0.1366.738" timestamp="1618231086932" />
-    <state x="275" y="101" key="Vcs.Push.Dialog.v2" timestamp="1619454856894">
+    <state x="275" y="101" key="Vcs.Push.Dialog.v2" timestamp="1619455030750">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state x="275" y="101" key="Vcs.Push.Dialog.v2/0.0.1366.738@0.0.1366.738" timestamp="1619454856894" />
+    <state x="275" y="101" key="Vcs.Push.Dialog.v2/0.0.1366.738@0.0.1366.738" timestamp="1619455030750" />
     <state x="500" y="282" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1619454575574">
       <screen x="0" y="0" width="1366" height="738" />
     </state>

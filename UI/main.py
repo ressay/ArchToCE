@@ -206,9 +206,14 @@ class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
             # self.draw(polys)
     def columnSearch(self):
         potentialColumns,haxes,vaxes= WallSkeleton.Columns(self.skeletonLevels,0)
-        axesSolution=tabu_search(potentialColumns,haxes,vaxes,limit=10)
-        for axis in axesSolution:
-            print("axis solution:",axis.bounds)
+        axes=[haxes,vaxes]
+        axesSolution=tabu_search(potentialColumns,axes,self.skeletonLevels[0].slabSkeleton,limit=10)
+        print("Haxis solution:")
+        for axis in axesSolution.axes[0]:
+            print(axis.bounds)
+        print("Vaxis solution:")
+        for axis in axesSolution.axes[1]:
+            print(axis.bounds)
 
     def multiSearch(self):
 

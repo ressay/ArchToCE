@@ -329,6 +329,8 @@ class Poly(object):
 
     def MaxCoords(self):
         return Pnt.getTopRight(self.points)
+    def MinCoods(self):
+        return Pnt.getTopLeft(self.points)
 
     def VerticalalMids(self, width, height):
         topleft = Pnt.getTopLeft(self.points)
