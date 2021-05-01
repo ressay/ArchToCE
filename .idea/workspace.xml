@@ -19,14 +19,10 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="970fbb92-1777-4107-8d6b-9f3c4b97d9d9" name="Default" comment="latest update">
+    <list default="true" id="970fbb92-1777-4107-8d6b-9f3c4b97d9d9" name="Default" comment="adding neighbors">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Geometry/Geom2D.py" beforeDir="false" afterPath="$PROJECT_DIR$/Geometry/Geom2D.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IFCFiles/R+3.ifc" beforeDir="false" afterPath="$PROJECT_DIR$/IFCFiles/R+3.ifc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IFCFiles/R+3.ifc.log" beforeDir="false" afterPath="$PROJECT_DIR$/IFCFiles/R+3.ifc.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Optimization/TabuSearch/AxesSolution.py" beforeDir="false" afterPath="$PROJECT_DIR$/Optimization/TabuSearch/AxesSolution.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Optimization/TabuSearch/TabuSearch.py" beforeDir="false" afterPath="$PROJECT_DIR$/Optimization/TabuSearch/TabuSearch.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/UI/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -429,7 +425,13 @@
       <option name="presentableId" value="LOCAL‎00021" />
       <updated>1619454974115</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL‎00022" summary="adding neighbors">
+      <created>1619691051162</created>
+      <option name="number" value="LOCAL‎00022" />
+      <option name="presentableId" value="LOCAL‎00022" />
+      <updated>1619691051163</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -465,7 +467,8 @@
     <MESSAGE value="plot full unique axes" />
     <MESSAGE value="plot column possible positions" />
     <MESSAGE value="latest update" />
-    <option name="LAST_COMMIT_MESSAGE" value="latest update" />
+    <MESSAGE value="adding neighbors" />
+    <option name="LAST_COMMIT_MESSAGE" value="adding neighbors" />
   </component>
   <component name="WindowStateProjectService">
     <state x="137" y="0" width="1092" height="738" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1619343847891">
@@ -484,22 +487,22 @@
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state x="561" y="266" key="Github.ShareDialog/0.0.1366.738@0.0.1366.738" timestamp="1616665949724" />
-    <state width="672" height="186" key="GridCell.Tab.0.bottom" timestamp="1619689379834">
+    <state width="672" height="186" key="GridCell.Tab.0.bottom" timestamp="1619869022756">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state width="672" height="186" key="GridCell.Tab.0.bottom/0.0.1366.738@0.0.1366.738" timestamp="1619689379834" />
-    <state width="672" height="186" key="GridCell.Tab.0.center" timestamp="1619689379834">
+    <state width="672" height="186" key="GridCell.Tab.0.bottom/0.0.1366.738@0.0.1366.738" timestamp="1619869022756" />
+    <state width="672" height="186" key="GridCell.Tab.0.center" timestamp="1619869022756">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state width="672" height="186" key="GridCell.Tab.0.center/0.0.1366.738@0.0.1366.738" timestamp="1619689379834" />
-    <state width="672" height="186" key="GridCell.Tab.0.left" timestamp="1619689379834">
+    <state width="672" height="186" key="GridCell.Tab.0.center/0.0.1366.738@0.0.1366.738" timestamp="1619869022756" />
+    <state width="672" height="186" key="GridCell.Tab.0.left" timestamp="1619869022756">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state width="672" height="186" key="GridCell.Tab.0.left/0.0.1366.738@0.0.1366.738" timestamp="1619689379834" />
-    <state width="672" height="186" key="GridCell.Tab.0.right" timestamp="1619689379834">
+    <state width="672" height="186" key="GridCell.Tab.0.left/0.0.1366.738@0.0.1366.738" timestamp="1619869022756" />
+    <state width="672" height="186" key="GridCell.Tab.0.right" timestamp="1619869022756">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state width="672" height="186" key="GridCell.Tab.0.right/0.0.1366.738@0.0.1366.738" timestamp="1619689379834" />
+    <state width="672" height="186" key="GridCell.Tab.0.right/0.0.1366.738@0.0.1366.738" timestamp="1619869022756" />
     <state x="184" y="13" key="SettingsEditor" timestamp="1619456147004">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
@@ -508,10 +511,10 @@
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state width="498" height="446" key="SwitcherDM/0.0.1366.738@0.0.1366.738" timestamp="1618231086932" />
-    <state x="275" y="101" key="Vcs.Push.Dialog.v2" timestamp="1619455030750">
+    <state x="275" y="101" key="Vcs.Push.Dialog.v2" timestamp="1619691058065">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state x="275" y="101" key="Vcs.Push.Dialog.v2/0.0.1366.738@0.0.1366.738" timestamp="1619455030750" />
+    <state x="275" y="101" key="Vcs.Push.Dialog.v2/0.0.1366.738@0.0.1366.738" timestamp="1619691058065" />
     <state x="500" y="282" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1619454575574">
       <screen x="0" y="0" width="1366" height="738" />
     </state>

@@ -28,7 +28,9 @@ class AxesSolution(object):
                 otherp=Point(otheraxis.coords[0])
                 if abs(p.y - otherp.y) < self.hminDist and p.y - otherp.y!=0:
                     self.hminDist=abs(p.y-otherp.y)
-        return self.hminDist
+                    firstaxis=axis
+                    secondaxis=otheraxis
+        return self.hminDist, firstaxis,secondaxis
 
     def HmaximumDistance(self):
         distances=[]
@@ -60,7 +62,9 @@ class AxesSolution(object):
                 otherp=Point(otheraxis.coords[0])
                 if abs(p.x - otherp.x) < self.vminDist and p.x - otherp.x!=0:
                     self.vminDist=abs(p.x-otherp.x)
-        return self.vminDist
+                    firstaxis = axis
+                    secondaxis = otheraxis
+        return self.vminDist, firstaxis,secondaxis
 
     def VmaximumDistance(self):
         distances = []
@@ -85,20 +89,20 @@ class AxesSolution(object):
         return self.vmaxDist
 
     def HDistanceCondition(self):
-        hmindist = self.HminimumDistance()
+        hmindist,firstaxis,secondaxis = self.HminimumDistance()
         hmaxdist = self.HmaximumDistance()
         if hmindist > 2.5 and hmaxdist < 6:
-            return True
+            return True, 0, 0
         else:
-            return False
+            return False, firstaxis, secondaxis
 
     def VDistanceCondition(self):
-        vmindist = self.VminimumDistance()
+        vmindist, firstaxis, secondaxis = self.VminimumDistance()
         vmaxdist = self.VmaximumDistance()
         if vmindist > 2.5 and vmaxdist < 6:
-            return True
+            return True, 0, 0
         else:
-            return False
+            return False, firstaxis, secondaxis
 
     def AddrandomHAxis(self,Axes):
         test = False
@@ -117,3 +121,25 @@ class AxesSolution(object):
                 self.axes[1].append(axis)
                 test = True
         return self.axes[1]
+
+    def get_DistancesFromEdges(self,R_x,L_x,U_y,D_y):
+        Haxes=self.axes[0]
+        Vaxes=self.axes[1]
+        Ylist = []
+        ylist = []
+        Xlist = []
+        xlist = []
+        for axis in Haxes:
+            Ylist.append(abs(U_y-Point(axis.coords[0]).y))
+            ylist.append(abs(D_y-Point(axis.coords[0]).y))
+        for axis in Vaxes:
+            Xlist.append(abs(R_x-Point(axis.coords[0]).x))
+            xlist.append(abs(L_x-Point(axis.coords[0]).x))
+        Y=min(Ylist)
+        y=min(ylist)
+        X=min(Xlist)
+        x=min(xlist)
+        return x,X,y,Y
+
+
+

@@ -10,21 +10,21 @@ def random_solution(Axes) -> AxesSolution:
     vaxes = Axes[1]
     a = len(haxes)
     b= len(vaxes)
-    # random.seed(5)
+    random.seed(5)
 
     Hcondition=False
     while not Hcondition:
         A = random.randint(3, a)
         print("random number of Haxes",A,"from",a)
         Haxes=random.sample(haxes,A)
-        Hcondition=AxesSolution(Haxes).HDistanceCondition()
+        Hcondition=AxesSolution(Haxes).HDistanceCondition()[0]
 
     Vcondition=False
     while not Vcondition:
         B = random.randint(3, b)
         print("random number of Vaxes",B,"from",b)
         Vaxes=random.sample(vaxes,B)
-        Vcondition=AxesSolution(Vaxes).VDistanceCondition()
+        Vcondition=AxesSolution(Vaxes).VDistanceCondition()[0]
 
     axes=[[],[]]
     axes[0] = Haxes
@@ -51,22 +51,45 @@ def get_neighbors(solution: AxesSolution,Axes) -> list:
 
     for Haxe in AvailableHaxes:
         for Vaxe in AvailableVaxes:
-            Sol[0].append(Haxe)
             Sol[1].append(Vaxe)
-            neighbors.append(Sol)
-            Sol=copy.deepcopy(solution.axes)
+            Sol[0].append(Haxe)
+
+            if not AxesSolution(Sol[0]).HDistanceCondition()[0]:
+                if Haxe == AxesSolution(Sol[0]).HDistanceCondition()[1]:
+                    Sol[0].remove(AxesSolution(Sol[0]).HDistanceCondition()[2])
+                else:
+                    Sol[0].remove(AxesSolution(Sol[0]).HDistanceCondition()[1])
+            if not AxesSolution(Sol[1]).VDistanceCondition()[0]:
+                if Haxe == AxesSolution(Sol[1]).VDistanceCondition()[1]:
+                    Sol[1].remove(AxesSolution(Sol[1]).VDistanceCondition()[2])
+                else:
+                    Sol[1].remove(AxesSolution(Sol[1]).VDistanceCondition()[1])
+
+                neighbors.append(AxesSolution(Sol))
+                Sol = copy.deepcopy(solution.axes)
 
     return neighbors
 
 
 def fitness(solution: AxesSolution,Slab) -> float:
     # evaluate here how good is this axes distribution
-    Max_x = round(Slab.poly.MaxCoords().x())
-    Max_y = round(Slab.poly.MaxCoords().y())
-    Min_x = round(Slab.poly.MinCoods().x())
-    Min_y = round(Slab.poly.MinCoods().y())
 
-    return 0
+    R_x = round(Slab.poly.MaxCoords().x())
+    L_x = round(Slab.poly.MinCoods().x())
+    U_y = round(Slab.poly.MaxCoords().y())
+    D_y = round(Slab.poly.MinCoods().y())
+    x,X,y,Y=solution.get_DistancesFromEdges(R_x,L_x,U_y,D_y)
+
+    Cond1 = 1 # if the axis contains columns in the intersection or not
+    Cond2 = len(solution.axes[0])/((U_y-D_y)/4+1)+len(solution.axes[1])/((R_x-L_x)/4+1)
+
+
+    score=(1/x+1/X+1/y+1/Y)*Cond1+Cond2
+
+
+
+
+    return score
 
 
 def tabu_search(potentialColumns,Axes,slab,limit=10000) -> AxesSolution:
@@ -74,27 +97,29 @@ def tabu_search(potentialColumns,Axes,slab,limit=10000) -> AxesSolution:
     best_candidate = sbest
     # I did not implement tabu list here, but this should be good enough to start and test your code.
 
-    # iteration = 0
-    # while iteration < limit and not stopping_condition(sbest):
-    neighbors = get_neighbors(best_candidate,Axes)
-    #     best_candidate = neighbors[0]
-    #
-    #     for candidate in neighbors:
-    #         if fitness(candidate) > fitness(best_candidate):
-    #             best_candidate = candidate
-    #
-    #     if fitness(best_candidate) > fitness(sbest):
-    #         sbest = best_candidate
-    for neighbor in neighbors:
-        print("Neighbor n°:", neighbors.index(neighbor))
-        print("neighbor Haxis solution:")
-        for axis in neighbor[0]:
-            print(axis.bounds)
-        print("neighbor Vaxis solution:")
-        for axis in neighbor[1]:
-            print(axis.bounds)
-        # iteration+=1
+    iteration = 0
+    while iteration < limit :
+        print("Iteration",iteration)
+        neighbors = get_neighbors(best_candidate,Axes)
+
+        best_candidate = neighbors[0]
+        for candidate in neighbors:
+            if fitness(candidate,slab) > fitness(best_candidate,slab):
+                best_candidate = candidate
+
+        if fitness(best_candidate,slab) > fitness(sbest,slab):
+            print("fitness:",fitness(best_candidate,slab))
+            sbest = best_candidate
+        iteration+=1
+    # for neighbor in neighbors:
+    #     print("Neighbor n°:", neighbors.index(neighbor))
+    #     Neighbor=neighbor.axes
+    #     fit=fitness(neighbor,slab)
+    #     print("fitness:",fit,"\nneighbor Haxis solution:")
+    #     for axis in Neighbor[0]:
+    #         print(axis.bounds)
+    #     print("neighbor Vaxis solution:")
+    #     for axis in Neighbor[1]:
+    #         print(axis.bounds)
 
     return sbest
-
-
