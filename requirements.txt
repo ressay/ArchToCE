@@ -56,3 +56,10 @@ wincertstore=0.2=py38_0
 xz=5.2.5=h62dcd97_0
 zlib=1.2.11=h62dcd97_4
 zstd=1.4.5=h04227a9_0
+
+matplotlib~=3.3.2
+numpy~=1.19.2
+shapely~=1.7.1
+descartes~=1.1.0
+ifcopenshell~=v0.6.0
+pandas~=1.1.3

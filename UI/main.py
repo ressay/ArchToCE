@@ -17,7 +17,7 @@ from Skeleton.StoreySkeleton import StoreySkeleton
 from Structures.Level import Level
 from Ifc import IfcUtils
 from UI import Plotter
-from shapely.geometry import Point
+from shapely.geometry import Point, linestring
 load_backend("qt-pyqt5")  # here you need to tell OCC.Display to load qt5 backend
 
 
@@ -46,8 +46,9 @@ class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
         print("INFO INIT: DONE GENERATING LEVELS FROM SHAPES")
         self.levels.sort(key=lambda lvl: lvl.getHeight())
 
+        self.Columns = []
+        self.init_skeletons(ind=0)
 
-        self.init_skeletons()
         # self.skeletonLevels = [LevelSkeleton.createSkeletonFromLevel(level) for level in self.levels]
         # self.levelsHash = dict(list(zip(self.levels, self.skeletonLevels)))
         # self.skeletonLevelsHash = dict(list(zip(self.skeletonLevels, self.levels)))
@@ -117,8 +118,11 @@ class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
         self.setViewerDisplay("All", all)
         self.pend = True
 
-    def init_skeletons(self):
+    def init_skeletons(self,ind):
+
         self.skeletonLevels = [LevelSkeleton.createSkeletonFromLevel(level) for level in self.levels]
+        if ind == 1: self.skeletonLevels = LevelSkeleton.removeUnwantedWalls(self.skeletonLevels, self.axesSolution)
+
         self.levelsHash = dict(list(zip(self.levels, self.skeletonLevels)))
         self.skeletonLevelsHash = dict(list(zip(self.skeletonLevels, self.levels)))
         print(self.levels)
@@ -153,6 +157,39 @@ class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
 
         self.solutions = {}
 
+    def init_newSkeletons(self):
+        self.newskeletonLevels = LevelSkeleton.removeUnwantedWalls(self.skeletonLevels,self.axesSolution)
+        self.newlevelsHash = dict(list(zip(self.levels, self.newskeletonLevels)))
+        self.newskeletonLevelsHash = dict(list(zip(self.newskeletonLevels, self.levels)))
+
+        self.newlevels = [level for level in self.levels if len(self.newlevelsHash[level].getPolys())]
+        for level in self.newlevels:
+            level.relatedLevels = self.newlevels
+        self.newskeletonLevels = [levelSkeleton for levelSkeleton in self.newskeletonLevels if len(levelSkeleton.getPolys())]
+
+        print("INFO INIT: DONE GENERATING new LEVELSKELETONS FROM LEVELS")
+        baseSlabHeight = 0
+        for level in self.newlevels:
+            if not len(self.newlevelsHash[level].getPolys()):  # or level.getHeight() <= 0:
+                baseSlabHeight = level.getHeight()
+            else:
+                break
+
+        print(baseSlabHeight)
+
+        for i, levelSkeleton in enumerate(self.newskeletonLevels):
+            prevLevels = self.newskeletonLevelsHash[levelSkeleton].getRightLowerLevels()
+            if not prevLevels:
+                continue
+
+            prevLevels = [self.newlevelsHash[level] for level in prevLevels if level.getHeight() >= baseSlabHeight]
+            print(prevLevels)
+            if not len(prevLevels):
+                continue
+            levelSkeleton.restrictLevelUsableWalls(prevLevels)
+
+
+        self.newsolutions = {}
     def sol1CB(self):
         print(("s1: " + str(self.solutions1[self.selectedRow].getFitness())))
         polys = self.getPolygonsFromLevelSkeletons(self.solutions1[self.selectedRow].levelSkeleton)
@@ -196,24 +233,42 @@ class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
                 colors += [[0.5, 0.5, 0]]
                 alphas += [1, 1]
             axes=haxes+vaxes
+
             for axe in axes:
                 plt.plot(*axe.xy)
 
+            for column in self.Columns:
+                polys += [column]
+                colors += [[1, 0, 0]]
+                alphas += [1, 1]
 
             Plotter.plotShapely(polys, colors, alphas, 20)
             plt.show()
             # plt.savefig('try2.png', bbox_inches='tight')
             # self.draw(polys)
     def columnSearch(self):
-        potentialColumns,haxes,vaxes= WallSkeleton.Columns(self.skeletonLevels,0)
-        axes=[haxes,vaxes]
-        axesSolution=tabu_search(potentialColumns,axes,self.skeletonLevels[0].slabSkeleton,limit=10)
+        self.potentialColumns, self.haxes, self.vaxes = WallSkeleton.Columns(self.skeletonLevels, 0)
+        axes=[self.haxes,self.vaxes]
+        self.axesSolution=tabu_search(self.potentialColumns,axes,self.skeletonLevels[0].slabSkeleton,limit=20)
         print("Haxis solution:")
-        for axis in axesSolution.axes[0]:
+        for axis in self.axesSolution.axes[0]:
             print(axis.bounds)
         print("Vaxis solution:")
-        for axis in axesSolution.axes[1]:
+        for axis in self.axesSolution.axes[1]:
             print(axis.bounds)
+
+        Columns=[]
+        for Haxis in self.axesSolution.axes[0]:
+            for Vaxis in self.axesSolution.axes[1]:
+                column = linestring.BaseGeometry.intersection(Haxis, Vaxis)
+                if column not in Columns: Columns.append(column)
+        Distances= WallSkeleton.ColumnDistances(Columns)
+        print("I am here")
+        for i in range(len(Columns)):
+            print("Distance of the column", i, "(", Columns[i].x, Columns[i].y, ")", Distances[0][i],Distances[1][i])
+        totalHeight = self.levels[len(self.levels)-1].getHeight()+0.15
+        print("Total Height here:",totalHeight)
+        self.Columns=WallSkeleton.CreateColumnShapes(Distances,totalHeight,Columns)
 
     def multiSearch(self):
 
@@ -280,8 +335,12 @@ class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
                                                          "\nShear Wall cover area weight: " +
                                                          str(consts['area_w']))
             self.constraints = consts
-            self.init_skeletons()
+            self.init_skeletons(ind=1)
             self.solutions = {}
+
+            # self.init_newSkeletons()
+            # self.newsolutions={}
+
             for levelSkeleton in self.skeletonLevels[::-1]:
                 level = self.skeletonLevelsHash[levelSkeleton]
                 prevs = [self.solutions[self.levelsHash[p]].levelSkeleton for p in level.getUpperLevels()
@@ -301,7 +360,6 @@ class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
             froot = root + lv + '/'
             if not os.path.exists(froot):
                 os.makedirs(froot)
-
             from matplotlib import pyplot as plt
             levelSkeleton = self.skeletonLevels[selectedRow]
             solution = self.solutions[levelSkeleton]
@@ -348,8 +406,9 @@ class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
             f.write("overlapped area: " + str(solution.getOverlappedArea(constraints['d'])))
 
     def mergeCB(self):
-        # self.multiSearch()
         self.columnSearch()
+        self.multiSearch()
+
         # self.solutions = {}
         # for levelSkeleton in self.skeletonLevels[::-1]:
         #     level = self.skeletonLevelsHash[levelSkeleton]
@@ -513,7 +572,7 @@ def createShapes(file):
 
 
 def main():
-    file = "../IFCFiles/R+3.ifc"
+    file = "../IFCFiles/Modele_2.ifc"
     wShapes, sShapes = createShapes(file)
     space_shapes = getSpaceShapesFromIfc(file)
     space_shapes = [s for _, s in space_shapes]

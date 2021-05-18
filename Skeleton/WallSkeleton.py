@@ -1,9 +1,9 @@
 import random
 
 import math
-
+import pandas as pd
 import numpy
-from shapely.geometry import linestring, Point
+from shapely.geometry import linestring, Point, Polygon
 
 from Geometry import ShapeToPoly
 from Geometry.Geom2D import Pnt
@@ -30,6 +30,14 @@ class WallSkeleton(BoxSkeleton):
     @staticmethod
     def createSkeletonFromWall(wall):
         return WallSkeleton(wall.getBasePolygon())
+
+    @staticmethod
+    def getPolygonMid(wallskeleton):
+        wallskeletons = []
+        wallskeletons.append(wallskeleton)
+        H,V,a,b,c,d = WallSkeleton.getMids(wallskeletons)
+        if len(H)==0: return V[0]
+        else:return H[0]
 
     @staticmethod
     def createSkeletonsFromWall(wall, minZ=None, maxZ=None):
@@ -73,25 +81,20 @@ class WallSkeleton(BoxSkeleton):
             wallSkeletons.append(wallSkeleton)
 
         return wallSkeletons
-
     @staticmethod
-    def createAxes(wallSkeletons,slabSkeleton):
-
+    def getMids(wallSkeletons):
         HorizontalWallSkeletons = []
         VerticalWallSkeletons = []
         HorizontalMid = []
         VerticalMid = []
-        Haxes=[]
-        Vaxes = []
-        HaxesCoords=[]
-        VaxesCoords=[]
-        intersections=[]
-        CurPotentialColumns=[]
+        HaxesCoords = []
+        VaxesCoords = []
         for wallSkeleton in wallSkeletons:
             if abs(wallSkeleton.vecLength.x()) < abs(wallSkeleton.vecLength.y()):
                 VerticalWallSkeletons.append(wallSkeleton)
             else:
                 HorizontalWallSkeletons.append(wallSkeleton)
+
         for wallSkeleton in VerticalWallSkeletons:
             Mid,Coord = wallSkeleton.poly.VerticalalMids(wallSkeleton.getWidth(),wallSkeleton.getHeight())
             if Mid.length>0.21:
@@ -103,7 +106,17 @@ class WallSkeleton(BoxSkeleton):
             if Mid.length>0.21:
                 if Coord not in HaxesCoords: HaxesCoords.append(Coord)
             HorizontalMid.append(Mid)
-            print("Coord",Mid.bounds)
+        # HwallSkeletonandMids = [HorizontalWallSkeletons,HorizontalMid]
+        # VwallSkeletonandMids = [VerticalWallSkeletons,VerticalMid]
+        return HorizontalMid, VerticalMid,HaxesCoords,VaxesCoords
+
+    @staticmethod
+    def createAxes(wallSkeletons,slabSkeleton):
+        Haxes=[]
+        Vaxes = []
+        intersections=[]
+        CurPotentialColumns=[]
+        HorizontalMid, VerticalMid, HaxesCoords, VaxesCoords = WallSkeleton.getMids(wallSkeletons)
         for coord in VaxesCoords:
             first = (coord, 0)
             second = (coord, round(slabSkeleton.poly.MaxCoords().y(),2))
@@ -137,7 +150,6 @@ class WallSkeleton(BoxSkeleton):
     @staticmethod
     def Columns(skeletonLevels,level):
 
-
         levelSkeleton = skeletonLevels[level]
         vaxes, haxes, bcolumns = WallSkeleton.createAxes(levelSkeleton.wallSkeletons,
                                                         levelSkeleton.slabSkeleton)
@@ -164,7 +176,6 @@ class WallSkeleton(BoxSkeleton):
         axes = haxes + vaxes
 
         ColumnDistances = WallSkeleton.ColumnDistances(columns)
-        ColumnDimensions = WallSkeleton.ColumnDimensions(ColumnDistances)
         return columns, haxes, vaxes
 
     @staticmethod
@@ -214,14 +225,53 @@ class WallSkeleton(BoxSkeleton):
             Distances[0].append(finalXdist)
             Distances[1].append(finalYdist)
 
-            print("Distance of the point",i,"(",pColumns[i].x,pColumns[i].y,")",finalXdist,finalYdist)
+            # print("Distance of the point",i,"(",pColumns[i].x,pColumns[i].y,")",finalXdist,finalYdist)
 
         return Distances
 
     @staticmethod
-    def ColumnDimensions(distances):
-        return 0
+    def CreateColumnShapes(distances,TotalHeight,Columns):
+        ColumnPolys=[]
+        for i in range(len(Columns)):
+            cx=Columns[i].x
+            cy=Columns[i].y
+            Hdim, Vdim = WallSkeleton.GetColumnDimensions(distances[0][i],distances[1][i],TotalHeight)
+            ColumnPoly = Polygon([(cx-Hdim/2,cy-Vdim/2),(cx+Hdim/2,cy-Vdim/2),(cx+Hdim/2,cy+Vdim/2),(cx-Hdim/2,cy+Vdim/2)])
+            ColumnPolys.append(ColumnPoly)
+        return ColumnPolys
 
+    @staticmethod
+    def GetColumnDimensions(Hdist,Vdist,Height):
+        Hdim = 0
+        Vdim = 0
+        if 3<= Hdist <=4.5 : Hdim=0.3
+        if 4.5 < Hdist <= 6: Hdim = 0.45
+        if 6 < Hdist <= 7.5: Hdim = 0.6
+        if 7.5 < Hdist <= 9: Hdim = 0.75
+        if 9 < Hdist <= 10.5: Hdim = 0.9
+        if 10.5 < Hdist <= 12: Hdim = 1.05
+
+        if 3<= Vdist <=4.5 : Vdim=0.3
+        if 4.5 < Vdist <= 6: Vdim = 0.45
+        if 6 < Vdist <= 7.5: Vdim = 0.6
+        if 7.5 < Vdist <= 9: Vdim = 0.75
+        if 9 < Vdist <= 10.5: Vdim = 0.9
+        if 10.5 < Vdist <= 12: Vdim = 1.05
+
+        if 3<=Height<=6:
+            Hdim=Hdim+0.05
+            Vdim=Vdim+0.05
+        if 6<Height<=9:
+            Hdim=Hdim+0.1
+            Vdim=Vdim+0.1
+        if 9<Height<=12:
+            Hdim=Hdim+0.15
+            Vdim=Vdim+0.15
+        if 12<=Height<=17:
+            Hdim=Hdim+0.2
+            Vdim=Vdim+0.2
+
+        return Hdim,Vdim
 
     def createRandomVoileFromRatio(self, ratio):
         if ratio >= 1:

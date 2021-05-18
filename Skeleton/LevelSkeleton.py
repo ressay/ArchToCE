@@ -1,13 +1,13 @@
 from shapely.geometry import Polygon
 from shapely.ops import cascaded_union
 
-from Geometry.Geom2D import Pnt
+from Geometry.Geom2D import Pnt, linestring
 from Skeleton.BoxSkeleton import NotBoxError
 from Skeleton.SlabSkeleton import SlabSkeleton
 from Skeleton.WallSkeleton import WallSkeleton
 from Skeleton.Skelet import Skelet
 import math
-
+import copy
 # Add intersection of two walls same level  (axes or polygons)
 
 class LevelSkeleton(Skelet):
@@ -33,6 +33,43 @@ class LevelSkeleton(Skelet):
                                                                   lowZ,
                                                                   level.slab.getLowestZ())
         # wallSkeletons = [WallSkeleton.createSkeletonFromWall(wall) for wall in level.walls]
+        return LevelSkeleton(wallSkeletons, slabSkeleton, level)
+
+    @staticmethod
+    def createNewSkeletonfromLevel(level,SolutionAxes):
+        slabSkeleton = SlabSkeleton.createSkeletonFromSlab(level.slab)
+        wallSkeletons = []
+        lowerlevel = level.getLowerLevel()
+        lowZ = None if lowerlevel is None else lowerlevel.slab.getHighestZ()
+        print("for ", level, "lowz is: ", lowZ)
+        test=False
+        if lowZ is None:
+            lowZ = 0
+        for axis in SolutionAxes.axes[0]:
+            print("here axis",axis.coords[0][1])
+        for wall in level.walls:
+            wallSkeletons += WallSkeleton.createSkeletonsFromWall(wall,
+                                                                  lowZ,
+                                                                  level.slab.getLowestZ())
+        # for wall in level.walls:
+        #     wallSkeleton = WallSkeleton.createSkeletonFromWall(wall)
+        #     x = round(wallSkeleton.poly.centroid().x,2)
+        #     y = round(wallSkeleton.poly.centroid().y,2)
+
+            # for axis in SolutionAxes.axes[0]:
+            #     if y==axis.coords[0][1]:
+            #         wallSkeletons += WallSkeleton.createSkeletonsFromWall(wall,
+            #                                                               lowZ,
+            #                                                               level.slab.getLowestZ())
+            #         test = True
+            # for axis in SolutionAxes.axes[1]:
+            #     if x==axis.coords[0][0]:
+            #         # print("I am here Vertical",mid,"\n",axis)
+            #         wallSkeletons += WallSkeleton.createSkeletonsFromWall(wall,
+            #                                                               lowZ,
+            #                                                               level.slab.getLowestZ())
+            #         test = True
+            # if test == False: level.walls.remove(wall)
         return LevelSkeleton(wallSkeletons, slabSkeleton, level)
 
     def getVoileLengthNeeded(self, weight=1):
@@ -120,6 +157,31 @@ class LevelSkeleton(Skelet):
         cntr = Pnt(x, y)
 
         return cntr
+
+    @staticmethod
+    def removeUnwantedWalls(LevelSkeletons,SolutionAxes):
+        for levelSkeleton in LevelSkeletons:
+            newWallSkeletons = []
+            # print("number of walls", len(levelSkeleton.wallSkeletons))
+            for wallskeleton in levelSkeleton.wallSkeletons:
+                test = False
+                y = round(wallskeleton.poly.centroid().y, 2)
+                x = round(wallskeleton.poly.centroid().x, 2)
+                # print("here wallz ",levelSkeleton.wallSkeletons.index(wallskeleton),":",wallskeleton)
+                for axis in SolutionAxes.axes[0]:
+                    # print("here axis:",axis)
+                    if y==axis.coords[0][1]:
+                        test = True
+                        newWallSkeletons.append(wallskeleton)
+                        # print("added horizontal")
+                for axis in SolutionAxes.axes[1]:
+                    if x==axis.coords[0][0]:
+                        test = True
+                        newWallSkeletons.append(wallskeleton)
+                # if not test: levelSkeleton.wallSkeletons.remove(wallskeleton)
+            levelSkeleton.wallSkeletons = copy.deepcopy(newWallSkeletons)
+            # print("new number of walls", len(levelSkeleton.wallSkeletons))
+        return LevelSkeletons
 
     def restrictLevelUsableWalls(self, levelSkeletons):
         restrictWalls = []

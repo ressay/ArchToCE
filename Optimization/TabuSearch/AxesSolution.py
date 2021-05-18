@@ -22,6 +22,8 @@ class AxesSolution(object):
 
     def HminimumDistance(self):
         self.hminDist = self.axes[0].length
+        firstaxis = None
+        secondaxis = None
         for axis in self.axes:
             p=Point(axis.coords[0])
             for otheraxis in self.axes:
@@ -32,21 +34,25 @@ class AxesSolution(object):
                     secondaxis=otheraxis
         return self.hminDist, firstaxis,secondaxis
 
-    def HmaximumDistance(self):
+    def HmaximumDistance(self,uy,dy):
         distances=[]
-
+        points=[]
+        points.append(uy)
         for axis in self.axes:
-            p= Point(axis.coords[0]).y
-            ind = self.axes.index(axis)
+            points.append(Point(axis.coords[0]).y)
+        points.append(dy)
+        points.sort()
+        for p in points:
+            ind = points.index(p)
             if ind == 0:
-                op= Point(self.axes[ind+1].coords[0]).y
-                dist= abs(p-op)
-            elif ind == len(self.axes)-1:
-                op = Point(self.axes[ind-1].coords[0]).y
-                dist= abs(p-op)
+                op = points[ind+1]
+                dist = abs(p-op)
+            elif ind == len(points)-1:
+                op = points[ind-1]
+                dist = abs(p-op)
             else:
-                op1= Point(self.axes[ind-1].coords[0]).y
-                op2= Point(self.axes[ind+1].coords[0]).y
+                op1 = points[ind-1]
+                op2 = points[ind+1]
                 dist=max(abs(p-op1),abs(p-op2))
 
             if dist not in distances: distances.append(dist)
@@ -56,6 +62,8 @@ class AxesSolution(object):
 
     def VminimumDistance(self):
         self.vminDist = self.axes[0].length
+        firstaxis = None
+        secondaxis = None
         for axis in self.axes:
             p=Point(axis.coords[0])
             for otheraxis in self.axes:
@@ -66,21 +74,25 @@ class AxesSolution(object):
                     secondaxis = otheraxis
         return self.vminDist, firstaxis,secondaxis
 
-    def VmaximumDistance(self):
+    def VmaximumDistance(self,rx,lx):
         distances = []
-
+        points = []
+        points.append(lx)
         for axis in self.axes:
-            p = Point(axis.coords[0]).x
-            ind = self.axes.index(axis)
+            points.append(Point(axis.coords[0]).x)
+        points.append(rx)
+        points.sort()
+        for p in points:
+            ind = points.index(p)
             if ind == 0:
-                op = Point(self.axes[ind + 1].coords[0]).x
+                op = points[ind + 1]
                 dist = abs(p - op)
-            elif ind == len(self.axes) - 1:
-                op = Point(self.axes[ind - 1].coords[0]).x
+            elif ind == len(points) - 1:
+                op = points[ind - 1]
                 dist = abs(p - op)
             else:
-                op1 = Point(self.axes[ind - 1].coords[0]).x
-                op2 = Point(self.axes[ind + 1].coords[0]).x
+                op1 = points[ind - 1]
+                op2 = points[ind + 1]
                 dist = max(abs(p - op1), abs(p - op2))
 
             if dist not in distances: distances.append(dist)
@@ -88,21 +100,35 @@ class AxesSolution(object):
         self.vmaxDist=max(distances)
         return self.vmaxDist
 
-    def HDistanceCondition(self):
+    def HDistanceCondition(self,uy,dy):
         hmindist,firstaxis,secondaxis = self.HminimumDistance()
-        hmaxdist = self.HmaximumDistance()
-        if hmindist > 2.5 and hmaxdist < 6:
-            return True, 0, 0
+        hmaxdist = self.HmaximumDistance(uy,dy)
+        i=0
+        if hmindist > 2.5:
+            if hmaxdist < 6:
+                i=2
+                Result  = True
+            else:
+                i=1
+                Result= False
         else:
-            return False, firstaxis, secondaxis
+            Result = False
+        return Result,firstaxis,secondaxis,i
 
-    def VDistanceCondition(self):
+    def VDistanceCondition(self,R_x,L_x):
         vmindist, firstaxis, secondaxis = self.VminimumDistance()
-        vmaxdist = self.VmaximumDistance()
-        if vmindist > 2.5 and vmaxdist < 6:
-            return True, 0, 0
+        vmaxdist = self.VmaximumDistance(R_x,L_x)
+        i = 0
+        if vmindist > 2.5:
+            if vmaxdist < 6:
+                i = 2
+                Result = True
+            else:
+                i = 1
+                Result = False
         else:
-            return False, firstaxis, secondaxis
+            Result = False
+        return Result, firstaxis, secondaxis, i
 
     def AddrandomHAxis(self,Axes):
         test = False
@@ -140,6 +166,7 @@ class AxesSolution(object):
         X=min(Xlist)
         x=min(xlist)
         return x,X,y,Y
+
 
 
 
