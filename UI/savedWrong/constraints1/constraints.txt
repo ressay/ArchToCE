@@ -1,3 +1,3 @@
 Torsional radius weight: 0Eccentricity weight: -0.5
 Shear Wall length weight: 1
-Shear Wall cover area weight: 2
+Shear Wall cover area weight: 0

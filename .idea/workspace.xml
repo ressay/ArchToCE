@@ -19,99 +19,21 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="970fbb92-1777-4107-8d6b-9f3c4b97d9d9" name="Default" comment="fitness">
-      <change afterPath="$PROJECT_DIR$/IFCFiles/Project2.ifc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IFCFiles/Project2.ifc.log" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IFCFiles/model 1.ifc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IFCFiles/model 1.ifc.log" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IFCFiles/model 2.ifc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IFCFiles/model 2.ifc.log" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IFCFiles/old/B09_mod.ifc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IFCFiles/old/House.ifc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IFCFiles/old/House.ifc.log" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IFCFiles/old/IFC models.rar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IFCFiles/old/IfcOpenHouse.ifc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IFCFiles/old/Immeuble1.ifc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IFCFiles/old/Immeuble19.ifc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IFCFiles/old/Immeuble2.ifc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IFCFiles/old/Immeuble29.ifc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IFCFiles/old/Immeuble39.ifc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IFCFiles/old/Modele_1.ifc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IFCFiles/old/Modele_3.ifc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IFCFiles/old/Modele_4.ifc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IFCFiles/old/Modele_5.ifc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IFCFiles/old/Modele_6.ifc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IFCFiles/old/Mur.ifc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IFCFiles/old/gss_revit.ifc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IFCFiles/old/gss_revit.ifc.log" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IFCFiles/old/ifc_adv1.ifc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IFCFiles/old/ifc_adv2.ifc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IFCFiles/old/ifc_adv3.ifc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IFCFiles/old/ifc_adv4.ifc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IFCFiles/old/ifc_adv5.ifc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IFCFiles/old/ifc_adv6.ifc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IFCFiles/old/model_001.ifc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IFCFiles/old/model_002.ifc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IFCFiles/old/model_003.ifc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IFCFiles/old/projet.ifc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IFCFiles/old/px+vl4.ifc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IFCFiles/old/px.ifc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IFCFiles/old/schema.log" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IFCFiles/old/try.ifc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IFCFiles/old/try.ifc.log" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IFCFiles/old/villa1.ifc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IFCFiles/old/villa2.ifc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IFCFiles/old/villaRdc.ifc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IFCFiles/old/villaRdc2.ifc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/UI/Sections.xlsx" afterDir="false" />
+    <list default="true" id="970fbb92-1777-4107-8d6b-9f3c4b97d9d9" name="Default" comment="new skeleton with only walls in axes that can contain shear walls">
+      <change afterPath="$PROJECT_DIR$/Skeleton/ColumnSkeleton.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Geometry/Geom2D.py" beforeDir="false" afterPath="$PROJECT_DIR$/Geometry/Geom2D.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IFCFiles/B09_mod.ifc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IFCFiles/House.ifc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IFCFiles/House.ifc.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IFCFiles/IFC models.rar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IFCFiles/IfcOpenHouse.ifc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IFCFiles/Immeuble1.ifc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IFCFiles/Immeuble19.ifc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IFCFiles/Immeuble2.ifc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IFCFiles/Immeuble29.ifc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IFCFiles/Immeuble39.ifc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IFCFiles/Modele_1.ifc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IFCFiles/Modele_3.ifc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IFCFiles/Modele_4.ifc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IFCFiles/Modele_5.ifc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IFCFiles/Modele_6.ifc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IFCFiles/Mur.ifc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IFCFiles/gss_revit.ifc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IFCFiles/gss_revit.ifc.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IFCFiles/ifc_adv1.ifc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IFCFiles/ifc_adv2.ifc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IFCFiles/ifc_adv3.ifc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IFCFiles/ifc_adv4.ifc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IFCFiles/ifc_adv5.ifc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IFCFiles/ifc_adv6.ifc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IFCFiles/model_001.ifc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IFCFiles/model_002.ifc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IFCFiles/model_003.ifc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IFCFiles/projet.ifc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IFCFiles/px+vl4.ifc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IFCFiles/px.ifc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IFCFiles/schema.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IFCFiles/try.ifc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IFCFiles/try.ifc.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IFCFiles/villa1.ifc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IFCFiles/villa2.ifc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IFCFiles/villaRdc.ifc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IFCFiles/villaRdc2.ifc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Optimization/TabuSearch/AxesSolution.py" beforeDir="false" afterPath="$PROJECT_DIR$/Optimization/TabuSearch/AxesSolution.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Optimization/TabuSearch/TabuSearch.py" beforeDir="false" afterPath="$PROJECT_DIR$/Optimization/TabuSearch/TabuSearch.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Optimization/Genetic/Evaluator.py" beforeDir="false" afterPath="$PROJECT_DIR$/Optimization/Genetic/Evaluator.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Optimization/Genetic/GeneticAlgorithm.py" beforeDir="false" afterPath="$PROJECT_DIR$/Optimization/Genetic/GeneticAlgorithm.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Skeleton/LevelSkeleton.py" beforeDir="false" afterPath="$PROJECT_DIR$/Skeleton/LevelSkeleton.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Skeleton/VoileSkeleton.py" beforeDir="false" afterPath="$PROJECT_DIR$/Skeleton/VoileSkeleton.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Skeleton/WallSkeleton.py" beforeDir="false" afterPath="$PROJECT_DIR$/Skeleton/WallSkeleton.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/UI/level0" beforeDir="false" afterPath="$PROJECT_DIR$/UI/level0" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/UI/level1" beforeDir="false" afterPath="$PROJECT_DIR$/UI/level1" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/UI/level2" beforeDir="false" afterPath="$PROJECT_DIR$/UI/level2" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/UI/level3" beforeDir="false" afterPath="$PROJECT_DIR$/UI/level3" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/UI/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/UI/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/constraints.txt" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/constraints.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/level1/layout.png" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/level1/layout.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/level1/layout_ranges.png" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/level1/layout_ranges.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/level1/properties.txt" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/level1/properties.txt" afterDir="false" />
@@ -124,7 +46,6 @@
       <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/level4/layout.png" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/level4/layout.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/level4/layout_ranges.png" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/level4/layout_ranges.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/level4/properties.txt" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/level4/properties.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -539,7 +460,13 @@
       <option name="presentableId" value="LOCAL‎00023" />
       <updated>1619869250354</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL‎00024" summary="new skeleton with only walls in axes that can contain shear walls">
+      <created>1621340908935</created>
+      <option name="number" value="LOCAL‎00024" />
+      <option name="presentableId" value="LOCAL‎00024" />
+      <updated>1621340908935</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -577,7 +504,8 @@
     <MESSAGE value="latest update" />
     <MESSAGE value="adding neighbors" />
     <MESSAGE value="fitness" />
-    <option name="LAST_COMMIT_MESSAGE" value="fitness" />
+    <MESSAGE value="new skeleton with only walls in axes that can contain shear walls" />
+    <option name="LAST_COMMIT_MESSAGE" value="new skeleton with only walls in axes that can contain shear walls" />
   </component>
   <component name="WindowStateProjectService">
     <state x="137" y="0" width="1092" height="738" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1620836273574">
@@ -600,22 +528,22 @@
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state x="561" y="266" key="Github.ShareDialog/0.0.1366.738@0.0.1366.738" timestamp="1616665949724" />
-    <state width="672" height="186" key="GridCell.Tab.0.bottom" timestamp="1621340655977">
+    <state width="672" height="186" key="GridCell.Tab.0.bottom" timestamp="1621714559937">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state width="672" height="186" key="GridCell.Tab.0.bottom/0.0.1366.738@0.0.1366.738" timestamp="1621340655977" />
-    <state width="672" height="186" key="GridCell.Tab.0.center" timestamp="1621340655977">
+    <state width="672" height="186" key="GridCell.Tab.0.bottom/0.0.1366.738@0.0.1366.738" timestamp="1621714559937" />
+    <state width="672" height="186" key="GridCell.Tab.0.center" timestamp="1621714559937">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state width="672" height="186" key="GridCell.Tab.0.center/0.0.1366.738@0.0.1366.738" timestamp="1621340655977" />
-    <state width="672" height="186" key="GridCell.Tab.0.left" timestamp="1621340655977">
+    <state width="672" height="186" key="GridCell.Tab.0.center/0.0.1366.738@0.0.1366.738" timestamp="1621714559937" />
+    <state width="672" height="186" key="GridCell.Tab.0.left" timestamp="1621714559937">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state width="672" height="186" key="GridCell.Tab.0.left/0.0.1366.738@0.0.1366.738" timestamp="1621340655977" />
-    <state width="672" height="186" key="GridCell.Tab.0.right" timestamp="1621340655977">
+    <state width="672" height="186" key="GridCell.Tab.0.left/0.0.1366.738@0.0.1366.738" timestamp="1621714559937" />
+    <state width="672" height="186" key="GridCell.Tab.0.right" timestamp="1621714559937">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state width="672" height="186" key="GridCell.Tab.0.right/0.0.1366.738@0.0.1366.738" timestamp="1621340655977" />
+    <state width="672" height="186" key="GridCell.Tab.0.right/0.0.1366.738@0.0.1366.738" timestamp="1621714559937" />
     <state width="672" height="227" key="GridCell.Tab.1.bottom" timestamp="1620232287263">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
@@ -640,10 +568,10 @@
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state width="498" height="446" key="SwitcherDM/0.0.1366.738@0.0.1366.738" timestamp="1618231086932" />
-    <state x="275" y="101" key="Vcs.Push.Dialog.v2" timestamp="1619869254573">
+    <state x="275" y="101" key="Vcs.Push.Dialog.v2" timestamp="1621716935519">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state x="275" y="101" key="Vcs.Push.Dialog.v2/0.0.1366.738@0.0.1366.738" timestamp="1619869254573" />
+    <state x="275" y="101" key="Vcs.Push.Dialog.v2/0.0.1366.738@0.0.1366.738" timestamp="1621716935519" />
     <state x="500" y="282" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1619454575574">
       <screen x="0" y="0" width="1366" height="738" />
     </state>

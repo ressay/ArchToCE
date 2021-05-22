@@ -6,7 +6,7 @@ import numpy
 from shapely.geometry import linestring, Point, Polygon
 
 from Geometry import ShapeToPoly
-from Geometry.Geom2D import Pnt
+from Geometry.Geom2D import Pnt, Poly
 from Skeleton.BoxSkeleton import BoxSkeleton, NotBoxError
 from Skeleton.VoileSkeleton import VoileSkeleton
 from UI import Plotter
@@ -30,6 +30,10 @@ class WallSkeleton(BoxSkeleton):
     @staticmethod
     def createSkeletonFromWall(wall):
         return WallSkeleton(wall.getBasePolygon())
+
+    @staticmethod
+    def createSkeletonFromPoly(ply):
+        return WallSkeleton(ply)
 
     @staticmethod
     def getPolygonMid(wallskeleton):
@@ -481,3 +485,27 @@ class WallSkeleton(BoxSkeleton):
 
     def getVoilesLength(self):
         return sum(voileSkeleton.getLength() for voileSkeleton in self.getAllVoiles())
+
+    @staticmethod
+    def ColumnToVoile(ColumnPolys, wallSkeletons):
+        voiles = []
+        for Column in ColumnPolys:
+            pnts = Column.exterior.coords
+            x= round(Column.centroid.x,2)
+            y= round(Column.centroid.y,2)
+            end1 = round(pnts[1][0]-pnts[0][0],2)
+            end2 = round(pnts[3][1]-pnts[0][1],2)
+            if end1>end2: end=end1
+            else:end=end2
+            print("Column number:", ColumnPolys.index(Column), "(",x,y,")", end1,end2,end)
+
+            for wall in wallSkeletons:
+                X = round(wall.poly.centroid().x, 2)
+                Y = round(wall.poly.centroid().y, 2)
+                dim1 = abs(wall.poly.MinCoods().x() - wall.poly.MaxCoords().x())
+                dim2 = abs(wall.poly.MinCoods().y() - wall.poly.MaxCoords().y())
+                if X==x and Y==y:
+                    if dim1>0.2 and dim2>0.2:
+                        voile = VoileSkeleton(wall, 0, end)
+                        voiles.append(voile)
+        return voiles

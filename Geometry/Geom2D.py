@@ -355,6 +355,9 @@ class Poly(object):
     def area(self):
         return self.poly.area
 
+    def difference(self, poly):
+        return  self.poly.difference(poly.poly)
+
     def centroid(self):
         return self.poly.centroid
 

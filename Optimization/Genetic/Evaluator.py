@@ -80,6 +80,7 @@ def calculateFitnessSolution(solution, constraints=None):
     lengthX = 0
     lengthY = 0
     needed = levelSkeleton.getVoileLengthNeeded(constraints['ratio'])
+    # here
     centerV = levelSkeleton.slabSkeleton.poly.centroid()
     centerV = Pnt(centerV.x, centerV.y)
     vecUni = Pnt(0,0)

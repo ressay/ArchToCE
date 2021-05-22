@@ -19,6 +19,7 @@ class VoileSkeleton(BoxSkeleton):
         self.surrondingBox = None
         self.surrondingBoxes = None
 
+
     def setParentWall(self,wallSkeleton,update=False):
         self.parentWall = wallSkeleton
         if update:
@@ -69,7 +70,7 @@ class VoileSkeleton(BoxSkeleton):
         return abs(self.vecLength.y())
 
     def copy(self):
-        voile = VoileSkeleton(self.parentWall,self.start,self.end)
+        voile = VoileSkeleton(self.parentWall, self.start, self.end)
         voile.evalData = self.evalData
         return voile
 
@@ -116,6 +117,44 @@ class VoileSkeleton(BoxSkeleton):
         circle = p.buffer(distance+self.vecWidth.magn()/2)
         circle2 = p2.buffer(distance+self.vecWidth.magn()/2)
         result = polygon.union(circle).union(circle2)
+
+        # dist1 = max(abs(self.vecWidth.x()), abs(self.vecWidth.y()))
+        # dist2 = max(abs(self.vecLength.x()), abs(self.vecLength.y()))
+        # if dist2<=2*dist1:
+        #     if self.vecWidth.y() == 0:
+        #         wid = abs(self.vecWidth.x())
+        #         len = abs(self.vecLength.y())
+        #         pnt1 = Point(self.topLeftPnt.x() + 4.5 * wid, self.topLeftPnt.y() - 4.5 * len)
+        #         pnts = [pnt1, Point(pnt1.x, pnt1.y + 10 * len), Point(pnt1.x - 10 * wid, pnt1.y + 10 * len),
+        #                 Point(pnt1.x - 10 * wid, pnt1.y)]
+        #         result = Polygon(pnts)
+        #
+        #     if self.vecWidth.y() != 0:
+        #         wid = abs(self.vecWidth.y())
+        #         len = abs(self.vecLength.x())
+        #         pnt1 = Point(self.topLeftPnt.x() + 4.5 * len, self.topLeftPnt.y() - 4.5 * wid)
+        #         pnts = [pnt1, Point(pnt1.x, pnt1.y + 10 * wid), Point(pnt1.x - 10 * len, pnt1.y + 10 * wid),
+        #                 Point(pnt1.x - 10 * len, pnt1.y)]
+        #         result = Polygon(pnts)
+        #
+        # else:
+        #     if self.vecWidth.y() == 0:
+        #         wid = abs(self.vecWidth.x())
+        #         len = abs(self.vecLength.y())
+        #         pnt1 = Point(self.topLeftPnt.x() + 2.5, self.topLeftPnt.y() - 2.5)
+        #         pnts = [pnt1, Point(pnt1.x, pnt1.y + len+5), Point(pnt1.x -5 - wid, pnt1.y + len+5),
+        #                 Point(pnt1.x - wid-5, pnt1.y)]
+        #         result = Polygon(pnts)
+        #
+        #     if self.vecWidth.y() != 0:
+        #         wid = abs(self.vecWidth.y())
+        #         len = abs(self.vecLength.x())
+        #         pnt1 = Point(self.topLeftPnt.x() +2.5, self.topLeftPnt.y() -2.5)
+        #         pnts = [pnt1, Point(pnt1.x, pnt1.y + 5+ wid), Point(pnt1.x - 5- len, pnt1.y + 5+  wid),
+        #                 Point(pnt1.x - 5- len, pnt1.y)]
+        #         result = Polygon(pnts)
+
+
         self.surrondingBox = result
         return result
 
