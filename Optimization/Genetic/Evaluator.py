@@ -51,7 +51,6 @@ class WallEvaluator(object):
             dis += distance(centerV, self.center)
             lengthX += voileSkeleton.getLengthX()
             lengthY += voileSkeleton.getLengthY()
-            # length += (voileSkeleton.end - voileSkeleton.start)
             size += 1
         wallSkeleton.evalData = EvaluationData(dis, size, totalLengthX,totalLengthY,lengthX,lengthY)
         sumLi1,sumLi2,sumLixi,sumLiyi = wallSkeleton.getSums()
@@ -72,7 +71,7 @@ def calculateFitnessSolution(solution, constraints=None):
         rad_w, ecc_w, area_w, length_w = constraints['rad_w'], constraints['ecc_w'],\
                                          constraints['area_w'], constraints['length_w']
     else:
-        rad_w, ecc_w, area_w, length_w = 0.5, -0.5, 1, 1
+        rad_w, ecc_w, area_w, length_w = 0.5, -0.5, 0, 1
     size = 0
     dis = 0
     totalX = 0
@@ -80,49 +79,115 @@ def calculateFitnessSolution(solution, constraints=None):
     lengthX = 0
     lengthY = 0
     needed = levelSkeleton.getVoileLengthNeeded(constraints['ratio'])
-    # here
+
     centerV = levelSkeleton.slabSkeleton.poly.centroid()
     centerV = Pnt(centerV.x, centerV.y)
-    vecUni = Pnt(0,0)
+    vecUni = Pnt(0, 0)
+    toAddXneeded = 0
+    toAddYneeded = 0
     for wallSkeleton in levelSkeleton.wallSkeletons:
         # print "attached voiles : " + str(len(wallSkeleton.attachedVoiles))
         evalData = wallEvaluator.calculateFitnessWall(wallSkeleton)
-        d,s,lx,ly = evalData.dis,evalData.size,evalData.totalLengthX,evalData.totalLengthY
+        d, s, lx, ly = evalData.dis, evalData.size, evalData.totalLengthX, evalData.totalLengthY
         dis += d
         size += s
         totalX += lx
         totalY += ly
-        lengthX += evalData.lengthX
-        lengthY += evalData.lengthY
+        if wallSkeleton.iscolumnParent:
+            xDis = wallSkeleton.poly.MaxCoords().x() - wallSkeleton.poly.MinCoords().x()
+            yDis = wallSkeleton.poly.MaxCoords().y() - wallSkeleton.poly.MinCoords().y()
+            # lengthX += xDis
+            # lengthY += yDis
+            toAddXneeded += xDis
+            toAddYneeded += yDis
+        else:
+            lengthX += evalData.lengthX
+            lengthY += evalData.lengthY
         vecUni += evalData.vecUni
+    # print("columns direction length", toAddYneeded, toAddXneeded)
+    # print("total here", lengthY, lengthX)
     cntr = levelSkeleton.getCenterFromShear()
     Rx, Ry = levelSkeleton.getTorsionalRadius(centerV)
     momentx, momenty = levelSkeleton.slabSkeleton.poly.momentX(), levelSkeleton.slabSkeleton.poly.momentY()
     if momentx < 0 or momenty < 0:
         print((momentx, momenty))
         eval(input())
-    radiuses = (Rx + Ry)/(abs(Rx-Ry)+0.000001) #abs(1-(Ry/(momentx+momenty))) + abs(1-(Rx/(momentx+momenty)))
+    # radiuses = (Rx + Ry)/(abs(Rx-Ry)+0.000001) #abs(1-(Ry/(momentx+momenty))) + abs(1-(Rx/(momentx+momenty)))
+    rx = math.sqrt(momentx/levelSkeleton.slabSkeleton.poly.area())   # Torsional radius
+    ry = math.sqrt(momenty/levelSkeleton.slabSkeleton.poly.area())
+    radiuses= (Rx/rx + Ry/ry)
+    scoreDist = levelSkeleton.ScoreOfUnacceptableVoiles()
+    a = solution.getOverlappedArea(constraints['d'])
 
-    area = solution.getAreaCoveredBoxes(constraints['d'])
+    effectiveArea = solution.getEffectiveArea()
+    overlappedArea = solution.geteffectiveOverlappedArea(effectiveArea)
+
+    ex = abs(cntr.x() - centerV.x())
+    ey = abs(cntr.y() - centerV.y())
+
     coeffs = {
         'rad': rad_w,
         'sym': ecc_w,
         'lengthShearX': length_w/2.,
         'lengthShearY': length_w/2.,
-        # 'overlapped': -1,
+        'overlapped': 1,
         # 'unif': 0,
-        'area': area_w
+        'area': area_w,
+        'distance': 3,
+        'distribution': 0.5
     }
-
     def getScoreLength(lengthA,total):
-        if lengthA < needed:
-            scoreLengthA = math.pow(lengthA/needed,3)
+        if lengthA > needed:
+            scoreLengthA = math.pow(needed/lengthA,3)
         else:
-            scoreLengthA = 1 - (lengthA - needed)/needed
+            scoreLengthA = 1 - (needed - lengthA)/needed
         return scoreLengthA
 
+    def getScoreArea(area, slabArea):
+        if area:
+            if area> 0.2*slabArea:
+                scoreArea = math.pow(0.02*slabArea/area,3)
+            else:
+                scoreArea = 1- (0.2*slabArea-area)/(0.2*slabArea)
+            return  scoreArea
+        else: return 0
+
+    def getScoreOverlapped(overlapped, totalArea):
+        if totalArea:
+            return 1-overlapped/totalArea
+        else: return 0
+
+    def getScoreSymEcc(ex,ey,Rx,Ry):
+        if Ry==0: Ry=0.1
+        if Rx==0: Rx=0.1
+        return 2- ex/(0.3*Rx) - ey/(0.3*Ry)
+    def getDistrubtionScore(Rx,Ry,LX,LY):
+        if Ry:
+            s1 = 1 - (Rx/Ry - LX/LY)
+        else: s1 = -1
+        if Rx:
+            s2 = 1 - (Ry/Rx - LY/LX)
+        else: s2 = -1
+        return s1+s2
+
+    LX = levelSkeleton.slabSkeleton.poly.MaxCoords().x()-levelSkeleton.slabSkeleton.poly.MinCoords().x()
+    LY = levelSkeleton.slabSkeleton.poly.MaxCoords().y()-levelSkeleton.slabSkeleton.poly.MinCoords().y()
     scoreLengthX = getScoreLength(lengthX,totalX)
     scoreLengthY = getScoreLength(lengthY,totalY)
+    scoreArea = getScoreArea(effectiveArea,levelSkeleton.slabSkeleton.poly.area())
+    scoreOverlapped = getScoreOverlapped(overlappedArea,effectiveArea)
+    SymScore = getScoreSymEcc(ex,ey,Rx,Ry)
+    distributionScore = getDistrubtionScore(Rx,Ry,LX,LY)
+
+    # print("\nscore length", scoreLengthX, scoreLengthY)
+
+    # print("effective inslab area:", effectiveArea," score:", scoreArea)
+    # print("overlapped area", overlappedArea," score:",scoreOverlapped)
+    # print("eccentricty", SymScore)
+    # print("Distance score", scoreDist)
+    # print("radius score", radiuses)
+    print('distributionScore', distributionScore)
+
     areaNorm = sum(voileSkeleton.getSurrondingBox(constraints['d']).area for wallSkeleton in levelSkeleton.wallSkeletons
                for voileSkeleton in wallSkeleton.getAllVoiles())
     if areaNorm == 0:
@@ -130,24 +195,28 @@ def calculateFitnessSolution(solution, constraints=None):
         ar = -1
     else:
         ar = math.sqrt(areaNorm)
+
+
     fitV = {
         'radX': Rx,
         'radY': Ry,
         'rad': radiuses,
-        'sym': max([0,distance(cntr,centerV)/ar]),
+        'sym': SymScore,                                   #max([0,distance(cntr,centerV)/ar]),
         'lengthShearX': scoreLengthX,
         'lengthShearY': scoreLengthY,
         'unif': vecUni.magn(),
-        'area': area/levelSkeleton.getSlabArea(),
-        'overlapped': max([0,solution.getOverlappedArea(constraints['d'])/areaNorm]),
+        'area': scoreArea,                                 #area/levelSkeleton.getSlabArea(),
+        'overlapped': scoreOverlapped,
         'lengthX': lengthX,
-        'lengthY': lengthY
+        'lengthY': lengthY,
+        'distance': scoreDist,
+        'distribution': distributionScore
         }
     fitness = 0
     for key in coeffs:
+        # print("fitness of",key,':',fitV[key]*coeffs[key] )
         fitness += fitV[key]*coeffs[key]
     fitV['totalScore'] = fitness
-    # fitness = fitV['area']
     return fitV
 
 
@@ -156,5 +225,4 @@ def calculateFitnessPopulation(population, constraints=None):
     for solution in population:
         # print("calculating:")
         fitnesses.append(solution.getFitness(constraints)['totalScore'])
-
     return fitnesses

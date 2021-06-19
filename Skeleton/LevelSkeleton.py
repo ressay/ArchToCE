@@ -4,6 +4,7 @@ from Geometry import ShapeToPoly
 from Geometry.Geom2D import Pnt, linestring, Poly
 from Skeleton.BoxSkeleton import NotBoxError
 from Skeleton.SlabSkeleton import SlabSkeleton
+from Skeleton.VoileSkeleton import VoileSkeleton
 from Skeleton.WallSkeleton import WallSkeleton
 from Skeleton.Skelet import Skelet
 from Skeleton.VoileSkeleton import VoileSkeleton
@@ -73,13 +74,77 @@ class LevelSkeleton(Skelet):
             # if test == False: level.walls.remove(wall)
         return LevelSkeleton(wallSkeletons, slabSkeleton, level)
 
-    def getVoileLengthNeeded(self, weight=1):
-        height = self.level.heighestZ
-        coeff = 1.3*weight
-        if height < 30:
-            coeff = 0.7*weight
-        return coeff * height * self.slabSkeleton.poly.area() / 100
-    # add needed length function
+    @staticmethod
+    def CreateColumnShapes(distances, TotalHeight, Columns):
+        ColumnPolys = []
+        Vlen = 0
+        Hlen = 0
+        for i in range(len(Columns)):
+            cx = Columns[i].x
+            cy = Columns[i].y
+            Hdim, Vdim = LevelSkeleton.GetColumnDimensions(distances[0][i], distances[1][i], TotalHeight)
+            if Hdim > Vdim:
+                Hlen += Hdim
+            else:
+                Vlen += Vdim
+            print("Column n°:", i, "maxDim", max(Hdim, Vdim))
+            pnt1 = (round(cx - Hdim / 2, 2), round(cy - Vdim / 2, 2))
+            pnt2 = (round(cx + Hdim / 2, 2), round(cy - Vdim / 2, 2))
+            pnt3 = (round(cx + Hdim / 2, 2), round(cy + Vdim / 2, 2))
+            pnt4 = (round(cx - Hdim / 2, 2), round(cy + Vdim / 2, 2))
+            ColumnPoly = Polygon([pnt1, pnt2, pnt3, pnt4])
+            ColumnPolys.append(ColumnPoly)
+        Len = Vlen + Hlen
+        return ColumnPolys, Len
+
+    @staticmethod
+    def GetColumnDimensions(Hdist, Vdist, Height):
+        Hdim = 0
+        Vdim = 0
+        if 3 <= Hdist <= 4.5: Hdim = 0.3
+        if 4.5 < Hdist <= 6: Hdim = 0.45
+        if 6 < Hdist <= 7.5: Hdim = 0.6
+        if 7.5 < Hdist <= 9: Hdim = 0.75
+        if 9 < Hdist <= 10.5: Hdim = 0.9
+        if 10.5 < Hdist <= 12: Hdim = 1.05
+
+        if 3 <= Vdist <= 4.5: Vdim = 0.3
+        if 4.5 < Vdist <= 6: Vdim = 0.45
+        if 6 < Vdist <= 7.5: Vdim = 0.6
+        if 7.5 < Vdist <= 9: Vdim = 0.75
+        if 9 < Vdist <= 10.5: Vdim = 0.9
+        if 10.5 < Vdist <= 12: Vdim = 1.05
+
+        if 3 <= Height <= 6:
+            Hdim = Hdim + 0.05
+            Vdim = Vdim + 0.05
+        if 6 < Height <= 9:
+            Hdim = Hdim + 0.1
+            Vdim = Vdim + 0.1
+        if 9 < Height <= 12:
+            Hdim = Hdim + 0.15
+            Vdim = Vdim + 0.15
+        if 12 <= Height <= 17:
+            Hdim = Hdim + 0.2
+            Vdim = Vdim + 0.2
+
+        return Hdim, Vdim
+
+    def getVoileLengthNeeded(self, weight=1, ColumnsLength=0):
+        # height = self.level.heighestZ
+        # coeff = 1.3*weight
+        # if height < 30:
+        #     coeff = 0.7*weight
+        #     print("here coef2",coeff)
+        # return coeff * height * self.slabSkeleton.poly.area() / 100
+
+        Height = self.level.getHeightOverLowerLevel()+0.3
+        D = 1.5*Height
+        neededLength = 0.2*self.slabSkeleton.poly.area()/3-D
+        # print("here area",self.slabSkeleton.poly.area())
+        # print("NEEEEDED",neededLength)
+        # if neededLength < 0.8: neededLength = 0.8
+        return 3
 
     def getWallsTotalLength(self):
         length = 0
@@ -135,6 +200,7 @@ class LevelSkeleton(Skelet):
 
         nShears = 0
         for wallSkeleton in self.wallSkeletons:
+
             sLiX, sLiY, sLixi, sLiyi = wallSkeleton.getSums()
             nShears += len(wallSkeleton.getAllVoiles())
             sumLiX += sLiX
@@ -170,8 +236,6 @@ class LevelSkeleton(Skelet):
                 y = round(wallskeleton.poly.centroid().y, 2)
                 x = round(wallskeleton.poly.centroid().x, 2)
                 print("here wall ",levelSkeleton.wallSkeletons.index(wallskeleton),":",x,y)
-                dim1 = abs(wallskeleton.poly.MinCoods().x() - wallskeleton.poly.MaxCoords().x())
-                dim2 = abs(wallskeleton.poly.MinCoods().y() - wallskeleton.poly.MaxCoords().y())
                 for axis in SolutionAxes.axes[0]:
                     # print("here axis:",axis)
                     if y==axis.coords[0][1] :
@@ -183,9 +247,6 @@ class LevelSkeleton(Skelet):
                 # if not test: levelSkeleton.wallSkeletons.remove(wallskeleton)
             for wallsklt in LevelSkeleton.removeColumnIntersections(newWallSkeletons1,Columns):
                 newWallSkeletons4.append(wallsklt)
-            print('here lengths', len(newWallSkeletons4))
-            for newwallsklt in newWallSkeletons4:
-                print("here wallcolumn", newwallsklt.poly.centroid())
 
             for Column in Columns:
                 pnts = Column.exterior.coords
@@ -193,6 +254,7 @@ class LevelSkeleton(Skelet):
                 for i in range(len(pnts)): Pnts.append(Pnt(pnts[i][0], pnts[i][1]))
                 wall = Poly(Pnts)
                 wallsklt = WallSkeleton.createSkeletonFromPoly(wall)
+                wallsklt.iscolumnParent = True
                 newWallSkeletons4.append(wallsklt)
 
             NewWallSkeletons = []
@@ -303,17 +365,17 @@ class LevelSkeleton(Skelet):
             X = round(wallSkeleton2.poly.centroid().x, 2)
             Y = round(wallSkeleton2.poly.centroid().y, 2)
             A = wallSkeleton2.poly.MaxCoords()
-            B = wallSkeleton2.poly.MinCoods()
+            B = wallSkeleton2.poly.MinCoords()
             voiles = ColumnsVoileSkeletons
             for voileSkeleton in voiles:
                 x = round(voileSkeleton.poly.centroid().x,2)
                 y = round(voileSkeleton.poly.centroid().y,2)
                 if x==X :
                     if y == Y:
-                        voileSkeleton = voileSkeleton.copy()
-                        voileSkeleton.setParentWall(wallSkeleton2, True)
                         wallSkeleton2.attachFixedVoile(voileSkeleton)
             ColumnVoiles += len(wallSkeleton2.getAllVoiles())
+            voiles = wallSkeleton2.getAllVoiles()
+
 
     def copyLevelsVoiles(self, levelSkeletons):
         aboveWalls = []
@@ -334,3 +396,67 @@ class LevelSkeleton(Skelet):
 
     def getPolys(self):
         return [wallSkeleton.poly for wallSkeleton in self.wallSkeletons]
+
+    def ScoreOfUnacceptableVoiles(self):
+        VoileSkeletons = []
+        ColumnWalls = []
+        N=0
+        for wallSkeleton in self.wallSkeletons:
+            if wallSkeleton.iscolumnParent :
+                ColumnWalls.append(wallSkeleton)
+            else:
+                for VoileSkeleton in wallSkeleton.getAllVoiles():
+                    VoileSkeletons.append(VoileSkeleton)
+        AllElements = ColumnWalls + VoileSkeletons
+        if len(VoileSkeletons):
+            for VoileS in VoileSkeletons:
+                test = False
+                CurrentCenter = VoileS.poly.centroid()
+                leftDists = []
+                rightDists = []
+                if VoileS.getLengthX() != 0:  # Horizontal=> same Y
+                    for element in AllElements:
+                        eleCenter = element.poly.centroid()
+                        eleWidth = element.poly.MaxCoords().x()-element.poly.MinCoords().x()
+                        Vwidth = VoileS.poly.MaxCoords().x()-VoileS.poly.MinCoords().x()
+                        if type(VoileS) != type(element):
+                            test = True
+                        elif VoileS != element : test = True
+                        if test :
+                            if round(CurrentCenter.y, 2) == round(eleCenter.y, 2):
+
+                                dist = round(CurrentCenter.x, 2)-round(eleCenter.x, 2)-(eleWidth+Vwidth)/2
+                                if dist > 0: leftDists.append(abs(dist))
+                                else : rightDists.append(abs(dist))
+                    if len(leftDists):
+                        if 0.01<min(leftDists)<2 : N+=1
+                    if len(rightDists):
+                        if 0.01<min(rightDists)<2 : N+=1
+
+                if VoileS.getLengthY() != 0:  # Vertical=> same X
+                    DownDists = []
+                    UpDists = []
+                    for element in AllElements:
+                        eleCenter = element.poly.centroid()
+                        eleHeight = element.poly.MaxCoords().y()-element.poly.MinCoords().y()
+                        Vheight = VoileS.poly.MaxCoords().y()-VoileS.poly.MinCoords().y()
+                        if type(VoileS) != type(element):
+                            test = True
+                        elif VoileS != element:
+                            test = True
+                        if test:
+                            if round(CurrentCenter.x, 2) == round(eleCenter.x, 2):
+
+                                dist = round(CurrentCenter.y, 2)-round(eleCenter.y, 2)-(eleHeight+Vheight)/2
+                                if dist > 0: DownDists.append(abs(dist))
+                                else : UpDists.append(abs(dist))
+                    if len(DownDists):
+                        if 0.01<min(DownDists)<2 : N+=1
+                    if len(UpDists):
+                        if 0.01<min(UpDists)<2 : N+=1
+
+            # for sVoile in VoileSkeletons:
+            #     if not VoileS.TouchesColumn(ColumnWalls=ColumnWalls): N +=1
+
+            return 1 - N/(len(VoileSkeletons))
+        else: return 0

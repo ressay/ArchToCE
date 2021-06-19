@@ -26,19 +26,22 @@ class VoileSkeleton(BoxSkeleton):
             return self.updateStartEnd()
         return True
 
-    def getPolyFromStartEnd(self,start,end):
+    def getPolyFromStartEnd(self, start, end):
         parent = self.parentWall
-        length = end - start
-        newLengthVec = parent.vecLength.copy().resize(length)
-        move = start
-        moveVec = parent.vecLength.copy()
-        moveVec.resize(move)
-        topLeftPnt = parent.topLeftPnt + moveVec
-        newWidthVec = parent.vecWidth.copy()
-        pnt1 = topLeftPnt + newWidthVec
-        pnt2 = pnt1 + newLengthVec
-        pnt3 = topLeftPnt + newLengthVec
-        poly = Poly([topLeftPnt, pnt1, pnt2, pnt3])
+        if parent.iscolumnParent:
+            poly = parent.poly
+        else:
+            length = end - start
+            newLengthVec = parent.vecLength.copy().resize(length)
+            move = start
+            moveVec = parent.vecLength.copy()
+            moveVec.resize(move)
+            topLeftPnt = parent.topLeftPnt + moveVec
+            newWidthVec = parent.vecWidth.copy()
+            pnt1 = topLeftPnt + newWidthVec
+            pnt2 = pnt1 + newLengthVec
+            pnt3 = topLeftPnt + newLengthVec
+            poly = Poly([topLeftPnt, pnt1, pnt2, pnt3])
         return poly
 
     def updateStartEnd(self):
@@ -98,66 +101,73 @@ class VoileSkeleton(BoxSkeleton):
     def getSurrondingBox(self, d_ratio):
         if self.surrondingBox:
             return self.surrondingBox
-        distance = 4*d_ratio
-        wid = Pnt(self.vecLength.y(),-self.vecLength.x())
-        # if distance == 0 or self.vecWidth.magn() == 0:
-        #     print ("distance: ", distance, "vecWidth: ", self.vecWidth.magn())
-        wid = wid.copy().resize(distance)*2 + wid.copy().resize(self.vecWidth.magn())
-        # leng = self.vecLength.copy().resize(distance)*2 + self.vecLength
-        leng = self.vecLength
-        center = self.topLeftPnt + self.vecLength/2 + self.vecWidth/2
-        pnt1 = center - leng/2 - wid/2
-        pnts = [pnt1, pnt1 + leng, pnt1 + leng + wid, pnt1 + wid]
-        polyPnts = [[pnt.x(),pnt.y()] for pnt in pnts]
-        polygon = Polygon(polyPnts)
-        p = center - leng/2
-        p = Point(p.x(),p.y())
-        p2 = center + leng/2
-        p2 = Point(p2.x(),p2.y())
-        circle = p.buffer(distance+self.vecWidth.magn()/2)
-        circle2 = p2.buffer(distance+self.vecWidth.magn()/2)
-        result = polygon.union(circle).union(circle2)
+        # distance = 4*d_ratio
+        # wid = Pnt(self.vecLength.y(),-self.vecLength.x())
+        # # if distance == 0 or self.vecWidth.magn() == 0:
+        # #     print ("distance: ", distance, "vecWidth: ", self.vecWidth.magn())
+        # wid = wid.copy().resize(distance)*2 + wid.copy().resize(self.vecWidth.magn())
+        # # leng = self.vecLength.copy().resize(distance)*2 + self.vecLength
+        # leng = self.vecLength
+        # center = self.topLeftPnt + self.vecLength/2 + self.vecWidth/2
+        # pnt1 = center - leng/2 - wid/2
+        # pnts = [pnt1, pnt1 + leng, pnt1 + leng + wid, pnt1 + wid]
+        # polyPnts = [[pnt.x(),pnt.y()] for pnt in pnts]
+        # polygon = Polygon(polyPnts)
+        # p = center - leng/2
+        # p = Point(p.x(),p.y())
+        # p2 = center + leng/2
+        # p2 = Point(p2.x(),p2.y())
+        # print("here D value",distance+self.vecWidth.magn()/2)
+        # circle = p.buffer(distance+self.vecWidth.magn()/2)
+        # circle2 = p2.buffer(distance+self.vecWidth.magn()/2)
+        # result = polygon.union(circle).union(circle2)
 
-        # dist1 = max(abs(self.vecWidth.x()), abs(self.vecWidth.y()))
-        # dist2 = max(abs(self.vecLength.x()), abs(self.vecLength.y()))
-        # if dist2<=2*dist1:
-        #     if self.vecWidth.y() == 0:
-        #         wid = abs(self.vecWidth.x())
-        #         len = abs(self.vecLength.y())
-        #         pnt1 = Point(self.topLeftPnt.x() + 4.5 * wid, self.topLeftPnt.y() - 4.5 * len)
-        #         pnts = [pnt1, Point(pnt1.x, pnt1.y + 10 * len), Point(pnt1.x - 10 * wid, pnt1.y + 10 * len),
-        #                 Point(pnt1.x - 10 * wid, pnt1.y)]
-        #         result = Polygon(pnts)
-        #
-        #     if self.vecWidth.y() != 0:
-        #         wid = abs(self.vecWidth.y())
-        #         len = abs(self.vecLength.x())
-        #         pnt1 = Point(self.topLeftPnt.x() + 4.5 * len, self.topLeftPnt.y() - 4.5 * wid)
-        #         pnts = [pnt1, Point(pnt1.x, pnt1.y + 10 * wid), Point(pnt1.x - 10 * len, pnt1.y + 10 * wid),
-        #                 Point(pnt1.x - 10 * len, pnt1.y)]
-        #         result = Polygon(pnts)
-        #
-        # else:
-        #     if self.vecWidth.y() == 0:
-        #         wid = abs(self.vecWidth.x())
-        #         len = abs(self.vecLength.y())
-        #         pnt1 = Point(self.topLeftPnt.x() + 2.5, self.topLeftPnt.y() - 2.5)
-        #         pnts = [pnt1, Point(pnt1.x, pnt1.y + len+5), Point(pnt1.x -5 - wid, pnt1.y + len+5),
-        #                 Point(pnt1.x - wid-5, pnt1.y)]
-        #         result = Polygon(pnts)
-        #
-        #     if self.vecWidth.y() != 0:
-        #         wid = abs(self.vecWidth.y())
-        #         len = abs(self.vecLength.x())
-        #         pnt1 = Point(self.topLeftPnt.x() +2.5, self.topLeftPnt.y() -2.5)
-        #         pnts = [pnt1, Point(pnt1.x, pnt1.y + 5+ wid), Point(pnt1.x - 5- len, pnt1.y + 5+  wid),
-        #                 Point(pnt1.x - 5- len, pnt1.y)]
-        #         result = Polygon(pnts)
-
+        Height=6
+        parentwall=self.parentWall
+        if parentwall.iscolumnParent:
+            if self.vecWidth.y() == 0:
+                wid = VoileSkeleton.realValue(abs(self.vecWidth.x()), Height)
+                len = VoileSkeleton.realValue(abs(self.vecLength.y()), Height)
+                pnt1 = Point(self.poly.centroid().x + 0.5 * wid, self.poly.centroid().y - 0.5 * len)
+                pnts = [pnt1, Point(pnt1.x, pnt1.y + len), Point(pnt1.x - wid, pnt1.y + len),
+                        Point(pnt1.x - wid, pnt1.y)]
+            elif self.vecWidth.y() != 0:
+                wid = VoileSkeleton.realValue(abs(self.vecWidth.y()), Height)
+                len = VoileSkeleton.realValue(abs(self.vecLength.x()), Height)
+                pnt1 = Point(self.poly.centroid().x +0.5* len, self.poly.centroid().y -0.5* wid)
+                pnts = [pnt1, Point(pnt1.x, pnt1.y +  wid), Point(pnt1.x - len, pnt1.y + wid),
+                            Point(pnt1.x - len, pnt1.y)]
+            result = Polygon(pnts)
+        else:
+            if self.vecWidth.y() == 0:
+                wid = abs(self.vecWidth.x())
+                len = abs(self.vecLength.y())
+                pnt1 = Point(self.poly.centroid().x + 1.2, self.poly.centroid().y - 1.2 - 0.5 * len)
+                pnts = [pnt1, Point(pnt1.x, pnt1.y + len + 2.4), Point(pnt1.x - 2.4, pnt1.y + len + 2.4),
+                        Point(pnt1.x - 2.4, pnt1.y)]
+                result = Polygon(pnts)
+            elif self.vecWidth.y() != 0:
+                wid = abs(self.vecWidth.y())
+                len = abs(self.vecLength.x())
+                pnt1 = Point(self.poly.centroid().x - 1.2-0.5*len, self.poly.centroid().y +1.2)
+                pnts = [pnt1, Point(pnt1.x+ len+2.4, pnt1.y ), Point(pnt1.x + len+2.4, pnt1.y -2.4),
+                        Point(pnt1.x, pnt1.y-2.4)]
+                result = Polygon(pnts)
 
         self.surrondingBox = result
         return result
 
+    @staticmethod
+    def realValue(dist, Height):
+        check=Height/3
+        dist=round(dist,2)
+        if 0 < check <= 1: ind = (dist - 0.3) / 0.15
+        if 1 < check <= 2: ind = (dist - 0.35) / 0.15
+        if 2 < check <= 3: ind = (dist - 0.4) / 0.15
+        if 3 < check <= 4: ind = (dist - 0.45) / 0.15
+        if 4 < check <= 7: ind = (dist - 0.5) / 0.15
+        realvalues=(4.5,6,7.5,9,10.5,12)
+        return realvalues[int(ind)]
     def getSurrondingBoxes(self,selected=None):
         if self.surrondingBoxes:
             return self.surrondingBoxes

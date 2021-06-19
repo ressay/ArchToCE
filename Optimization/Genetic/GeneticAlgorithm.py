@@ -10,9 +10,18 @@ from Optimization.Solution import Solution
 def generatePopulation(levelSkeleton,popSize, ratio):
     solutions = []
     for i in range(popSize):
-        solutions.append(Solution.createRandomSolutionFromSkeleton2(levelSkeleton, ratio))
-    return solutions
+        ReserveWallS = []
+        for wallskeleton in levelSkeleton.wallSkeletons:
+            if wallskeleton.iscolumnParent:
+                ReserveWallS.append(wallskeleton)
+        for wallskeleton in ReserveWallS: levelSkeleton.wallSkeletons.remove(wallskeleton)
 
+        Ssolution=Solution.createRandomSolutionFromSkeleton2(levelSkeleton, ratio)
+        for wallskeleton in ReserveWallS:
+            levelSkeleton.wallSkeletons.append(wallskeleton)
+            Ssolution.levelSkeleton.wallSkeletons.append(wallskeleton)
+        solutions.append(Ssolution)
+    return solutions
 
 def selection(population,probability,fitnesses):
     selected = []
@@ -35,12 +44,12 @@ def mutationSelection(mutationRate,population):
         if random.uniform(0,1) < mutationRate:
             yield p
 
-def search(levelSkeleton,popSize=2,crossRate=0.3,mutRate=0.5,maxIterations=2
+def search(levelSkeleton,popSize=1,crossRate=0.3,mutRate=0.5,maxIterations=1
            ,geneticOps=GeneticOperations2,filename='default', constraints=None):
     start1 = timeit.default_timer()
-    population = generatePopulation(levelSkeleton,popSize, constraints['ratio'])
+    population = generatePopulation(levelSkeleton, popSize, constraints['ratio'])
     # tracker = SummaryTracker()
-
+    print("GA LEVEL:",)
     for i in range(maxIterations):
         # tracker.print_diff()
         print(("len population: " + str(len(population))))
@@ -76,6 +85,7 @@ def search(levelSkeleton,popSize=2,crossRate=0.3,mutRate=0.5,maxIterations=2
         stop = timeit.default_timer()
         print(("time it took mutation: " + str(stop - start)))
 
+
         start = timeit.default_timer()
         fits = calculateFitnessPopulation(population, constraints)
         stop = timeit.default_timer()
@@ -89,15 +99,15 @@ def search(levelSkeleton,popSize=2,crossRate=0.3,mutRate=0.5,maxIterations=2
         stop = timeit.default_timer()
         print(("time it took delete: " + str(stop - start)))
 
-
     fitnesses = calculateFitnessPopulation(population, constraints)
     bestIndex = max(list(range(len(fitnesses))), key=lambda a: fitnesses[a])
     stop = timeit.default_timer()
     print(("time it took: " + str(stop - start1)))
     solution = population[bestIndex]
     fitness = solution.getFitness()
-    print(("in x: " + str(fitness['radX']) + " in y: " + str(fitness['radY'])))
-    print(("score in x: " + str(fitness['lengthShearX']) + " in y: " + str(fitness['lengthShearY'])))
+    print(("scores:\nRadius score in x: " + str(fitness['radX']) + " in y: " + str(fitness['radY'])))
+    print(("length score in x: " + str(fitness['lengthShearX']) + " in y: " + str(fitness['lengthShearY'])))
+    print('')
     print(("needed: " + str(solution.levelSkeleton.getVoileLengthNeeded(constraints['ratio']))))
     f = open(filename,'w')
     f.write("in x: " + str(fitness['lengthX']) + " in y: " + str(fitness['lengthY']))
@@ -105,11 +115,19 @@ def search(levelSkeleton,popSize=2,crossRate=0.3,mutRate=0.5,maxIterations=2
     f.write("covered area: " + str(solution.getAreaCoveredBoxes(constraints['d'])))
     f.write("overlapped area: " + str(solution.getOverlappedArea(constraints['d'])))
     f.close()
+
     levelSkeleton = solution.levelSkeleton
     for wallSkeleton in levelSkeleton.wallSkeletons:
-        for voileSkeleton in wallSkeleton.getAllVoiles():
-            if voileSkeleton.end - voileSkeleton.start > wallSkeleton.vecLength.magn():
-                print(("problem: voile is ", voileSkeleton.end - voileSkeleton.start, wallSkeleton.vecLength.magn()))
+        if not wallSkeleton.iscolumnParent:
+            for voileSkeleton in wallSkeleton.getAllVoiles():
+                if voileSkeleton.end - voileSkeleton.start > wallSkeleton.vecLength.magn():
+                    print(("problem: voile is ", voileSkeleton.end - voileSkeleton.start, wallSkeleton.vecLength.magn()))
+    ReserveWallS = []
+    for wallskeleton in solution.levelSkeleton.wallSkeletons:
+        if wallskeleton.iscolumnParent:
+            ReserveWallS.append(wallskeleton)
+    print("yo here number of columns", len(ReserveWallS))
+
     return solution
 
 

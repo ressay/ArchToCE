@@ -13,9 +13,9 @@ def random_solution(Axes,Slab) -> AxesSolution:
     a = len(haxes)
     b = len(vaxes)
     R_x = round(Slab.poly.MaxCoords().x())
-    L_x = round(Slab.poly.MinCoods().x())
+    L_x = round(Slab.poly.MinCoords().x())
     U_y = round(Slab.poly.MaxCoords().y())
-    D_y = round(Slab.poly.MinCoods().y())
+    D_y = round(Slab.poly.MinCoords().y())
     print(L_x, D_y, R_x, U_y)
 
     start = timeit.default_timer()
@@ -63,9 +63,9 @@ def get_neighbors(solution: AxesSolution, Slab, Axes) -> list:
     AvailableHaxes = []
     AvailableVaxes = []
     R_x = round(Slab.poly.MaxCoords().x())
-    L_x = round(Slab.poly.MinCoods().x())
+    L_x = round(Slab.poly.MinCoords().x())
     U_y = round(Slab.poly.MaxCoords().y())
-    D_y = round(Slab.poly.MinCoods().y())
+    D_y = round(Slab.poly.MinCoords().y())
     for Haxe in Axes[0]:
         if Haxe not in solution.axes[0]: AvailableHaxes.append(Haxe)
     for Vaxe in Axes[1]:
@@ -115,9 +115,9 @@ def fitness(solution: AxesSolution,Axes,Slab,potentialC) -> float:
     # evaluate here how good is this axes distribution
 
     R_x = round(Slab.poly.MaxCoords().x())
-    L_x = round(Slab.poly.MinCoods().x())
+    L_x = round(Slab.poly.MinCoords().x())
     U_y = round(Slab.poly.MaxCoords().y())
-    D_y = round(Slab.poly.MinCoods().y())
+    D_y = round(Slab.poly.MinCoords().y())
     x,X,y,Y=solution.get_DistancesFromEdges(R_x,L_x,U_y,D_y)
     slab_len = abs(U_y - D_y)
     slab_wid = abs(R_x-L_x)
@@ -145,9 +145,10 @@ def fitness(solution: AxesSolution,Axes,Slab,potentialC) -> float:
              0.5*abs(len(solution.axes[1])-desiredVaxes)/maxV_error
     score2 = 0.25*((y+Y)/(0.5*slab_len)+(x+X)/(0.5*slab_wid))
     score3 = p/len(intersections)
+    score4 = solution.get_equidistance()
 
     # print("score1:",score1,"score2:",score2,"score3:",score3)
-    fitness= 1/(score1+score2+3*score3)
+    fitness= 1/(1+score1+score2+3*score3+0.5*score4)
     return fitness
 
 

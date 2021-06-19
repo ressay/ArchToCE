@@ -1,7 +1,6 @@
 import os
 import sys
 from random import random
-
 from OCC.Display.backend import load_backend
 from PyQt5 import QtGui, QtWidgets
 import UI.Show2DWindow as Show2DWindow
@@ -50,6 +49,7 @@ class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
 
         self.Columns = []
         self.init_skeletons(ind=0)
+        self.totalHeight = self.levels[len(self.levels) - 1].getHeight() + 0.15
 
         # self.skeletonLevels = [LevelSkeleton.createSkeletonFromLevel(level) for level in self.levels]
         # self.levelsHash = dict(list(zip(self.levels, self.skeletonLevels)))
@@ -103,7 +103,7 @@ class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
         self.showLower.clicked.connect(self.showLowerFun)
 
         self.scrollTab = QtWidgets.QScrollArea()
-
+        self.scrollTab.setWidgetResizable(True)
         self.tabWidget.addTab(self.scrollTab, "upperView")
 
         self.addViewerTab("Walls")
@@ -187,7 +187,7 @@ class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
             polys += [Point(c1.x(), c1.y()).buffer(0.1), Point(c2.x(), c2.y()).buffer(0.1)]
             colors += [[0, 1, 0], [1, 0, 0]]
             alphas += [1, 1]
-            Plotter.plotShapely(polys, colors, alphas, 30, title="plan")
+            # Plotter.plotShapely(polys, colors, alphas, 30, title="plan")
             boxes = [voileSkeleton.getSurrondingBox(self.constraints['d'])
                      for wallSkeleton in levelSkeleton.wallSkeletons
                      for voileSkeleton in wallSkeleton.getAllVoiles()]
@@ -195,22 +195,21 @@ class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
             polys += boxes
             alphas += [0.2 for poly in boxes]
 
-            # PotentialColumns, haxes,vaxes= WallSkeleton.Columns(self.skeletonLevels,self.selectedRow)
-            # for PotentialColumn in PotentialColumns:
-            #     polys += [Point(PotentialColumn.x, PotentialColumn.y).buffer(0.1)]
-            #     colors += [[0.5, 0.5, 0]]
-            #     alphas += [1, 1]
-            # axes=haxes+vaxes
-            #
-            # for axe in axes:
-            #     plt.plot(*axe.xy)
-            #
-            # for column in self.Columns:
-            #     polys += [column]
-            #     colors += [[1, 0, 0]]
-            #     alphas += [1, 1]
+            PotentialColumns, haxes,vaxes= WallSkeleton.Columns(self.skeletonLevels,self.selectedRow)
+            for PotentialColumn in PotentialColumns:
+                polys += [Point(PotentialColumn.x, PotentialColumn.y).buffer(0.1)]
+                colors += [[1, 0, 0]]
+                alphas += [1, 1]
+            axes=haxes+vaxes
 
+
+            for column in self.Columns:
+                polys += [column]
+                colors += [[1, 0, 0]]
+                alphas += [1, 1]
             Plotter.plotShapely(polys, colors, alphas, 20)
+            for axe in axes:
+                plt.plot(*axe.xy, color='red', linestyle='dashed', linewidth=1)
             plt.show()
             # plt.savefig('try2.png', bbox_inches='tight')
             # self.draw(polys)
@@ -231,12 +230,16 @@ class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
                 column = linestring.BaseGeometry.intersection(Haxis, Vaxis)
                 if column not in Columns: Columns.append(column)
         Distances= WallSkeleton.ColumnDistances(Columns)
-        print("I am here")
         for i in range(len(Columns)):
             print("Distance of the column", i, "(", Columns[i].x, Columns[i].y, ")", Distances[0][i],Distances[1][i])
-        totalHeight = self.levels[len(self.levels)-1].getHeight()+0.15
-        print("Total Height here:",totalHeight)
-        self.Columns = WallSkeleton.CreateColumnShapes(Distances,totalHeight,Columns)
+        print("Total Height here:",self.totalHeight)
+        self.Columns, self.ColumnsLength = LevelSkeleton.CreateColumnShapes(Distances,self.totalHeight,Columns)
+        for Column in self.Columns:
+            # VDim = round(Column.poly.MaxCoords().y()-Column.poly.MinCoods().y())
+            # Hdim = round(Column.poly.MaxCoords().x()-Column.poly.MinCoods().x())
+            print("Column:",Column.centroid, "Vdim:",Column.bounds)
+
+
     def multiSearch(self):
 
         def mygen2():
@@ -260,10 +263,10 @@ class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
 
         def mygenprov():
             c = {
-                "rad_w": 0,
-                "ecc_w": -0.5,
-                "area_w": 0,
-                "length_w": 1,
+                "rad_w": 1,
+                "ecc_w": 0.5,
+                "area_w": 3,
+                "length_w": 0,
                 "ratio": 1,
                 "d": 1,
             }
@@ -271,10 +274,10 @@ class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
 
         def mygen():
             c = {
-                "rad_w": 0,
+                "rad_w": 1,
                 "ecc_w": -0.5,
                 "area_w": 1,
-                "length_w": 1,
+                "length_w": 3,
                 "ratio": 1,
                 "d": 1,
             }
@@ -305,8 +308,6 @@ class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
             self.init_skeletons(ind=1)
             self.solutions = {}
 
-
-
             for levelSkeleton in self.skeletonLevels[::-1]:
                 if self.skeletonLevels.index(levelSkeleton) == len(self.skeletonLevels) - 1:
                     self.ColumnsVoileSkeleton = WallSkeleton.ColumnToVoile(self.Columns, levelSkeleton.wallSkeletons)
@@ -320,7 +321,7 @@ class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
                 if len(prevs):
                     levelSkeleton.copyLevelsVoiles(prevs)
                 i = self.skeletonLevels.index(levelSkeleton)
-                solution = search(levelSkeleton, filename="level" + str(i), constraints=self.constraints)
+                solution = search(levelSkeleton, filename="leve" + str(i), constraints=self.constraints)
                 self.solutions[levelSkeleton] = solution
             self.saveSkeletons(dirname)
             count += 1
@@ -368,18 +369,25 @@ class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
             fitness = solution.getFitness(constraints=self.constraints)
             constraints = self.constraints
             f = open(froot + 'properties.txt', 'w')
-            f.write("slab center: " + str(c1) +
-                    "\necc center: " + str(c2) +
-                    "\nlength X: " + str(fitness['lengthX']) +
-                    "\nlength Y: " + str(fitness['lengthY']))
-            f.write("needed: " +
-                    str(solution.levelSkeleton.getVoileLengthNeeded(constraints['ratio'])))
-            f.write("covered area: " + str(solution.getAreaCoveredBoxes(constraints['d'])))
-            f.write("overlapped area: " + str(solution.getOverlappedArea(constraints['d'])))
+            f.write("Slab center: " + str(c1) +
+                    "\nEcc center: " + str(c2)+
+                    "   ecc score: " + str(fitness['sym']))
+            f.write("\nTotal Slab area: " + str(solution.levelSkeleton.slabSkeleton.poly.area()))
+            f.write("\nCovered area: " + str(solution.effectiveArea)+
+                    "   score:"+ str(fitness['area']))
+            f.write("\nOverlapped area: " + str(solution.overlappedArea)+
+                    "   score:"+str(fitness['overlapped']))
+            f.write("\nRadiuse score: " + str(fitness['rad']))
+            f.write("\nDistance condition score: " + str(fitness['distance']))
+            f.write("\nDistribution score: " + str(fitness['distribution']))
+            f.write("\n**total score (with weights)**: " + str(fitness['totalScore']))
+
 
     def mergeCB(self):
         self.columnSearch()
-        self.multiSearch()
+        # Resume = input("continue:")
+        # if Resume == "yes":
+        #     self.multiSearch()
 
         # self.solutions = {}
         # for levelSkeleton in self.skeletonLevels[::-1]:
@@ -543,7 +551,7 @@ def createShapes(file):
     return wShapes, sShapes
 
 def main():
-    file = "../IFCFiles/Modele_2.ifc"
+    file = "../IFCFiles/Project2.ifc"
     wShapes, sShapes = createShapes(file)
     space_shapes = getSpaceShapesFromIfc(file)
     space_shapes = [s for _, s in space_shapes]

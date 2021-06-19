@@ -1,5 +1,6 @@
 from shapely.geometry import Point
 import random
+import math
 
 class AxesSolution(object):
 
@@ -166,6 +167,47 @@ class AxesSolution(object):
         X=min(Xlist)
         x=min(xlist)
         return x,X,y,Y
+
+    def get_equidistance(self):
+        Xlist = []
+        dists = []
+
+        Hvalue=0
+        for Axis in self.axes[1]:
+            Xlist.append(Point(Axis.coords[0]).x)
+        Xlist.sort()
+        for i in range(len(Xlist)):
+            if i != len(Xlist)-1:
+                dists.append(abs(Xlist[i]-Xlist[i+1]))
+        n = len(dists)
+        if n <= 1 :
+            Hresult = 10
+        else:
+            sum = 0
+            for dist in dists:
+                sum += math.pow(4-dist,2)
+
+            Hresult = math.sqrt(sum/(n-1))
+
+        Ylist = []
+        dists = []
+        for Axis in self.axes[0]:
+            Ylist.append(Point(Axis.coords[0]).y)
+        Ylist.sort()
+        for i in range(len(Ylist)):
+            if i != len(Ylist) - 1:
+                dists.append(abs(Ylist[i] - Ylist[i + 1]))
+        n = len(dists)
+        if n <= 1:
+            Vresult = 10
+        else:
+            sum = 0
+            for dist in dists:
+                sum += math.pow(4 - dist, 2)
+            Vresult = math.sqrt(sum / (n - 1))
+
+        return Hresult+ Vresult
+
 
 
 

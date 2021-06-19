@@ -26,6 +26,7 @@ class WallSkeleton(BoxSkeleton):
         self.fixedVoiles = []
         self.sums = None
         self.sums2 = None
+        self.iscolumnParent = False
 
     @staticmethod
     def createSkeletonFromWall(wall):
@@ -233,50 +234,6 @@ class WallSkeleton(BoxSkeleton):
 
         return Distances
 
-    @staticmethod
-    def CreateColumnShapes(distances,TotalHeight,Columns):
-        ColumnPolys=[]
-        for i in range(len(Columns)):
-            cx=Columns[i].x
-            cy=Columns[i].y
-            Hdim, Vdim = WallSkeleton.GetColumnDimensions(distances[0][i],distances[1][i],TotalHeight)
-            ColumnPoly = Polygon([(cx-Hdim/2,cy-Vdim/2),(cx+Hdim/2,cy-Vdim/2),(cx+Hdim/2,cy+Vdim/2),(cx-Hdim/2,cy+Vdim/2)])
-            ColumnPolys.append(ColumnPoly)
-        return ColumnPolys
-
-    @staticmethod
-    def GetColumnDimensions(Hdist,Vdist,Height):
-        Hdim = 0
-        Vdim = 0
-        if 3<= Hdist <=4.5 : Hdim=0.3
-        if 4.5 < Hdist <= 6: Hdim = 0.45
-        if 6 < Hdist <= 7.5: Hdim = 0.6
-        if 7.5 < Hdist <= 9: Hdim = 0.75
-        if 9 < Hdist <= 10.5: Hdim = 0.9
-        if 10.5 < Hdist <= 12: Hdim = 1.05
-
-        if 3<= Vdist <=4.5 : Vdim=0.3
-        if 4.5 < Vdist <= 6: Vdim = 0.45
-        if 6 < Vdist <= 7.5: Vdim = 0.6
-        if 7.5 < Vdist <= 9: Vdim = 0.75
-        if 9 < Vdist <= 10.5: Vdim = 0.9
-        if 10.5 < Vdist <= 12: Vdim = 1.05
-
-        if 3<=Height<=6:
-            Hdim=Hdim+0.05
-            Vdim=Vdim+0.05
-        if 6<Height<=9:
-            Hdim=Hdim+0.1
-            Vdim=Vdim+0.1
-        if 9<Height<=12:
-            Hdim=Hdim+0.15
-            Vdim=Vdim+0.15
-        if 12<=Height<=17:
-            Hdim=Hdim+0.2
-            Vdim=Vdim+0.2
-
-        return Hdim,Vdim
-
     def createRandomVoileFromRatio(self, ratio):
         if ratio >= 1:
             return VoileSkeleton(self, 0, self.vecLength.magn())
@@ -452,15 +409,25 @@ class WallSkeleton(BoxSkeleton):
         sumLy3 = 0
         sumX2Ly3 = 0
         sumY2Lx3 = 0
-        for voileSkeleton in self.getAllVoiles():
-            centerV = voileSkeleton.poly.centroid()
-            centerV = Pnt(centerV.x - origin.x(), centerV.y - origin.y())
-            Lx3 = math.pow(abs(voileSkeleton.vecLength.x()), 3)
-            Ly3 = math.pow(abs(voileSkeleton.vecLength.y()), 3)
-            sumLx3 += Lx3
-            sumLy3 += Ly3
-            sumX2Ly3 += Ly3 * math.pow(centerV.x(), 2)
-            sumY2Lx3 += Lx3 * math.pow(centerV.y(), 2)
+        if self.iscolumnParent:
+            centerV = self.poly.centroid()
+            centerV = Pnt(centerV.x, centerV.y)
+            x = math.pow(self.poly.MaxCoords().x() - self.poly.MinCoords().x(), 3)
+            y = math.pow(self.poly.MaxCoords().y() - self.poly.MinCoords().y(), 3)
+            sumLx3 = 0
+            sumLy3 = 0
+            sumX2Ly3 = 0
+            sumY2Lx3 = 0
+        else:
+            for voileSkeleton in self.getAllVoiles():
+                centerV = voileSkeleton.poly.centroid()
+                centerV = Pnt(centerV.x - origin.x(), centerV.y - origin.y())
+                Lx3 = math.pow(abs(voileSkeleton.vecLength.x()), 3)
+                Ly3 = math.pow(abs(voileSkeleton.vecLength.y()), 3)
+                sumLx3 += Lx3
+                sumLy3 += Ly3
+                sumX2Ly3 += Ly3 * math.pow(centerV.x(), 2)
+                sumY2Lx3 += Lx3 * math.pow(centerV.y(), 2)
         self.sums2 = sumLx3, sumLy3, sumX2Ly3, sumY2Lx3
         return self.sums2
 
@@ -471,15 +438,25 @@ class WallSkeleton(BoxSkeleton):
         sumLi2 = 0
         sumLixi = 0
         sumLiyi = 0
-        for voileSkeleton in self.getAllVoiles():
-            centerV = voileSkeleton.poly.centroid()
+        if self.iscolumnParent:
+            centerV = self.poly.centroid()
             centerV = Pnt(centerV.x, centerV.y)
-            x3 = math.pow(abs(voileSkeleton.vecLength.x()), 3)
-            y3 = math.pow(abs(voileSkeleton.vecLength.y()), 3)
-            sumLi1 += x3
-            sumLi2 += y3
-            sumLixi += y3 * centerV.x()
-            sumLiyi += x3 * centerV.y()
+            x = math.pow(self.poly.MaxCoords().x() - self.poly.MinCoords().x(), 3)
+            y = math.pow(self.poly.MaxCoords().y() - self.poly.MinCoords().y(), 3)
+            sumLi1 = x
+            sumLi2 = y
+            sumLixi += y * centerV.x()
+            sumLiyi += x * centerV.y()
+        else:
+            for voileSkeleton in self.getAllVoiles():
+                centerV = voileSkeleton.poly.centroid()
+                centerV = Pnt(centerV.x, centerV.y)
+                x3 = math.pow(abs(voileSkeleton.vecLength.x()), 3)
+                y3 = math.pow(abs(voileSkeleton.vecLength.y()), 3)
+                sumLi1 += x3
+                sumLi2 += y3
+                sumLixi += y3 * centerV.x()
+                sumLiyi += x3 * centerV.y()
         self.sums = sumLi1, sumLi2, sumLixi, sumLiyi
         return self.sums
 
@@ -497,15 +474,14 @@ class WallSkeleton(BoxSkeleton):
             end2 = round(pnts[3][1]-pnts[0][1],2)
             if end1>end2: end=end1
             else:end=end2
-            print("Column number:", ColumnPolys.index(Column), "(",x,y,")", end1,end2,end)
-
             for wall in wallSkeletons:
                 X = round(wall.poly.centroid().x, 2)
                 Y = round(wall.poly.centroid().y, 2)
-                dim1 = abs(wall.poly.MinCoods().x() - wall.poly.MaxCoords().x())
-                dim2 = abs(wall.poly.MinCoods().y() - wall.poly.MaxCoords().y())
+                dim1 = abs(wall.poly.MinCoords().x() - wall.poly.MaxCoords().x())
+                dim2 = abs(wall.poly.MinCoords().y() - wall.poly.MaxCoords().y())
                 if X==x and Y==y:
                     if dim1>0.2 and dim2>0.2:
                         voile = VoileSkeleton(wall, 0, end)
                         voiles.append(voile)
+
         return voiles

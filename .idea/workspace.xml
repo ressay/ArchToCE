@@ -20,18 +20,29 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="970fbb92-1777-4107-8d6b-9f3c4b97d9d9" name="Default" comment="new skeleton with only walls in axes that can contain shear walls">
-      <change afterPath="$PROJECT_DIR$/Skeleton/ColumnSkeleton.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/UI/leve0" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/UI/leve1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/UI/leve2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/UI/leve3" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/UI/leve4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/UI/leve5" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Geometry/Geom2D.py" beforeDir="false" afterPath="$PROJECT_DIR$/Geometry/Geom2D.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Optimization/Genetic/Evaluator.py" beforeDir="false" afterPath="$PROJECT_DIR$/Optimization/Genetic/Evaluator.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Optimization/Genetic/GeneticAlgorithm.py" beforeDir="false" afterPath="$PROJECT_DIR$/Optimization/Genetic/GeneticAlgorithm.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Optimization/Solution.py" beforeDir="false" afterPath="$PROJECT_DIR$/Optimization/Solution.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Optimization/TabuSearch/AxesSolution.py" beforeDir="false" afterPath="$PROJECT_DIR$/Optimization/TabuSearch/AxesSolution.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Optimization/TabuSearch/TabuSearch.py" beforeDir="false" afterPath="$PROJECT_DIR$/Optimization/TabuSearch/TabuSearch.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Skeleton/LevelSkeleton.py" beforeDir="false" afterPath="$PROJECT_DIR$/Skeleton/LevelSkeleton.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Skeleton/VoileSkeleton.py" beforeDir="false" afterPath="$PROJECT_DIR$/Skeleton/VoileSkeleton.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Skeleton/WallSkeleton.py" beforeDir="false" afterPath="$PROJECT_DIR$/Skeleton/WallSkeleton.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Structures/Level.py" beforeDir="false" afterPath="$PROJECT_DIR$/Structures/Level.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/UI/level0" beforeDir="false" afterPath="$PROJECT_DIR$/UI/level0" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/UI/level1" beforeDir="false" afterPath="$PROJECT_DIR$/UI/level1" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/UI/level2" beforeDir="false" afterPath="$PROJECT_DIR$/UI/level2" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/UI/level3" beforeDir="false" afterPath="$PROJECT_DIR$/UI/level3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UI/level4" beforeDir="false" afterPath="$PROJECT_DIR$/UI/level4" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UI/level5" beforeDir="false" afterPath="$PROJECT_DIR$/UI/level5" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/UI/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/UI/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/constraints.txt" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/constraints.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/level1/layout.png" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/level1/layout.png" afterDir="false" />
@@ -46,6 +57,12 @@
       <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/level4/layout.png" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/level4/layout.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/level4/layout_ranges.png" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/level4/layout_ranges.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/level4/properties.txt" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/level4/properties.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/level5/layout.png" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/level5/layout.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/level5/layout_ranges.png" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/level5/layout_ranges.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/level5/properties.txt" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/level5/properties.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/level6/layout.png" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/level6/layout.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/level6/layout_ranges.png" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/level6/layout_ranges.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/level6/properties.txt" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/level6/properties.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -289,8 +306,8 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.main" />
-        <item itemvalue="Python.main" />
         <item itemvalue="Python.WallSkeleton" />
+        <item itemvalue="Python.main" />
         <item itemvalue="Python.main2" />
         <item itemvalue="Python.main3" />
       </list>
@@ -466,7 +483,13 @@
       <option name="presentableId" value="LOCAL‎00024" />
       <updated>1621340908935</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL‎00025" summary="new skeleton with only walls in axes that can contain shear walls">
+      <created>1621716964283</created>
+      <option name="number" value="LOCAL‎00025" />
+      <option name="presentableId" value="LOCAL‎00025" />
+      <updated>1621716964283</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -528,38 +551,38 @@
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state x="561" y="266" key="Github.ShareDialog/0.0.1366.738@0.0.1366.738" timestamp="1616665949724" />
-    <state width="672" height="186" key="GridCell.Tab.0.bottom" timestamp="1621714559937">
+    <state width="1345" height="165" key="GridCell.Tab.0.bottom" timestamp="1624055423349">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state width="672" height="186" key="GridCell.Tab.0.bottom/0.0.1366.738@0.0.1366.738" timestamp="1621714559937" />
-    <state width="672" height="186" key="GridCell.Tab.0.center" timestamp="1621714559937">
+    <state width="1345" height="165" key="GridCell.Tab.0.bottom/0.0.1366.738@0.0.1366.738" timestamp="1624055423349" />
+    <state width="1345" height="165" key="GridCell.Tab.0.center" timestamp="1624055423348">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state width="672" height="186" key="GridCell.Tab.0.center/0.0.1366.738@0.0.1366.738" timestamp="1621714559937" />
-    <state width="672" height="186" key="GridCell.Tab.0.left" timestamp="1621714559937">
+    <state width="1345" height="165" key="GridCell.Tab.0.center/0.0.1366.738@0.0.1366.738" timestamp="1624055423348" />
+    <state width="1345" height="165" key="GridCell.Tab.0.left" timestamp="1624055423348">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state width="672" height="186" key="GridCell.Tab.0.left/0.0.1366.738@0.0.1366.738" timestamp="1621714559937" />
-    <state width="672" height="186" key="GridCell.Tab.0.right" timestamp="1621714559937">
+    <state width="1345" height="165" key="GridCell.Tab.0.left/0.0.1366.738@0.0.1366.738" timestamp="1624055423348" />
+    <state width="1345" height="165" key="GridCell.Tab.0.right" timestamp="1624055423349">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state width="672" height="186" key="GridCell.Tab.0.right/0.0.1366.738@0.0.1366.738" timestamp="1621714559937" />
-    <state width="672" height="227" key="GridCell.Tab.1.bottom" timestamp="1620232287263">
+    <state width="1345" height="165" key="GridCell.Tab.0.right/0.0.1366.738@0.0.1366.738" timestamp="1624055423349" />
+    <state width="1345" height="227" key="GridCell.Tab.1.bottom" timestamp="1622450603377">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state width="672" height="227" key="GridCell.Tab.1.bottom/0.0.1366.738@0.0.1366.738" timestamp="1620232287263" />
-    <state width="672" height="227" key="GridCell.Tab.1.center" timestamp="1620232287263">
+    <state width="1345" height="227" key="GridCell.Tab.1.bottom/0.0.1366.738@0.0.1366.738" timestamp="1622450603377" />
+    <state width="1345" height="227" key="GridCell.Tab.1.center" timestamp="1622450603377">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state width="672" height="227" key="GridCell.Tab.1.center/0.0.1366.738@0.0.1366.738" timestamp="1620232287263" />
-    <state width="672" height="227" key="GridCell.Tab.1.left" timestamp="1620232287262">
+    <state width="1345" height="227" key="GridCell.Tab.1.center/0.0.1366.738@0.0.1366.738" timestamp="1622450603377" />
+    <state width="1345" height="227" key="GridCell.Tab.1.left" timestamp="1622450603377">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state width="672" height="227" key="GridCell.Tab.1.left/0.0.1366.738@0.0.1366.738" timestamp="1620232287262" />
-    <state width="672" height="227" key="GridCell.Tab.1.right" timestamp="1620232287263">
+    <state width="1345" height="227" key="GridCell.Tab.1.left/0.0.1366.738@0.0.1366.738" timestamp="1622450603377" />
+    <state width="1345" height="227" key="GridCell.Tab.1.right" timestamp="1622450603377">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state width="672" height="227" key="GridCell.Tab.1.right/0.0.1366.738@0.0.1366.738" timestamp="1620232287263" />
+    <state width="1345" height="227" key="GridCell.Tab.1.right/0.0.1366.738@0.0.1366.738" timestamp="1622450603377" />
     <state x="184" y="13" key="SettingsEditor" timestamp="1620836456686">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
@@ -568,10 +591,10 @@
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state width="498" height="446" key="SwitcherDM/0.0.1366.738@0.0.1366.738" timestamp="1618231086932" />
-    <state x="275" y="101" key="Vcs.Push.Dialog.v2" timestamp="1621716935519">
+    <state x="275" y="101" key="Vcs.Push.Dialog.v2" timestamp="1621716978031">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state x="275" y="101" key="Vcs.Push.Dialog.v2/0.0.1366.738@0.0.1366.738" timestamp="1621716935519" />
+    <state x="275" y="101" key="Vcs.Push.Dialog.v2/0.0.1366.738@0.0.1366.738" timestamp="1621716978031" />
     <state x="500" y="282" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1619454575574">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
@@ -588,10 +611,10 @@
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state x="324" y="95" width="700" height="530" key="recent.locations.popup/0.0.1366.738@0.0.1366.738" timestamp="1616852205406" />
-    <state x="346" y="59" width="672" height="678" key="search.everywhere.popup" timestamp="1620831357434">
+    <state x="346" y="59" width="672" height="678" key="search.everywhere.popup" timestamp="1623944702751">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state x="346" y="59" width="672" height="678" key="search.everywhere.popup/0.0.1366.738@0.0.1366.738" timestamp="1620831357434" />
+    <state x="346" y="59" width="672" height="678" key="search.everywhere.popup/0.0.1366.738@0.0.1366.738" timestamp="1623944702751" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

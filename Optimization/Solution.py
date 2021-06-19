@@ -53,6 +53,7 @@ class Solution(object):
 
     @staticmethod
     def createRandomSolutionFromSkeleton2(levelS, ratio):
+
         # s = timeit.default_timer()
         walls = [wallSkeleton.copyWithoutVoiles() for wallSkeleton in levelS.wallSkeletons]
         # e = timeit.default_timer()
@@ -78,7 +79,6 @@ class Solution(object):
             totalLength -= (wallSkeleton.vecLength.magn() - wallSkeleton.getVoilesLength())
             wallSkeleton.attachVoiles(voiles)
             needed -= length
-
 
         # print("total length left: " + str(totalLength) + " needed left: " + str(needed))
         # e1 = timeit.default_timer()
@@ -139,19 +139,21 @@ class Solution(object):
             done = [False for v in allVoiles]
             for cpt,voil in enumerate(allVoiles):
                 box1 = voil.getSurrondingBox(ratio)
-                for i in range(cpt+1,len(allVoiles)):
-                    if not done[i] or not done[cpt]:
-                        box2 = allVoiles[i].getSurrondingBox(ratio)
-                        if box1.intersects(box2):
-                            if not done[cpt]:
-                                acceptedBoxes.append(box1)
-                                done[cpt] = True
-                            if not done[i]:
-                                acceptedBoxes.append(box2)
-                                done[i] = True
+                acceptedBoxes.append(box1)
+                # for i in range(cpt+1,len(allVoiles)):
+                #     if not done[i] or not done[cpt]:
+                #         box2 = allVoiles[i].getSurrondingBox(ratio)
+                #         if box1.intersects(box2):
+                #             if not done[cpt]:
+                #                 acceptedBoxes.append(box1)
+                #                 done[cpt] = True
+                #             if not done[i]:
+                #                 acceptedBoxes.append(box2)
+                #                 done[i] = True
             self.validBoxes = acceptedBoxes
-            self.nonValidBoxes = [voil.getSurrondingBox(ratio) for i,voil in enumerate(allVoiles)
-                                                            if not done[i]]
+            self.nonValidBoxes=[]
+            # self.nonValidBoxes = [voil.getSurrondingBox(ratio) for i,voil in enumerate(allVoiles)
+            #                                                 if not done[i]]
         return self.validBoxes
 
     def getValidVoilesBoxesBis(self):
@@ -204,16 +206,44 @@ class Solution(object):
         if not self.areaCoveredBoxes:
             pntsArray = self.getValidVoilesBoxes(d_ratio)
             a = cascaded_union(pntsArray)
-            # a = a.intersection(self.levelSkeleton.slabSkeleton.poly.poly)
+            a = a.intersection(self.levelSkeleton.slabSkeleton.poly.poly)
             self.areaCoveredBoxes = a.area
         return self.areaCoveredBoxes
 
     def getOverlappedArea(self, d_ratio):
         coveredArea = self.getAreaCoveredBoxes(d_ratio)
         levelSkeleton = self.levelSkeleton
-        area = sum(voileSkeleton.getSurrondingBox(d_ratio).area for wallSkeleton in levelSkeleton.wallSkeletons
-                   for voileSkeleton in wallSkeleton.getAllVoiles())
+        boxes = []
+        area = 0
+        for wallSkeleton in levelSkeleton.wallSkeletons:
+            for voileSkeleton in wallSkeleton.getAllVoiles():
+                boxes.append(voileSkeleton.getSurrondingBox(d_ratio))
+        slab = self.levelSkeleton.slabSkeleton.poly.poly
+        for box in boxes:
+            area += box.intersection(slab).area
         return area - coveredArea
+
+    def getEffectiveArea(self):
+        Boxes = []
+        slab = self.levelSkeleton.slabSkeleton.poly.poly
+        for wallskeleton in self.levelSkeleton.wallSkeletons:
+            if not wallskeleton.iscolumnParent:
+                for voile in wallskeleton.getAllVoiles():
+                    Boxes.append(voile.getSurrondingBox(1))
+        total = cascaded_union(Boxes)
+        self.effectiveArea = total.intersection(slab).area
+        return self.effectiveArea
+
+    def geteffectiveOverlappedArea(self, effectiveArea):
+        slab = self.levelSkeleton.slabSkeleton.poly.poly
+        areaSum = 0
+        for wallskeleton in self.levelSkeleton.wallSkeletons:
+            if not wallskeleton.iscolumnParent:
+                for voile in wallskeleton.getAllVoiles():
+                    box = voile.getSurrondingBox(1)
+                    areaSum += box.intersection(slab).area
+        self.overlappedArea = areaSum - effectiveArea
+        return self.overlappedArea
 
     def getNonValidVoilesBoxes(self, d_ratio):
         if not self.nonValidBoxes:

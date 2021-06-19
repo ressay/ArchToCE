@@ -116,7 +116,7 @@ class Level(object):
 
     def getHeightOverLowerLevel(self):
         if self.getLowerLevel() is None:
-            return -1
+            return 2.7
         return self.getHeight() - self.getLowerLevel().getHeight()
 
     def getBuildingHeight(self):
