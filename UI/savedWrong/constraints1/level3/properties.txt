@@ -1,9 +1,9 @@
-Slab center: (15.460409711506697,10.418885146136102)
-Ecc center: (26.23161147697814,12.479311163161597)   ecc score: -9.391237748881567
-Total Slab area: 463.1940244861064
-Covered area: 32.25674105518753   score:0.3481990197409711
-Overlapped area: 0.0   score:1.0
-Radiuse score: 1.6309299122706236
-Distance condition score: 0.25
-Distribution score: 1.5933928550319427
-**total score (with weights)**: 0.5266045245687248
+Slab center: (7.15737259126622,9.82205864839886)
+Ecc center: (7.04567459365804,9.462923684650717)   ecc score: 1.4051473764733227
+Total Slab area: 250.9
+Covered area: 47.367909078719045   score:0.9439599258413519
+Overlapped area: 9.638599371291576   score:0.7965162583960899
+Radiuse score: 1.2439062170559354
+Distance condition score: 0
+Distribution score: 0.7772337582568496
+**total score (with weights)**: 5.014473938175756

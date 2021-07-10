@@ -1,6 +1,5 @@
 import random
 import timeit
-
 from Optimization.Genetic import GeneticOperations2
 from Optimization.Genetic.Evaluator import calculateFitnessPopulation
 from Optimization.Genetic.GeneticOperations2 import mutate
@@ -44,16 +43,17 @@ def mutationSelection(mutationRate,population):
         if random.uniform(0,1) < mutationRate:
             yield p
 
-def search(levelSkeleton,popSize=1,crossRate=0.3,mutRate=0.5,maxIterations=1
+def search(levelSkeleton,popSize=50,crossRate=0.3,mutRate=0.5,maxIterations=1
            ,geneticOps=GeneticOperations2,filename='default', constraints=None):
     start1 = timeit.default_timer()
     population = generatePopulation(levelSkeleton, popSize, constraints['ratio'])
     # tracker = SummaryTracker()
-    print("GA LEVEL:",)
-    for i in range(maxIterations):
+    eccScore = 0
+    # for i in range(maxIterations):
+    while eccScore < 1 :
         # tracker.print_diff()
         print(("len population: " + str(len(population))))
-        print(("iteration: " + str(i)))
+        # print(("iteration: " + str(i)))
         start = timeit.default_timer()
         fitnesses = calculateFitnessPopulation(population,constraints)
         stop = timeit.default_timer()
@@ -81,6 +81,7 @@ def search(levelSkeleton,popSize=1,crossRate=0.3,mutRate=0.5,maxIterations=1
         for s in mutationSelection(mutRate,newComers):
             # print "mutating!!"
             mutate(s)
+
         population.extend(newComers)
         stop = timeit.default_timer()
         print(("time it took mutation: " + str(stop - start)))
@@ -99,6 +100,11 @@ def search(levelSkeleton,popSize=1,crossRate=0.3,mutRate=0.5,maxIterations=1
         stop = timeit.default_timer()
         print(("time it took delete: " + str(stop - start)))
 
+        bestIndex = max(list(range(len(fits))), key=lambda a: fits[a])
+        sol = population[bestIndex]
+        fitness = sol.getFitness()
+        eccScore = fitness['sym']
+        print("here condition eccScore",eccScore)
     fitnesses = calculateFitnessPopulation(population, constraints)
     bestIndex = max(list(range(len(fitnesses))), key=lambda a: fitnesses[a])
     stop = timeit.default_timer()

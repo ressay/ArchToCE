@@ -148,7 +148,7 @@ def fitness(solution: AxesSolution,Axes,Slab,potentialC) -> float:
     score4 = solution.get_equidistance()
 
     # print("score1:",score1,"score2:",score2,"score3:",score3)
-    fitness= 1/(1+score1+score2+3*score3+0.5*score4)
+    fitness= 1/(1+score1+score2+3*score3+0.1*score4)
     return fitness
 
 

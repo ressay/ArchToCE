@@ -142,16 +142,16 @@ class VoileSkeleton(BoxSkeleton):
             if self.vecWidth.y() == 0:
                 wid = abs(self.vecWidth.x())
                 len = abs(self.vecLength.y())
-                pnt1 = Point(self.poly.centroid().x + 1.2, self.poly.centroid().y - 1.2 - 0.5 * len)
-                pnts = [pnt1, Point(pnt1.x, pnt1.y + len + 2.4), Point(pnt1.x - 2.4, pnt1.y + len + 2.4),
-                        Point(pnt1.x - 2.4, pnt1.y)]
+                pnt1 = Point(self.poly.centroid().x + 1.1, self.poly.centroid().y - 1.1 - 0.5 * len)
+                pnts = [pnt1, Point(pnt1.x, pnt1.y + len + 2.2), Point(pnt1.x - 2.2, pnt1.y + len + 2.2),
+                        Point(pnt1.x - 2.2, pnt1.y)]
                 result = Polygon(pnts)
             elif self.vecWidth.y() != 0:
                 wid = abs(self.vecWidth.y())
                 len = abs(self.vecLength.x())
-                pnt1 = Point(self.poly.centroid().x - 1.2-0.5*len, self.poly.centroid().y +1.2)
-                pnts = [pnt1, Point(pnt1.x+ len+2.4, pnt1.y ), Point(pnt1.x + len+2.4, pnt1.y -2.4),
-                        Point(pnt1.x, pnt1.y-2.4)]
+                pnt1 = Point(self.poly.centroid().x - 1.1-0.5*len, self.poly.centroid().y +1.1)
+                pnts = [pnt1, Point(pnt1.x+ len+2.2, pnt1.y ), Point(pnt1.x + len+2.2, pnt1.y -2.2),
+                        Point(pnt1.x, pnt1.y-2.2)]
                 result = Polygon(pnts)
 
         self.surrondingBox = result

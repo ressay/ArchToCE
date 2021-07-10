@@ -1,10 +1,8 @@
 import random
-
 import math
 import pandas as pd
 import numpy
 from shapely.geometry import linestring, Point, Polygon
-
 from Geometry import ShapeToPoly
 from Geometry.Geom2D import Pnt, Poly
 from Skeleton.BoxSkeleton import BoxSkeleton, NotBoxError
@@ -432,21 +430,22 @@ class WallSkeleton(BoxSkeleton):
         return self.sums2
 
     def getSums(self):
-        if self.sums is not None:
-            return self.sums
+        # if self.sums is not None:
+        #     return self.sums
         sumLi1 = 0
         sumLi2 = 0
         sumLixi = 0
         sumLiyi = 0
         if self.iscolumnParent:
-            centerV = self.poly.centroid()
-            centerV = Pnt(centerV.x, centerV.y)
-            x = math.pow(self.poly.MaxCoords().x() - self.poly.MinCoords().x(), 3)
-            y = math.pow(self.poly.MaxCoords().y() - self.poly.MinCoords().y(), 3)
-            sumLi1 = x
-            sumLi2 = y
-            sumLixi += y * centerV.x()
-            sumLiyi += x * centerV.y()
+            # centerV = self.poly.centroid()
+            # centerV = Pnt(centerV.x, centerV.y)
+            # x = math.pow(self .poly.MaxCoords().x() - self.poly.MinCoords().x(), 1)
+            # y = math.pow(self.poly.MaxCoords().y() - self.poly.MinCoords().y(), 1)
+            # sumLi1 = x
+            # sumLi2 = y
+            # sumLixi += y * centerV.x()
+            # sumLiyi += x * centerV.y()
+            a=0
         else:
             for voileSkeleton in self.getAllVoiles():
                 centerV = voileSkeleton.poly.centroid()

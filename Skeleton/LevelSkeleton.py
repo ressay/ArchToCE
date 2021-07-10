@@ -144,6 +144,7 @@ class LevelSkeleton(Skelet):
         # print("here area",self.slabSkeleton.poly.area())
         # print("NEEEEDED",neededLength)
         # if neededLength < 0.8: neededLength = 0.8
+        # (0.125 * self.slabSkeleton.poly.area() / 2.4) - 1
         return 3
 
     def getWallsTotalLength(self):
@@ -197,10 +198,10 @@ class LevelSkeleton(Skelet):
         sumLiY = 0
         sumLixi = 0
         sumLiyi = 0
-
         nShears = 0
+        # for wallSkeleton in self.wallSkeletons:
+        #     if wallSkeleton.iscolumnParent:print("it is a column in here")
         for wallSkeleton in self.wallSkeletons:
-
             sLiX, sLiY, sLixi, sLiyi = wallSkeleton.getSums()
             nShears += len(wallSkeleton.getAllVoiles())
             sumLiX += sLiX
@@ -458,5 +459,5 @@ class LevelSkeleton(Skelet):
             # for sVoile in VoileSkeletons:
             #     if not VoileS.TouchesColumn(ColumnWalls=ColumnWalls): N +=1
 
-            return 1 - N/(len(VoileSkeletons))
+            return 1 - N/(2*len(VoileSkeletons))
         else: return 0

@@ -203,10 +203,10 @@ class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
             axes=haxes+vaxes
 
 
-            for column in self.Columns:
-                polys += [column]
-                colors += [[1, 0, 0]]
-                alphas += [1, 1]
+            # for column in self.Columns:
+            #     polys += [column]
+            #     colors += [[1, 0, 0]]
+            #     alphas += [1, 1]
             Plotter.plotShapely(polys, colors, alphas, 20)
             for axe in axes:
                 plt.plot(*axe.xy, color='red', linestyle='dashed', linewidth=1)
@@ -244,9 +244,9 @@ class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
 
         def mygen2():
             c = {
-                "rad_w": 1,
+                "rad_w": 0,
                 "ecc_w": -0.5,
-                "area_w": 1,
+                "area_w": 3,
                 "length_w": 1,
                 "ratio": 1,
                 "d": 1,
@@ -263,9 +263,9 @@ class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
 
         def mygenprov():
             c = {
-                "rad_w": 1,
+                "rad_w": 0,
                 "ecc_w": 0.5,
-                "area_w": 3,
+                "area_w": 5,
                 "length_w": 0,
                 "ratio": 1,
                 "d": 1,
@@ -277,7 +277,7 @@ class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
                 "rad_w": 1,
                 "ecc_w": -0.5,
                 "area_w": 1,
-                "length_w": 3,
+                "length_w": 5,
                 "ratio": 1,
                 "d": 1,
             }
@@ -321,7 +321,16 @@ class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
                 if len(prevs):
                     levelSkeleton.copyLevelsVoiles(prevs)
                 i = self.skeletonLevels.index(levelSkeleton)
-                solution = search(levelSkeleton, filename="leve" + str(i), constraints=self.constraints)
+                distributionScore = 0.6
+                overlapscore = 1
+                while distributionScore+overlapscore < 1.8 :
+                    solution = None
+                    solution = search(levelSkeleton, filename="leve" + str(i), constraints=self.constraints)
+                    fitness = solution.getFitness(constraints=self.constraints)
+                    distributionScore = fitness['distribution']
+                    overlapscore = fitness['overlapped']
+                    print("here condition out", distributionScore, overlapscore )
+
                 self.solutions[levelSkeleton] = solution
             self.saveSkeletons(dirname)
             count += 1
@@ -363,7 +372,6 @@ class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
             # plt.show()
 
 
-
             plt.savefig(froot + 'layout_ranges.png', bbox_inches='tight')
             plt.clf()
             fitness = solution.getFitness(constraints=self.constraints)
@@ -385,9 +393,7 @@ class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
 
     def mergeCB(self):
         self.columnSearch()
-        # Resume = input("continue:")
-        # if Resume == "yes":
-        #     self.multiSearch()
+        # self.multiSearch()
 
         # self.solutions = {}
         # for levelSkeleton in self.skeletonLevels[::-1]:
@@ -551,7 +557,7 @@ def createShapes(file):
     return wShapes, sShapes
 
 def main():
-    file = "../IFCFiles/Project2.ifc"
+    file = "../IFCFiles/Modele_2.ifc"
     wShapes, sShapes = createShapes(file)
     space_shapes = getSpaceShapesFromIfc(file)
     space_shapes = [s for _, s in space_shapes]
