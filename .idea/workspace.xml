@@ -21,8 +21,6 @@
   <component name="ChangeListManager">
     <list default="true" id="970fbb92-1777-4107-8d6b-9f3c4b97d9d9" name="Default" comment="test update">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/UI/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,7 +64,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../ArchToCeDual" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="settings.editor.selected.configurable" value="vcs.Git" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -461,7 +459,13 @@
       <option name="presentableId" value="LOCAL‎00027" />
       <updated>1625921462469</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL‎00028" summary="test update">
+      <created>1626185275838</created>
+      <option name="number" value="LOCAL‎00028" />
+      <option name="presentableId" value="LOCAL‎00028" />
+      <updated>1626185275838</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -548,18 +552,18 @@
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state width="1345" height="227" key="GridCell.Tab.1.right/0.0.1366.738@0.0.1366.738" timestamp="1622450603377" />
-    <state x="184" y="13" key="SettingsEditor" timestamp="1626184477761">
+    <state x="184" y="13" key="SettingsEditor" timestamp="1626185735243">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state x="184" y="13" key="SettingsEditor/0.0.1366.738@0.0.1366.738" timestamp="1626184477761" />
+    <state x="184" y="13" key="SettingsEditor/0.0.1366.738@0.0.1366.738" timestamp="1626185735243" />
     <state width="498" height="446" key="SwitcherDM" timestamp="1618231086932">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state width="498" height="446" key="SwitcherDM/0.0.1366.738@0.0.1366.738" timestamp="1618231086932" />
-    <state x="275" y="101" key="Vcs.Push.Dialog.v2" timestamp="1625921466437">
+    <state x="275" y="101" key="Vcs.Push.Dialog.v2" timestamp="1626185289026">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state x="275" y="101" key="Vcs.Push.Dialog.v2/0.0.1366.738@0.0.1366.738" timestamp="1625921466437" />
+    <state x="275" y="101" key="Vcs.Push.Dialog.v2/0.0.1366.738@0.0.1366.738" timestamp="1626185289026" />
     <state x="500" y="282" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1619454575574">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
