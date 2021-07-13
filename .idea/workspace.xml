@@ -20,33 +20,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="970fbb92-1777-4107-8d6b-9f3c4b97d9d9" name="Default" comment="test update">
-      <change afterPath="$PROJECT_DIR$/IFCFiles/R+3 limited.ifc" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Optimization/Genetic/Evaluator.py" beforeDir="false" afterPath="$PROJECT_DIR$/Optimization/Genetic/Evaluator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Optimization/Genetic/GeneticAlgorithm.py" beforeDir="false" afterPath="$PROJECT_DIR$/Optimization/Genetic/GeneticAlgorithm.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Optimization/Genetic/GeneticOperations2.py" beforeDir="false" afterPath="$PROJECT_DIR$/Optimization/Genetic/GeneticOperations2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Optimization/TabuSearch/TabuSearch.py" beforeDir="false" afterPath="$PROJECT_DIR$/Optimization/TabuSearch/TabuSearch.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Skeleton/LevelSkeleton.py" beforeDir="false" afterPath="$PROJECT_DIR$/Skeleton/LevelSkeleton.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Skeleton/VoileSkeleton.py" beforeDir="false" afterPath="$PROJECT_DIR$/Skeleton/VoileSkeleton.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Skeleton/WallSkeleton.py" beforeDir="false" afterPath="$PROJECT_DIR$/Skeleton/WallSkeleton.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/leve0" beforeDir="false" afterPath="$PROJECT_DIR$/UI/leve0" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/leve1" beforeDir="false" afterPath="$PROJECT_DIR$/UI/leve1" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/leve2" beforeDir="false" afterPath="$PROJECT_DIR$/UI/leve2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/leve3" beforeDir="false" afterPath="$PROJECT_DIR$/UI/leve3" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/UI/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/UI/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/constraints.txt" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/constraints.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/level1/layout.png" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/level1/layout.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/level1/layout_ranges.png" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/level1/layout_ranges.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/level1/properties.txt" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/level1/properties.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/level2/layout.png" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/level2/layout.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/level2/layout_ranges.png" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/level2/layout_ranges.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/level2/properties.txt" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/level2/properties.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/level3/layout.png" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/level3/layout.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/level3/layout_ranges.png" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/level3/layout_ranges.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/level3/properties.txt" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/level3/properties.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/level4/layout.png" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/level4/layout.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/level4/layout_ranges.png" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/level4/layout_ranges.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/level4/properties.txt" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/level4/properties.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -479,7 +455,13 @@
       <option name="presentableId" value="LOCAL‎00026" />
       <updated>1624119748779</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL‎00027" summary="test update">
+      <created>1625921462469</created>
+      <option name="number" value="LOCAL‎00027" />
+      <option name="presentableId" value="LOCAL‎00027" />
+      <updated>1625921462469</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -534,14 +516,6 @@
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state x="550" y="124" key="EnvironmentVariablesDialog/0.0.1366.738@0.0.1366.738" timestamp="1620836225566" />
-    <state x="462" y="123" key="FileChooserDialogImpl" timestamp="1616664985712">
-      <screen x="0" y="0" width="1366" height="738" />
-    </state>
-    <state x="462" y="123" key="FileChooserDialogImpl/0.0.1366.738@0.0.1366.738" timestamp="1616664985712" />
-    <state x="561" y="266" key="Github.ShareDialog" timestamp="1616665949724">
-      <screen x="0" y="0" width="1366" height="738" />
-    </state>
-    <state x="561" y="266" key="Github.ShareDialog/0.0.1366.738@0.0.1366.738" timestamp="1616665949724" />
     <state width="1345" height="162" key="GridCell.Tab.0.bottom" timestamp="1625237412825">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
@@ -574,18 +548,18 @@
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state width="1345" height="227" key="GridCell.Tab.1.right/0.0.1366.738@0.0.1366.738" timestamp="1622450603377" />
-    <state x="184" y="13" key="SettingsEditor" timestamp="1620836456686">
+    <state x="184" y="13" key="SettingsEditor" timestamp="1626184477761">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state x="184" y="13" key="SettingsEditor/0.0.1366.738@0.0.1366.738" timestamp="1620836456686" />
+    <state x="184" y="13" key="SettingsEditor/0.0.1366.738@0.0.1366.738" timestamp="1626184477761" />
     <state width="498" height="446" key="SwitcherDM" timestamp="1618231086932">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state width="498" height="446" key="SwitcherDM/0.0.1366.738@0.0.1366.738" timestamp="1618231086932" />
-    <state x="275" y="101" key="Vcs.Push.Dialog.v2" timestamp="1624119818333">
+    <state x="275" y="101" key="Vcs.Push.Dialog.v2" timestamp="1625921466437">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state x="275" y="101" key="Vcs.Push.Dialog.v2/0.0.1366.738@0.0.1366.738" timestamp="1624119818333" />
+    <state x="275" y="101" key="Vcs.Push.Dialog.v2/0.0.1366.738@0.0.1366.738" timestamp="1625921466437" />
     <state x="500" y="282" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1619454575574">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
@@ -602,14 +576,6 @@
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state x="390" y="102" width="585" height="534" key="find.popup/0.0.1366.738@0.0.1366.738" timestamp="1620832501843" />
-    <state x="483" y="270" key="git4idea.remote.GitConfigureRemotesDialog" timestamp="1616665640305">
-      <screen x="0" y="0" width="1366" height="738" />
-    </state>
-    <state x="483" y="270" key="git4idea.remote.GitConfigureRemotesDialog/0.0.1366.738@0.0.1366.738" timestamp="1616665640305" />
-    <state x="324" y="95" width="700" height="530" key="recent.locations.popup" timestamp="1616852205406">
-      <screen x="0" y="0" width="1366" height="738" />
-    </state>
-    <state x="324" y="95" width="700" height="530" key="recent.locations.popup/0.0.1366.738@0.0.1366.738" timestamp="1616852205406" />
     <state x="346" y="59" width="672" height="678" key="search.everywhere.popup" timestamp="1623944702751">
       <screen x="0" y="0" width="1366" height="738" />
     </state>

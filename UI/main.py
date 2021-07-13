@@ -202,7 +202,6 @@ class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
                 alphas += [1, 1]
             axes=haxes+vaxes
 
-
             # for column in self.Columns:
             #     polys += [column]
             #     colors += [[1, 0, 0]]
