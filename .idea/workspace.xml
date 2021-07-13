@@ -19,9 +19,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="970fbb92-1777-4107-8d6b-9f3c4b97d9d9" name="Default" comment="test update">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="970fbb92-1777-4107-8d6b-9f3c4b97d9d9" name="Default" comment="test update" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -465,7 +463,13 @@
       <option name="presentableId" value="LOCAL‎00028" />
       <updated>1626185275838</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL‎00029" summary="test update">
+      <created>1626186461534</created>
+      <option name="number" value="LOCAL‎00029" />
+      <option name="presentableId" value="LOCAL‎00029" />
+      <updated>1626186461534</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -560,10 +564,10 @@
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state width="498" height="446" key="SwitcherDM/0.0.1366.738@0.0.1366.738" timestamp="1618231086932" />
-    <state x="275" y="101" key="Vcs.Push.Dialog.v2" timestamp="1626185289026">
+    <state x="275" y="101" key="Vcs.Push.Dialog.v2" timestamp="1626186465520">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state x="275" y="101" key="Vcs.Push.Dialog.v2/0.0.1366.738@0.0.1366.738" timestamp="1626185289026" />
+    <state x="275" y="101" key="Vcs.Push.Dialog.v2/0.0.1366.738@0.0.1366.738" timestamp="1626186465520" />
     <state x="500" y="282" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1619454575574">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
