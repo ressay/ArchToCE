@@ -202,10 +202,10 @@ class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
                 alphas += [1, 1]
             axes=haxes+vaxes
 
-            # for column in self.Columns:
-            #     polys += [column]
-            #     colors += [[1, 0, 0]]
-            #     alphas += [1, 1]
+            for column in self.Columns:
+                polys += [column]
+                colors += [[1, 0, 0]]
+                alphas += [1, 1]
             Plotter.plotShapely(polys, colors, alphas, 20)
             for axe in axes:
                 plt.plot(*axe.xy, color='red', linestyle='dashed', linewidth=1)
