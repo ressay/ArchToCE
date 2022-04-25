@@ -1,6 +1,7 @@
 import os
 import sys
 from random import random
+from random import choice
 from OCC.Display.backend import load_backend
 from PyQt5 import QtGui, QtWidgets
 import UI.Show2DWindow as Show2DWindow
@@ -19,6 +20,9 @@ from Structures.Level import Level
 from Ifc import IfcUtils
 from UI import Plotter
 from shapely.geometry import Point, linestring
+import itertools
+from itertools import combinations_with_replacement
+
 load_backend("qt-pyqt5")  # here you need to tell OCC.Display to load qt5 backend
 
 
@@ -306,7 +310,11 @@ class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
             self.constraints = consts
             self.init_skeletons(ind=1)
             self.solutions = {}
-
+            froot = dirname + '/'
+            if not os.path.exists(froot):
+                os.makedirs(froot)
+            f = open(froot + 'Scores.txt', 'w')
+            scores = []
             for levelSkeleton in self.skeletonLevels[::-1]:
                 if self.skeletonLevels.index(levelSkeleton) == len(self.skeletonLevels) - 1:
                     self.ColumnsVoileSkeleton = WallSkeleton.ColumnToVoile(self.Columns, levelSkeleton.wallSkeletons)
@@ -321,16 +329,46 @@ class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
                     levelSkeleton.copyLevelsVoiles(prevs)
                 i = self.skeletonLevels.index(levelSkeleton)
                 distributionScore = 0.6
-                overlapscore = 1
-                while distributionScore+overlapscore < 1.8 :
-                    solution = None
-                    solution = search(levelSkeleton, filename="leve" + str(i), constraints=self.constraints)
-                    fitness = solution.getFitness(constraints=self.constraints)
-                    distributionScore = fitness['distribution']
-                    overlapscore = fitness['overlapped']
-                    print("here condition out", distributionScore, overlapscore )
+                SYM  = 0
+                # overlapscore = 1
+                j = 1
 
+                w = [0.5, 1, 1.5, 2]
+                combs = []
+                [combs.append(p) for p in itertools.product(w, repeat=4)]
+                # combs = [[1,0.5,1,2]]
+                l = 1
+                for comb in combs:
+                    print('Progress', l/len(combs)*100,'%','_',l)
+                    l=l+1
+                # while j==1 :
+
+                    solution = None
+
+                    for i in range(1):
+
+                        if self.skeletonLevels.index(levelSkeleton) == len(self.skeletonLevels)-1:
+                            while True:
+                                try: solution = search(levelSkeleton, filename="leve" + str(i), constraints=self.constraints, Comb= comb)
+                                except : continue
+                                break
+                        else:
+                            LS = self.skeletonLevels[len(self.skeletonLevels)-1]
+                            solution = self.solutions[LS]
+                        fitness = solution.getFitness(constraints=self.constraints)
+                        scores.append([fitness['sym'],fitness['area'],fitness['rad'],fitness['distribution'],fitness['totalScore']])
+                        distributionScore = fitness['distribution']
+                        SYM = fitness['sym']
+                        print('result gave ', distributionScore, SYM)
+                        # j = 2
+
+                    # overlapscore = fitness['overlapped']
+                    # print("here condition out", distributionScore, overlapscore )
                 self.solutions[levelSkeleton] = solution
+            for l in range(len(scores)):
+                if (l%2) == 0:
+                    score = scores[l]
+                    f.write(str(score[0])+ "/" +str(score[1])+ "/" +str(score[2])+ "/" +str(score[3])+ "/" + str(score[4]) +  "\n")
             self.saveSkeletons(dirname)
             count += 1
 
@@ -392,7 +430,7 @@ class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
 
     def mergeCB(self):
         self.columnSearch()
-        # self.multiSearch()
+        self.multiSearch()
 
         # self.solutions = {}
         # for levelSkeleton in self.skeletonLevels[::-1]:
@@ -556,7 +594,7 @@ def createShapes(file):
     return wShapes, sShapes
 
 def main():
-    file = "../IFCFiles/Modele_2.ifc"
+    file = "../IFCFiles/R+3.ifc"
     wShapes, sShapes = createShapes(file)
     space_shapes = getSpaceShapesFromIfc(file)
     space_shapes = [s for _, s in space_shapes]

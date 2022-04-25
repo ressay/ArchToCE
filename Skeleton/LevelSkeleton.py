@@ -399,23 +399,30 @@ class LevelSkeleton(Skelet):
         return [wallSkeleton.poly for wallSkeleton in self.wallSkeletons]
 
     def ScoreOfUnacceptableVoiles(self):
-        VoileSkeletons = []
+        VoileSkeletons = [[],[],[]]
+        # print('1',VoileSkeletons)
         ColumnWalls = []
         N=0
         for wallSkeleton in self.wallSkeletons:
-            if wallSkeleton.iscolumnParent :
+            if wallSkeleton.iscolumnParent:
                 ColumnWalls.append(wallSkeleton)
             else:
                 for VoileSkeleton in wallSkeleton.getAllVoiles():
-                    VoileSkeletons.append(VoileSkeleton)
-        AllElements = ColumnWalls + VoileSkeletons
-        if len(VoileSkeletons):
-            for VoileS in VoileSkeletons:
+                    VoileSkeletons[0].append(VoileSkeleton)
+                    VoileSkeletons[1].append(wallSkeleton.getAllVoiles().index(VoileSkeleton))
+                    VoileSkeletons[2].append(self.wallSkeletons.index(wallSkeleton))
+        # print('1', VoileSkeletons)
+        AllElements = ColumnWalls + VoileSkeletons[0]
+        problemwallsInds = [[],[],[]]
+        if len(VoileSkeletons[0]):
+            for VoileS in VoileSkeletons[0]:
                 test = False
                 CurrentCenter = VoileS.poly.centroid()
                 leftDists = []
                 rightDists = []
+                ind = VoileSkeletons[0].index(VoileS)
                 if VoileS.getLengthX() != 0:  # Horizontal=> same Y
+                    # print('2', VoileS)
                     for element in AllElements:
                         eleCenter = element.poly.centroid()
                         eleWidth = element.poly.MaxCoords().x()-element.poly.MinCoords().x()
@@ -429,14 +436,27 @@ class LevelSkeleton(Skelet):
                                 dist = round(CurrentCenter.x, 2)-round(eleCenter.x, 2)-(eleWidth+Vwidth)/2
                                 if dist > 0: leftDists.append(abs(dist))
                                 else : rightDists.append(abs(dist))
-                    if len(leftDists):
-                        if 0.01<min(leftDists)<2 : N+=1
-                    if len(rightDists):
-                        if 0.01<min(rightDists)<2 : N+=1
 
+                    if len(leftDists):
+                        # print('22', VoileS)
+                        if 0.1<min(leftDists)<2 :
+                            N+=1
+                            if ind not in problemwallsInds[0]:
+                                problemwallsInds[0].append(ind)
+                                problemwallsInds[1].append(VoileSkeletons[1][ind])
+                                problemwallsInds[2].append(VoileSkeletons[2][ind])
+                    if len(rightDists):
+                        # print('222', VoileS)
+                        if 0.1<min(rightDists)<2 :
+                            N+=1
+                            if ind not in problemwallsInds[0]:
+                                problemwallsInds[0].append(ind)
+                                problemwallsInds[1].append(VoileSkeletons[1][ind])
+                                problemwallsInds[2].append(VoileSkeletons[2][ind])
                 if VoileS.getLengthY() != 0:  # Vertical=> same X
                     DownDists = []
                     UpDists = []
+                    # print('3', VoileS)
                     for element in AllElements:
                         eleCenter = element.poly.centroid()
                         eleHeight = element.poly.MaxCoords().y()-element.poly.MinCoords().y()
@@ -451,13 +471,24 @@ class LevelSkeleton(Skelet):
                                 dist = round(CurrentCenter.y, 2)-round(eleCenter.y, 2)-(eleHeight+Vheight)/2
                                 if dist > 0: DownDists.append(abs(dist))
                                 else : UpDists.append(abs(dist))
+                    ind = VoileSkeletons[0].index(VoileS)
                     if len(DownDists):
-                        if 0.01<min(DownDists)<2 : N+=1
+                        # print('2', VoileS)
+                        if 0.1<min(DownDists)<2 :
+                            N+=1
+                            if ind not in problemwallsInds[0]:
+                                problemwallsInds[0].append(ind)
+                                problemwallsInds[1].append(VoileSkeletons[1][ind])
+                                problemwallsInds[2].append(VoileSkeletons[2][ind])
                     if len(UpDists):
-                        if 0.01<min(UpDists)<2 : N+=1
+                        if 0.1<min(UpDists)<2 :
+                            N+=1
+                            if ind not in problemwallsInds[0]:
+                                problemwallsInds[0].append(ind)
+                                problemwallsInds[1].append(VoileSkeletons[1][ind])
+                                problemwallsInds[2].append(VoileSkeletons[2][ind])
 
             # for sVoile in VoileSkeletons:
             #     if not VoileS.TouchesColumn(ColumnWalls=ColumnWalls): N +=1
-
-            return 1 - N/(2*len(VoileSkeletons))
-        else: return 0
+            return 1 - N/(2*len(VoileSkeletons)), problemwallsInds
+        else: return 0, [[], [], []]

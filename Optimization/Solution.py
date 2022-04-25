@@ -26,9 +26,9 @@ class Solution(object):
         self.validBoxes2 = None
         self.nonValidBoxes2 = None
 
-    def getFitness(self, constraints=None):
+    def getFitness(self, constraints=None, comb = [0,0,0,0]):
         if self.fitness is None:
-            self.fitness = calculateFitnessSolution(self,constraints)
+            self.fitness = calculateFitnessSolution(self,constraints, comb)
         return self.fitness
 
     def reInitFitness(self):

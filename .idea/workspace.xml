@@ -1,199 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="BranchesTreeState">
-    <expand>
-      <path>
-        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
-      </path>
-      <path>
-        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
-      </path>
-      <path>
-        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
-      </path>
-    </expand>
-    <select />
-  </component>
   <component name="ChangeListManager">
-    <list default="true" id="970fbb92-1777-4107-8d6b-9f3c4b97d9d9" name="Default" comment="test update">
+    <list default="true" id="7b000bcc-ce4e-40f8-8f04-3678f67f0b09" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/IfcProject.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/IfcProject.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Optimization/Genetic/Evaluator.py" beforeDir="false" afterPath="$PROJECT_DIR$/Optimization/Genetic/Evaluator.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Optimization/Genetic/GeneticAlgorithm.py" beforeDir="false" afterPath="$PROJECT_DIR$/Optimization/Genetic/GeneticAlgorithm.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Optimization/Genetic/GeneticOperations2.py" beforeDir="false" afterPath="$PROJECT_DIR$/Optimization/Genetic/GeneticOperations2.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Optimization/Solution.py" beforeDir="false" afterPath="$PROJECT_DIR$/Optimization/Solution.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Skeleton/LevelSkeleton.py" beforeDir="false" afterPath="$PROJECT_DIR$/Skeleton/LevelSkeleton.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UI/leve0" beforeDir="false" afterPath="$PROJECT_DIR$/UI/leve0" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UI/leve1" beforeDir="false" afterPath="$PROJECT_DIR$/UI/leve1" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/UI/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/UI/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/level1/layout.png" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/level1/layout.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/level1/layout_ranges.png" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/level1/layout_ranges.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/level1/properties.txt" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/level1/properties.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/level2/layout.png" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/level2/layout.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/level2/layout_ranges.png" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/level2/layout_ranges.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/level2/properties.txt" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/level2/properties.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/level3/layout.png" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/level3/layout.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/level3/layout_ranges.png" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/level3/layout_ranges.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/level3/properties.txt" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/level3/properties.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/level4/layout.png" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/level4/layout.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/level4/layout_ranges.png" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/level4/layout_ranges.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UI/savedWrong/constraints1/level4/properties.txt" beforeDir="false" afterPath="$PROJECT_DIR$/UI/savedWrong/constraints1/level4/properties.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/IfcProject$DrawUtils.coverage" NAME="DrawUtils Coverage Results" MODIFIED="1528682600198" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/IfcProject$qtTry.coverage" NAME="qtTry Coverage Results" MODIFIED="1528365388482" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/IfcProject$tries.coverage" NAME="tries Coverage Results" MODIFIED="1532013448395" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Samples" />
-    <SUITE FILE_PATH="coverage/IfcProject$Nosetests_in_tryTwo_py.coverage" NAME="Nosetests in tryTwo.py Coverage Results" MODIFIED="1528365434314" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/IfcProject$IfcUtils.coverage" NAME="IfcUtils Coverage Results" MODIFIED="1528377514681" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/IfcProject$main.coverage" NAME="main Coverage Results" MODIFIED="1556981304211" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/UI" />
-    <SUITE FILE_PATH="coverage/IfcProject$Plotter.coverage" NAME="Plotter Coverage Results" MODIFIED="1549412188509" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/UI" />
-    <SUITE FILE_PATH="coverage/IfcProject$Nosetests_in_test2_py.coverage" NAME="Nosetests in test2.py Coverage Results" MODIFIED="1528413808844" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/UI" />
-    <SUITE FILE_PATH="coverage/IfcProject$tuto.coverage" NAME="tuto Coverage Results" MODIFIED="1533163512988" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Samples" />
-    <SUITE FILE_PATH="coverage/IfcProject$Show2DWindow.coverage" NAME="Show2DWindow Coverage Results" MODIFIED="1528377812324" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/UI" />
-    <SUITE FILE_PATH="coverage/IfcProject$tryOCCDraw.coverage" NAME="tryOCCDraw Coverage Results" MODIFIED="1528414226421" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/UI" />
-    <SUITE FILE_PATH="coverage/IfcProject$navigation.coverage" NAME="navigation Coverage Results" MODIFIED="1528569333017" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Samples" />
-  </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="Python Script" />
-      </list>
-    </option>
-  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectId" id="1ofOzutdJAAvjjdrmCDi6AvnCv9" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
-    <ConfirmationsSetting value="2" id="Add" />
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
   </component>
+  <component name="ProjectId" id="266Rm9LeZGLG369eri4OX8fl8px" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
-    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../ArchToCeDual" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="last_opened_file_path" value="$USER_HOME$/anaconda3/envs/myenv/Lib/site-packages" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
-  <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\saber\ArchToCE\UI" />
-      <recent name="$PROJECT_DIR$/Structure/StructureExceptions" />
-      <recent name="$PROJECT_DIR$/IFCFiles" />
-      <recent name="$PROJECT_DIR$/Samples" />
-      <recent name="$PROJECT_DIR$/Geometry" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/IFCFiles" />
-      <recent name="$PROJECT_DIR$/UI" />
-      <recent name="$PROJECT_DIR$/Samples" />
-      <recent name="$PROJECT_DIR$" />
-    </key>
-  </component>
   <component name="RunManager" selected="Python.main">
-    <configuration default="true" type="js.build_tools.gulp">
-      <node-interpreter>project</node-interpreter>
-      <node-options />
-      <gulpfile />
-      <tasks />
-      <arguments />
-      <envs />
-      <method v="2" />
-    </configuration>
-    <configuration name="WallSkeleton" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="Unnamed" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="IfcProject" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="E:\anaconda3\envs\myenv\python.exe" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Skeleton" />
+      <option name="SDK_HOME" value="C:\Users\saber\anaconda3\envs\ArchToCE\python.exe" />
+      <option name="WORKING_DIRECTORY" value="" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Skeleton/WallSkeleton.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="main (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="IfcProject" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="IfcProject" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="E:\anaconda3\envs\myenv\python.exe" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/UI" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/UI/main.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="main2" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="IfcProject" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="E:\anaconda3\envs\myenv\python.exe" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/UI" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/UI/main2.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="main3" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="IfcProject" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="E:\anaconda3\envs\myenv\python.exe" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/UI" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/UI/main3.py" />
+      <option name="SCRIPT_NAME" value="" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -209,13 +79,12 @@
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="E:\anaconda3\envs\myenv\python.exe" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="false" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/UI" />
+      <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/UI/main.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -224,265 +93,22 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration default="true" type="tests" factoryName="Nosetests">
-      <module name="IfcProject" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="_new_regexPattern" value="&quot;&quot;" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;.&quot;" />
-      <option name="_new_targetType" value="&quot;PATH&quot;" />
-      <method v="2" />
-    </configuration>
-    <configuration default="true" type="tests" factoryName="Unittests">
-      <module name="IfcProject" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;.&quot;" />
-      <option name="_new_targetType" value="&quot;PATH&quot;" />
-      <method v="2" />
-    </configuration>
-    <list>
-      <item itemvalue="Python.WallSkeleton" />
-      <item itemvalue="Python.main (1)" />
-      <item itemvalue="Python.main2" />
-      <item itemvalue="Python.main3" />
-      <item itemvalue="Python.main" />
-    </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.main" />
-        <item itemvalue="Python.WallSkeleton" />
-        <item itemvalue="Python.main" />
-        <item itemvalue="Python.main2" />
-        <item itemvalue="Python.main3" />
       </list>
     </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
-  <component name="SvnConfiguration">
-    <configuration />
-  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="970fbb92-1777-4107-8d6b-9f3c4b97d9d9" name="Default" comment="" />
-      <created>1523551818664</created>
+      <changelist id="7b000bcc-ce4e-40f8-8f04-3678f67f0b09" name="Changes" comment="" />
+      <created>1646742205499</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1523551818664</updated>
-      <workItem from="1613674446008" duration="8017000" />
+      <updated>1646742205499</updated>
     </task>
-    <task id="LOCAL-00001" summary="initial commit">
-      <created>1528726008936</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1528726008936</updated>
-    </task>
-    <task id="LOCAL-00002" summary="adding genetic algorithm">
-      <created>1530793454524</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1530793454524</updated>
-    </task>
-    <task id="LOCAL-00003" summary="removing heavy files">
-      <created>1530794488870</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1530794488870</updated>
-    </task>
-    <task id="LOCAL-00004" summary="removing heavy files">
-      <created>1530830385297</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1530830385297</updated>
-    </task>
-    <task id="LOCAL-00005" summary="new random generation">
-      <created>1531396474408</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1531396474408</updated>
-    </task>
-    <task id="LOCAL-00006" summary="adding coverage evaluation">
-      <created>1532167300993</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1532167300993</updated>
-    </task>
-    <task id="LOCAL-00007" summary="fixed parsing doors">
-      <created>1533480239467</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1533480239467</updated>
-    </task>
-    <task id="LOCAL-00008" summary="fixed parsing windows">
-      <created>1549120289813</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1549120289813</updated>
-    </task>
-    <task id="LOCAL-00009" summary="added fixed reinforced concrete walls">
-      <created>1549280939413</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1549280939413</updated>
-    </task>
-    <task id="LOCAL-00010" summary="changed boxes shapes">
-      <created>1554494441353</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1554494441353</updated>
-    </task>
-    <task id="LOCAL-00011" summary="changed boxes shapes">
-      <created>1613763660472</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1613763660472</updated>
-    </task>
-    <task id="LOCAL-00012" summary="transition to python3">
-      <created>1613763841042</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1613763841042</updated>
-    </task>
-    <task id="LOCAL-00013" summary="added conda spec-file.txt">
-      <created>1613764094396</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1613764094396</updated>
-    </task>
-    <task id="LOCAL‎00014" summary="added conda spec-file.txt">
-      <created>1616668581489</created>
-      <option name="number" value="LOCAL‎00014" />
-      <option name="presentableId" value="LOCAL‎00014" />
-      <updated>1616668581490</updated>
-    </task>
-    <task id="LOCAL‎00015" summary="created edgesLength in Geom2D.py&#10;Created isVertical in Geom2D.py&#10;Added the isVertical while appending the wallSkeletons">
-      <created>1616928973563</created>
-      <option name="number" value="LOCAL‎00015" />
-      <option name="presentableId" value="LOCAL‎00015" />
-      <updated>1616928973587</updated>
-    </task>
-    <task id="LOCAL‎00016" summary="added condition in wallskeleton to be appended">
-      <created>1616930534640</created>
-      <option name="number" value="LOCAL‎00016" />
-      <option name="presentableId" value="LOCAL‎00016" />
-      <updated>1616930534640</updated>
-    </task>
-    <task id="LOCAL‎00017" summary="added condition in wallskeleton to be appended">
-      <created>1617033186237</created>
-      <option name="number" value="LOCAL‎00017" />
-      <option name="presentableId" value="LOCAL‎00017" />
-      <updated>1617033186237</updated>
-    </task>
-    <task id="LOCAL‎00018" summary="plot full unique axes">
-      <created>1617140142898</created>
-      <option name="number" value="LOCAL‎00018" />
-      <option name="presentableId" value="LOCAL‎00018" />
-      <updated>1617140142898</updated>
-    </task>
-    <task id="LOCAL‎00019" summary="plot column possible positions">
-      <created>1618172342816</created>
-      <option name="number" value="LOCAL‎00019" />
-      <option name="presentableId" value="LOCAL‎00019" />
-      <updated>1618172342816</updated>
-    </task>
-    <task id="LOCAL‎00020" summary="latest update">
-      <created>1619283701620</created>
-      <option name="number" value="LOCAL‎00020" />
-      <option name="presentableId" value="LOCAL‎00020" />
-      <updated>1619283701639</updated>
-    </task>
-    <task id="LOCAL‎00021" summary="latest update">
-      <created>1619454974115</created>
-      <option name="number" value="LOCAL‎00021" />
-      <option name="presentableId" value="LOCAL‎00021" />
-      <updated>1619454974115</updated>
-    </task>
-    <task id="LOCAL‎00022" summary="adding neighbors">
-      <created>1619691051162</created>
-      <option name="number" value="LOCAL‎00022" />
-      <option name="presentableId" value="LOCAL‎00022" />
-      <updated>1619691051163</updated>
-    </task>
-    <task id="LOCAL‎00023" summary="fitness">
-      <created>1619869250354</created>
-      <option name="number" value="LOCAL‎00023" />
-      <option name="presentableId" value="LOCAL‎00023" />
-      <updated>1619869250354</updated>
-    </task>
-    <task id="LOCAL‎00024" summary="new skeleton with only walls in axes that can contain shear walls">
-      <created>1621340908935</created>
-      <option name="number" value="LOCAL‎00024" />
-      <option name="presentableId" value="LOCAL‎00024" />
-      <updated>1621340908935</updated>
-    </task>
-    <task id="LOCAL‎00025" summary="new skeleton with only walls in axes that can contain shear walls">
-      <created>1621716964283</created>
-      <option name="number" value="LOCAL‎00025" />
-      <option name="presentableId" value="LOCAL‎00025" />
-      <updated>1621716964283</updated>
-    </task>
-    <task id="LOCAL‎00026" summary="test update">
-      <created>1624119748542</created>
-      <option name="number" value="LOCAL‎00026" />
-      <option name="presentableId" value="LOCAL‎00026" />
-      <updated>1624119748779</updated>
-    </task>
-    <task id="LOCAL‎00027" summary="test update">
-      <created>1625921462469</created>
-      <option name="number" value="LOCAL‎00027" />
-      <option name="presentableId" value="LOCAL‎00027" />
-      <updated>1625921462469</updated>
-    </task>
-    <task id="LOCAL‎00028" summary="test update">
-      <created>1626185275838</created>
-      <option name="number" value="LOCAL‎00028" />
-      <option name="presentableId" value="LOCAL‎00028" />
-      <updated>1626185275838</updated>
-    </task>
-    <task id="LOCAL‎00029" summary="test update">
-      <created>1626186461534</created>
-      <option name="number" value="LOCAL‎00029" />
-      <option name="presentableId" value="LOCAL‎00029" />
-      <updated>1626186461534</updated>
-    </task>
-    <task id="LOCAL‎00030" summary="test update">
-      <created>1626186555765</created>
-      <option name="number" value="LOCAL‎00030" />
-      <option name="presentableId" value="LOCAL‎00030" />
-      <updated>1626186555765</updated>
-    </task>
-    <option name="localTasksCounter" value="31" />
     <servers />
-  </component>
-  <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="1" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -494,119 +120,5 @@
         </entry>
       </map>
     </option>
-    <option name="oldMeFiltersMigrated" value="true" />
-  </component>
-  <component name="VcsManagerConfiguration">
-    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="initial commit" />
-    <MESSAGE value="adding genetic algorithm" />
-    <MESSAGE value="removing heavy files" />
-    <MESSAGE value="new random generation" />
-    <MESSAGE value="adding coverage evaluation" />
-    <MESSAGE value="fixed parsing doors" />
-    <MESSAGE value="fixed parsing windows" />
-    <MESSAGE value="added fixed reinforced concrete walls" />
-    <MESSAGE value="changed boxes shapes" />
-    <MESSAGE value="transition to python3" />
-    <MESSAGE value="added conda spec-file.txt" />
-    <MESSAGE value="created edgesLength in Geom2D.py&#10;Created isVertical in Geom2D.py&#10;Added the isVertical while appending the wallSkeletons" />
-    <MESSAGE value="added condition in wallskeleton to be appended" />
-    <MESSAGE value="plot full unique axes" />
-    <MESSAGE value="plot column possible positions" />
-    <MESSAGE value="latest update" />
-    <MESSAGE value="adding neighbors" />
-    <MESSAGE value="fitness" />
-    <MESSAGE value="new skeleton with only walls in axes that can contain shear walls" />
-    <MESSAGE value="test update" />
-    <option name="LAST_COMMIT_MESSAGE" value="test update" />
-  </component>
-  <component name="WindowStateProjectService">
-    <state x="137" y="0" width="1092" height="738" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1626361579264">
-      <screen x="0" y="0" width="1366" height="738" />
-    </state>
-    <state x="137" y="0" width="1092" height="738" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1366.738@0.0.1366.738" timestamp="1626361579264" />
-    <state x="413" y="115" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1618830935594">
-      <screen x="0" y="0" width="1366" height="738" />
-    </state>
-    <state x="413" y="115" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1366.738@0.0.1366.738" timestamp="1618830935594" />
-    <state x="550" y="124" key="EnvironmentVariablesDialog" timestamp="1620836225566">
-      <screen x="0" y="0" width="1366" height="738" />
-    </state>
-    <state x="550" y="124" key="EnvironmentVariablesDialog/0.0.1366.738@0.0.1366.738" timestamp="1620836225566" />
-    <state width="1345" height="162" key="GridCell.Tab.0.bottom" timestamp="1626361198252">
-      <screen x="0" y="0" width="1366" height="738" />
-    </state>
-    <state width="1345" height="162" key="GridCell.Tab.0.bottom/0.0.1366.738@0.0.1366.738" timestamp="1626361198252" />
-    <state width="1345" height="162" key="GridCell.Tab.0.center" timestamp="1626361198251">
-      <screen x="0" y="0" width="1366" height="738" />
-    </state>
-    <state width="1345" height="162" key="GridCell.Tab.0.center/0.0.1366.738@0.0.1366.738" timestamp="1626361198251" />
-    <state width="1345" height="162" key="GridCell.Tab.0.left" timestamp="1626361198251">
-      <screen x="0" y="0" width="1366" height="738" />
-    </state>
-    <state width="1345" height="162" key="GridCell.Tab.0.left/0.0.1366.738@0.0.1366.738" timestamp="1626361198251" />
-    <state width="1345" height="162" key="GridCell.Tab.0.right" timestamp="1626361198251">
-      <screen x="0" y="0" width="1366" height="738" />
-    </state>
-    <state width="1345" height="162" key="GridCell.Tab.0.right/0.0.1366.738@0.0.1366.738" timestamp="1626361198251" />
-    <state width="1345" height="227" key="GridCell.Tab.1.bottom" timestamp="1622450603377">
-      <screen x="0" y="0" width="1366" height="738" />
-    </state>
-    <state width="1345" height="227" key="GridCell.Tab.1.bottom/0.0.1366.738@0.0.1366.738" timestamp="1622450603377" />
-    <state width="1345" height="227" key="GridCell.Tab.1.center" timestamp="1622450603377">
-      <screen x="0" y="0" width="1366" height="738" />
-    </state>
-    <state width="1345" height="227" key="GridCell.Tab.1.center/0.0.1366.738@0.0.1366.738" timestamp="1622450603377" />
-    <state width="1345" height="227" key="GridCell.Tab.1.left" timestamp="1622450603377">
-      <screen x="0" y="0" width="1366" height="738" />
-    </state>
-    <state width="1345" height="227" key="GridCell.Tab.1.left/0.0.1366.738@0.0.1366.738" timestamp="1622450603377" />
-    <state width="1345" height="227" key="GridCell.Tab.1.right" timestamp="1622450603377">
-      <screen x="0" y="0" width="1366" height="738" />
-    </state>
-    <state width="1345" height="227" key="GridCell.Tab.1.right/0.0.1366.738@0.0.1366.738" timestamp="1622450603377" />
-    <state x="184" y="13" key="SettingsEditor" timestamp="1626359820490">
-      <screen x="0" y="0" width="1366" height="738" />
-    </state>
-    <state x="184" y="13" key="SettingsEditor/0.0.1366.738@0.0.1366.738" timestamp="1626359820490" />
-    <state width="498" height="446" key="SwitcherDM" timestamp="1618231086932">
-      <screen x="0" y="0" width="1366" height="738" />
-    </state>
-    <state width="498" height="446" key="SwitcherDM/0.0.1366.738@0.0.1366.738" timestamp="1618231086932" />
-    <state x="275" y="101" key="Vcs.Push.Dialog.v2" timestamp="1626361913651">
-      <screen x="0" y="0" width="1366" height="738" />
-    </state>
-    <state x="275" y="101" key="Vcs.Push.Dialog.v2/0.0.1366.738@0.0.1366.738" timestamp="1626361913651" />
-    <state x="500" y="282" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1619454575574">
-      <screen x="0" y="0" width="1366" height="738" />
-    </state>
-    <state x="500" y="282" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1366.738@0.0.1366.738" timestamp="1619454575574" />
-    <state x="704" y="185" width="1147" height="726" key="dock-window-1" timestamp="1625076738268">
-      <screen x="0" y="0" width="1366" height="738" />
-    </state>
-    <state x="704" y="185" width="1147" height="726" key="dock-window-1/0.0.1366.738@0.0.1366.738" timestamp="1625076738268" />
-    <state x="660" y="0" width="696" height="745" key="dock-window-2" timestamp="1625076738268">
-      <screen x="0" y="0" width="1366" height="738" />
-    </state>
-    <state x="660" y="0" width="696" height="745" key="dock-window-2/0.0.1366.738@0.0.1366.738" timestamp="1625076738268" />
-    <state x="390" y="102" width="585" height="534" key="find.popup" timestamp="1620832501843">
-      <screen x="0" y="0" width="1366" height="738" />
-    </state>
-    <state x="390" y="102" width="585" height="534" key="find.popup/0.0.1366.738@0.0.1366.738" timestamp="1620832501843" />
-    <state x="346" y="59" width="672" height="678" key="search.everywhere.popup" timestamp="1623944702751">
-      <screen x="0" y="0" width="1366" height="738" />
-    </state>
-    <state x="346" y="59" width="672" height="678" key="search.everywhere.popup/0.0.1366.738@0.0.1366.738" timestamp="1623944702751" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <default-breakpoints>
-        <breakpoint type="python-exception">
-          <properties notifyOnTerminate="true" exception="BaseException">
-            <option name="notifyOnTerminate" value="true" />
-          </properties>
-        </breakpoint>
-      </default-breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

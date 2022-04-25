@@ -8,7 +8,7 @@ from Optimization.Solution import Solution
 
 def generatePopulation(levelSkeleton,popSize, ratio):
     solutions = []
-    for i in range(popSize):
+    while len(solutions)< popSize:
         ReserveWallS = []
         for wallskeleton in levelSkeleton.wallSkeletons:
             if wallskeleton.iscolumnParent:
@@ -19,7 +19,8 @@ def generatePopulation(levelSkeleton,popSize, ratio):
         for wallskeleton in ReserveWallS:
             levelSkeleton.wallSkeletons.append(wallskeleton)
             Ssolution.levelSkeleton.wallSkeletons.append(wallskeleton)
-        solutions.append(Ssolution)
+        if Ssolution.levelSkeleton.ScoreOfUnacceptableVoiles()[0]>0.99:
+            solutions.append(Ssolution)
     return solutions
 
 def selection(population,probability,fitnesses):
@@ -43,52 +44,70 @@ def mutationSelection(mutationRate,population):
         if random.uniform(0,1) < mutationRate:
             yield p
 
-def search(levelSkeleton,popSize=50,crossRate=0.3,mutRate=0.5,maxIterations=1
-           ,geneticOps=GeneticOperations2,filename='default', constraints=None):
+def search(levelSkeleton,popSize=50,crossRate=0.5,mutRate=0.65,maxIterations=1
+           ,geneticOps=GeneticOperations2,filename='default', constraints=None, Comb = [0,0,0,0]):
     start1 = timeit.default_timer()
+    print('Generating the population..')
     population = generatePopulation(levelSkeleton, popSize, constraints['ratio'])
+    # print('The population size', len(population))
     # tracker = SummaryTracker()
-    eccScore = 0
+    scoreDist = 0
+    maxIterations = 50
+    i=0
     # for i in range(maxIterations):
-    while eccScore < 1 :
+
+    while i<100 :
         # tracker.print_diff()
-        print(("len population: " + str(len(population))))
+        # print(("len population: " + str(len(population))))
         # print(("iteration: " + str(i)))
         start = timeit.default_timer()
         fitnesses = calculateFitnessPopulation(population,constraints)
         stop = timeit.default_timer()
-        print(("time it took fitness: " + str(stop - start)))
+        # print(("time it took fitness: " + str(stop - start)))
 
         # for fit in fitnesses:
         #     print "fitness is " + str(fit)
-        start = timeit.default_timer()
+
         best = max(fitnesses)
-        print(("best is : " + str(best)))
-        selected = selection(population,crossRate/2,fitnesses)
-        stop = timeit.default_timer()
-        print(("time it took selection: " + str(stop - start)))
-        start = timeit.default_timer()
         newComers = []
-        for s1,s2 in selected:
+        bestis=[]
+        condition = False
+        print(("best is : " + str(best)))
+        bestis.append(best)
+        # while not condition:
+            # start = timeit.default_timer()
+        selected = selection(population,crossRate/2,fitnesses)
+            # print('here selected', len(selected))
+            # stop = timeit.default_timer()
+            # print(("time it took selection: " + str(stop - start)))
+            # start = timeit.default_timer()
+        for s1, s2 in selected:
             s3,s4 = geneticOps.cross(s1,s2)
-            # print "fitnesses are : " +str(s3.getFitness()) + " " + str(s4.getFitness())
-            newComers.append(s3)
-            newComers.append(s4)
+            a = s3.levelSkeleton.ScoreOfUnacceptableVoiles()[0]
+            b = s4.levelSkeleton.ScoreOfUnacceptableVoiles()[0]
+            # print('passed')
+            if a > 0.99 and b > 0.99:
+                newComers.append(s3)
+                newComers.append(s4)
+
+        # print('new comers', len(newComers))
+
 
         stop = timeit.default_timer()
-        print(("time it took cross: " + str(stop - start)))
+        # print(("time it took cross: " + str(stop - start)))
         start = timeit.default_timer()
         for s in mutationSelection(mutRate,newComers):
             # print "mutating!!"
-            mutate(s)
-
+            s=mutate(s)
+            # print('YESS HERE', s.levelSkeleton.ScoreOfUnacceptableVoiles()[0])
         population.extend(newComers)
+        print('after extending:', len(population))
         stop = timeit.default_timer()
-        print(("time it took mutation: " + str(stop - start)))
+        # print(("time it took mutation: " + str(stop - start)))
 
 
         start = timeit.default_timer()
-        fits = calculateFitnessPopulation(population, constraints)
+        fits = calculateFitnessPopulation(population, constraints, Comb)
         stop = timeit.default_timer()
         print(("time it took fitness2: " + str(stop - start)))
         start = timeit.default_timer()
@@ -102,9 +121,16 @@ def search(levelSkeleton,popSize=50,crossRate=0.3,mutRate=0.5,maxIterations=1
 
         bestIndex = max(list(range(len(fits))), key=lambda a: fits[a])
         sol = population[bestIndex]
-        fitness = sol.getFitness()
-        eccScore = fitness['sym']
-        print("here condition eccScore",eccScore)
+        scoreDist = sol.levelSkeleton.ScoreOfUnacceptableVoiles()[0]
+        s = sol.getFitness()
+        tscore = s['totalScore']
+        # fitness = sol.getFitness()
+        # eccScore = fitness['sym']
+        i= i+1
+        if i>=50 and scoreDist >0.799:
+            condition = True
+        print("here condition scoredist",scoreDist)
+        print('number of iterations',i)
     fitnesses = calculateFitnessPopulation(population, constraints)
     bestIndex = max(list(range(len(fitnesses))), key=lambda a: fitnesses[a])
     stop = timeit.default_timer()

@@ -61,9 +61,7 @@ class WallEvaluator(object):
         wallSkeleton.evalData.vecUni = vec
         return wallSkeleton.evalData
 
-
-
-def calculateFitnessSolution(solution, constraints=None):
+def calculateFitnessSolution(solution, constraints=None, comb = [0,0,0,0]):
     # ReserveWallS = []
     # for wallskeleton in solution.levelSkeleton.wallSkeletons:
     #     if wallskeleton.iscolumnParent:
@@ -77,7 +75,7 @@ def calculateFitnessSolution(solution, constraints=None):
         rad_w, ecc_w, area_w, length_w = constraints['rad_w'], constraints['ecc_w'],\
                                          constraints['area_w'], constraints['length_w']
     else:
-        rad_w, ecc_w, area_w, length_w = 0.5, -0.5, 0, 1
+        rad_w, ecc_w, area_w, length_w = 0, -0.5, 1, 1
     size = 0
     dis = 0
     totalX = 0
@@ -113,9 +111,9 @@ def calculateFitnessSolution(solution, constraints=None):
     # radiuses = (Rx + Ry)/(abs(Rx-Ry)+0.000001) #abs(1-(Ry/(momentx+momenty))) + abs(1-(Rx/(momentx+momenty)))
     rx = math.sqrt(momentx/levelSkeleton.slabSkeleton.poly.area())   # Torsional radius
     ry = math.sqrt(momenty/levelSkeleton.slabSkeleton.poly.area())
-    radiuses= (Rx/rx + Ry/ry)
-    # scoreDist = levelSkeleton.ScoreOfUnacceptableVoiles()
-    scoreDist = 0
+    radiuses= (Rx/rx + Ry/ry)*0.5
+    scoreDist = levelSkeleton.ScoreOfUnacceptableVoiles()[0]
+    # scoreDist = 0
     a = solution.getOverlappedArea(constraints['d'])
 
     effectiveArea = solution.getEffectiveArea()
@@ -124,16 +122,17 @@ def calculateFitnessSolution(solution, constraints=None):
     ex = abs(cntr.x() - centerV.x())
     ey = abs(cntr.y() - centerV.y())
     coeffs = {
-        'rad': rad_w,
-        'sym': ecc_w,
-        'lengthShearX': length_w/2.,
-        'lengthShearY': length_w/2.,
-        'overlapped': -1,
+        'rad': comb[2],
+        'sym': comb[0],
+        'lengthShearX': 0,
+        'lengthShearY': 0,
+        'overlapped': 0 ,
         # 'unif': 0,
-        'area': area_w,
+        'area': comb[1],
         'distance': 0,
-        'distribution': 0.5
+        'distribution': comb[3],
     }
+    # print('this combination is', comb)
     def getScoreLength(lengthA,total):
         if lengthA > needed:
             scoreLengthA = math.pow(needed/lengthA,3)
@@ -151,20 +150,22 @@ def calculateFitnessSolution(solution, constraints=None):
         else: return 0
 
     def getScoreOverlapped(overlapped, totalArea):
-        if totalArea:
+        if totalArea >= overlapped:
             return 1-overlapped/totalArea
         else: return 0
 
     def getScoreSymEcc(ex,ey,Rx,Ry):
         if Ry==0: Ry=0.1
         if Rx==0: Rx=0.1
-        return 2- ex/(0.3*Rx) - ey/(0.3*Ry)
+        return 0.5*(2 - ex/(0.3*Rx) - ey/(0.3*Ry))
+
     def getDistrubtionScore(lx,ly,LX,LY):
         if ly and lx:
             if ly > lx:
                 s1 = abs(lx/ly)
-            else: s1 = abs(ly/lx)
-        else:s1=-1
+            else:
+                s1 = abs(ly/lx)
+        else:s1 = -1
         return s1
 
     LX = levelSkeleton.slabSkeleton.poly.MaxCoords().x()-levelSkeleton.slabSkeleton.poly.MinCoords().x()
@@ -217,9 +218,9 @@ def calculateFitnessSolution(solution, constraints=None):
     return fitV
 
 
-def calculateFitnessPopulation(population, constraints=None):
+def calculateFitnessPopulation(population, constraints=None, comb = [0,0,0,0]):
     fitnesses = []
     for solution in population:
         # print("calculating:")
-        fitnesses.append(solution.getFitness(constraints)['totalScore'])
+        fitnesses.append(solution.getFitness(constraints, comb)['totalScore'])
     return fitnesses
