@@ -19,8 +19,8 @@ def generatePopulation(levelSkeleton,popSize, ratio):
         for wallskeleton in ReserveWallS:
             levelSkeleton.wallSkeletons.append(wallskeleton)
             Ssolution.levelSkeleton.wallSkeletons.append(wallskeleton)
-        if Ssolution.levelSkeleton.ScoreOfUnacceptableVoiles()[0]>0.99:
-            solutions.append(Ssolution)
+        # if Ssolution.levelSkeleton.ScoreOfUnacceptableVoiles()[0]>0.99:
+        solutions.append(Ssolution)
     return solutions
 
 def selection(population,probability,fitnesses):
@@ -56,7 +56,7 @@ def search(levelSkeleton,popSize=50,crossRate=0.5,mutRate=0.65,maxIterations=1
     i=0
     # for i in range(maxIterations):
 
-    while i<100 :
+    while i<50 :
         # tracker.print_diff()
         # print(("len population: " + str(len(population))))
         # print(("iteration: " + str(i)))
@@ -81,14 +81,15 @@ def search(levelSkeleton,popSize=50,crossRate=0.5,mutRate=0.65,maxIterations=1
             # stop = timeit.default_timer()
             # print(("time it took selection: " + str(stop - start)))
             # start = timeit.default_timer()
+
         for s1, s2 in selected:
             s3,s4 = geneticOps.cross(s1,s2)
-            a = s3.levelSkeleton.ScoreOfUnacceptableVoiles()[0]
-            b = s4.levelSkeleton.ScoreOfUnacceptableVoiles()[0]
-            # print('passed')
-            if a > 0.99 and b > 0.99:
-                newComers.append(s3)
-                newComers.append(s4)
+            # a = s3.levelSkeleton.ScoreOfUnacceptableVoiles()[0]
+            # b = s4.levelSkeleton.ScoreOfUnacceptableVoiles()[0]
+            # # print('passed')
+            # if a > 0.99 and b > 0.99:
+            newComers.append(s3)
+            newComers.append(s4)
 
         # print('new comers', len(newComers))
 

@@ -109,28 +109,38 @@ def calculateFitnessSolution(solution, constraints=None, comb = [0,0,0,0]):
         print((momentx, momenty))
         eval(input())
     # radiuses = (Rx + Ry)/(abs(Rx-Ry)+0.000001) #abs(1-(Ry/(momentx+momenty))) + abs(1-(Rx/(momentx+momenty)))
-    rx = math.sqrt(momentx/levelSkeleton.slabSkeleton.poly.area())   # Torsional radius
-    ry = math.sqrt(momenty/levelSkeleton.slabSkeleton.poly.area())
-    radiuses= (Rx/rx + Ry/ry)*0.5
+    # rx = math.sqrt(momentx/levelSkeleton.slabSkeleton.poly.area())   # Torsional radius
+    # ry = math.sqrt(momenty/levelSkeleton.slabSkeleton.poly.area())
+    # radiuses= (Rx/rx + Ry/ry)*0.5
+
+    def rad_norms(slab_poly, Needed):
+        minx, maxx = min([pnt.x() for pnt in slab_poly]), max([pnt.x() for pnt in slab_poly])
+        miny, maxy = min([pnt.y() for pnt in slab_poly]), max([pnt.y() for pnt in slab_poly])
+
+        s = math.pow((maxx - minx) / 2, 2) * Needed + math.pow((maxy - miny) / 2, 2) * Needed
+        return s / Needed, s / Needed
+
+    norm_rx, norm_ry = rad_norms(levelSkeleton.slabSkeleton.poly.points, math.pow(needed,3))
+    radiuses = 3*((Rx / norm_rx + Ry / norm_ry) / 2)
+
     scoreDist = levelSkeleton.ScoreOfUnacceptableVoiles()[0]
     # scoreDist = 0
     a = solution.getOverlappedArea(constraints['d'])
-
     effectiveArea = solution.getEffectiveArea()
     overlappedArea = solution.geteffectiveOverlappedArea(effectiveArea)
 
     ex = abs(cntr.x() - centerV.x())
     ey = abs(cntr.y() - centerV.y())
     coeffs = {
-        'rad': comb[2],
-        'sym': comb[0],
-        'lengthShearX': 0,
-        'lengthShearY': 0,
+        'rad': comb[0],
+        'sym': comb[1],
+        'lengthShearX': comb[2],
+        'lengthShearY': comb[2],
         'overlapped': 0 ,
         # 'unif': 0,
-        'area': comb[1],
-        'distance': 0,
-        'distribution': comb[3],
+        'area': 0,
+        'distance': comb[3],
+        'distribution': 0,
     }
     # print('this combination is', comb)
     def getScoreLength(lengthA,total):

@@ -342,7 +342,7 @@ class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
                     print('Progress', l/len(combs)*100,'%','_',l)
                     l=l+1
                 # while j==1 :
-
+                # comb = [0,0,0,0]
                     solution = None
 
                     for i in range(1):
@@ -356,19 +356,19 @@ class TryApp(QtWidgets.QMainWindow, Show2DWindow.Ui_MainWindow):
                             LS = self.skeletonLevels[len(self.skeletonLevels)-1]
                             solution = self.solutions[LS]
                         fitness = solution.getFitness(constraints=self.constraints)
-                        scores.append([fitness['sym'],fitness['area'],fitness['rad'],fitness['distribution'],fitness['totalScore']])
+                        scores.append([fitness['rad'],fitness['sym'],fitness['lengthShearX'],fitness['lengthShearY'],fitness['distance'],fitness['totalScore']])
                         distributionScore = fitness['distribution']
                         SYM = fitness['sym']
                         print('result gave ', distributionScore, SYM)
-                        # j = 2
+                                # j = 2
 
-                    # overlapscore = fitness['overlapped']
-                    # print("here condition out", distributionScore, overlapscore )
-                self.solutions[levelSkeleton] = solution
+                            # overlapscore = fitness['overlapped']
+                            # print("here condition out", distributionScore, overlapscore )
+                    self.solutions[levelSkeleton] = solution
             for l in range(len(scores)):
                 if (l%2) == 0:
                     score = scores[l]
-                    f.write(str(score[0])+ "/" +str(score[1])+ "/" +str(score[2])+ "/" +str(score[3])+ "/" + str(score[4]) +  "\n")
+                    f.write(str(score[0])+ "/" +str(score[1])+ "/" +str(score[2])+ "/" +str(score[3])+ "/" + str(score[4]) + "/" + str(score[5])+  "\n")
             self.saveSkeletons(dirname)
             count += 1
 
@@ -594,7 +594,7 @@ def createShapes(file):
     return wShapes, sShapes
 
 def main():
-    file = "../IFCFiles/R+3.ifc"
+    file = "../IFCFiles/ref.ifc"
     wShapes, sShapes = createShapes(file)
     space_shapes = getSpaceShapesFromIfc(file)
     space_shapes = [s for _, s in space_shapes]

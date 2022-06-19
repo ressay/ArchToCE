@@ -131,21 +131,21 @@ class LevelSkeleton(Skelet):
         return Hdim, Vdim
 
     def getVoileLengthNeeded(self, weight=1, ColumnsLength=0):
-        # height = self.level.heighestZ
-        # coeff = 1.3*weight
-        # if height < 30:
-        #     coeff = 0.7*weight
-        #     print("here coef2",coeff)
-        # return coeff * height * self.slabSkeleton.poly.area() / 100
+        height = self.level.heighestZ
+        coeff = 1.3*weight
+        if height < 30:
+            coeff = 0.7*weight
+            # print("here coef2",coeff)
+        return 0.5*(coeff * height * self.slabSkeleton.poly.area() / 100)
 
-        Height = self.level.getHeightOverLowerLevel()+0.3
-        D = 1.5*Height
-        neededLength = 0.2*self.slabSkeleton.poly.area()/3-D
-        # print("here area",self.slabSkeleton.poly.area())
-        # print("NEEEEDED",neededLength)
-        # if neededLength < 0.8: neededLength = 0.8
-        # (0.125 * self.slabSkeleton.poly.area() / 2.4) - 1
-        return 3
+        # Height = self.level.getHeightOverLowerLevel()+0.3
+        # D = 1.5*Height
+        # neededLength = 0.2*self.slabSkeleton.poly.area()/3-D
+        # # print("here area",self.slabSkeleton.poly.area())
+        # # print("NEEEEDED",neededLength)
+        # # if neededLength < 0.8: neededLength = 0.8
+        # # (0.125 * self.slabSkeleton.poly.area() / 2.4) - 1
+        # return 3
 
     def getWallsTotalLength(self):
         length = 0
@@ -191,7 +191,7 @@ class LevelSkeleton(Skelet):
             Ry = math.sqrt((ssumX2Ly3 + ssumY2Lx3)/ssumLx3)
         if ssumLy3 != 0:
             Rx = math.sqrt((ssumY2Lx3 + ssumX2Ly3)/ssumLy3)
-        return math.sqrt(Rx), math.sqrt(Ry)
+        return Rx, Ry
 
     def getCenterFromShear(self):
         sumLiX = 0

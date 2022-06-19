@@ -40,13 +40,13 @@ def cross(solution1,solution2):
     for wall in reserve2: resultWalls2.append(wall)
     s1 = Solution(LevelSkeleton(resultWalls1,levelS1.slabSkeleton,levelS1.level))
     s2 = Solution(LevelSkeleton(resultWalls2,levelS1.slabSkeleton,levelS1.level))
-    a = s1.levelSkeleton.ScoreOfUnacceptableVoiles()
-    b = s2.levelSkeleton.ScoreOfUnacceptableVoiles()
-    # print(a,b)
-    if 0<a[0]<0.9:
-        s1 = fixShortbeam(s1,a)
-    if 0<b[0]<0.9:
-        s1 = fixShortbeam(s2,b)
+    # a = s1.levelSkeleton.ScoreOfUnacceptableVoiles()
+    # b = s2.levelSkeleton.ScoreOfUnacceptableVoiles()
+    # # print(a,b)
+    # if 0<a[0]<0.9:
+    #     s1 = fixShortbeam(s1,a)
+    # if 0<b[0]<0.9:
+    #     s1 = fixShortbeam(s2,b)
     return s1,s2
 
 def fixShortbeam(solution, problemwalls):
@@ -129,8 +129,8 @@ def mutate(solution,mutationSize=None):
     for wall in Walls: levelSkeleton.wallSkeletons.append(wall)
     for Column in Columns:
         levelSkeleton.wallSkeletons.append(Column)
-    if levelSkeleton.ScoreOfUnacceptableVoiles()[0]<0.9:
-        solution = fixShortbeam(solution, levelSkeleton.ScoreOfUnacceptableVoiles())
+    # if levelSkeleton.ScoreOfUnacceptableVoiles()[0]<0.9:
+    #     solution = fixShortbeam(solution, levelSkeleton.ScoreOfUnacceptableVoiles())
     return solution
 
 def mutateWall(wallSkeleton,positive=True,mutationSize=1):
